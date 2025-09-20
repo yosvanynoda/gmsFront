@@ -1,0 +1,29 @@
+﻿@page
+@model GMS_UI.Pages.VLT.Volunteer.IndexModel
+@{
+    ViewData["Title"] = "Volunteer";
+}
+
+<div class="container-gms">
+    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4>Volunteer</h4>
+                </div>
+                <div class="col">
+                    <a asp-page="./Create" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="volunteerGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/VLT/Volunteer';
+</script>
+<script src="/js/vlt/volunteer/volunteer.js"></script>

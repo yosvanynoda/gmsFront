@@ -1,0 +1,159 @@
+﻿@page
+@model GMS_UI.Pages.STD.StudioDoc.IndexModel
+@{
+    ViewData["Title"] = "StudioDoc";
+}
+
+<div class="container-gms">
+
+    <div class="alert alert-success collapse" role="alert" id="successAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('successAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="successTitle"></h4>
+        <p id="successMsg"></p>
+    </div>
+
+    <div class="alert alert-danger collapse" role="alert" id="failedAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('failedAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="failedTitle"></h4>
+        <p id="failedMsg"></p>
+    </div>
+
+    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4>Studio Doc</h4>
+                </div>
+                <div class="col">
+                    <button data-bs-toggle="modal" data-bs-target="#studioDocNewModal" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="studioDocGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        </div>
+    </div>
+</div>
+<div id="studioDocNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studioDocNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Studio Doc</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docName">DocName</label>
+                    <input type="text" class="form-control pt-4" id="docName" placeholder="DocName">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docType">DocType</label>
+                    <input type="text" class="form-control pt-4" id="docType" placeholder="DocType">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docVersion">DocVersion</label>
+                    <input type="text" class="form-control pt-4" id="docVersion" placeholder="DocVersion">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docDate">DocDate</label>
+                    <input type="text" class="form-control pt-4" id="docDate" placeholder="DocDate">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="studioName">StudioName</label>
+                    <input type="text" class="form-control pt-4" id="studioName" placeholder="StudioName">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="notes">Notes</label>
+                    <input type="text" class="form-control pt-4" id="notes" placeholder="Notes">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudStudioDoc(1)"> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editStudioDoc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editStudioDocLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Edit Studio Doc</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docName">DocName</label>
+                    <input type="text" class="form-control pt-4" id="docNameEdit" placeholder="DocName">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docType">DocType</label>
+                    <input type="text" class="form-control pt-4" id="docTypeEdit" placeholder="DocType">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docVersion">DocVersion</label>
+                    <input type="text" class="form-control pt-4" id="docVersionEdit" placeholder="DocVersion">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="docDate">DocDate</label>
+                    <input type="text" class="form-control pt-4" id="docDateEdit" placeholder="DocDate">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="studioName">StudioName</label>
+                    <input type="text" class="form-control pt-4" id="studioNameEdit" placeholder="StudioName">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="notes">Notes</label>
+                    <input type="text" class="form-control pt-4" id="notesEdit" placeholder="Notes">
+                    <span id="validateStudioDoc" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" id="studioDocidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudStudioDoc(2)"> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="deleteStudioDoc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteStudioDocLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Are you sure you want to delete this studio doc?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="studioDocidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <dl class="row">
+                        <dt class="col-sm-6">DocName: </dt>
+                        <dd class="col-sm-6" id="docNameD"> </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">DocType:</dt>
+                        <dd class="col-sm-6" id="docTypeD">  </dd>
+                    </dl>                  
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" onclick="crudStudioDoc(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        window._csrfToken = $('@Html.AntiForgeryToken()').val();
+        urlIndex = '/STD/StudioDoc';
+    </script>
+    <script src="/js/std/studioDoc/studioDoc.js"></script>
+

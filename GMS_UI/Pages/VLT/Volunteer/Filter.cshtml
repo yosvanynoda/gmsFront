@@ -1,0 +1,53 @@
+﻿@page
+@model GMS_UI.Pages.VLT.Volunteer.FilterModel
+@{
+    ViewData["Title"] = "Volunteer Filter";
+}
+
+<div class="main-content">
+    <h2>Volunteer Filter</h2>
+    <form>
+        <!-- Study -->
+        <label for="research">Study</label>
+        <select id="research" name="research">
+            <option value="">-- Select --</option>
+            <option value="study1">Study 1</option>
+            <option value="study2">Study 2</option>
+            <option value="study3">Study 3</option>
+        </select>
+
+        <!-- Age -->
+        <label for="min_age">Min Age:</label>
+        <input type="number" id="min_age" name="min_age" min="0" max="120">
+
+        <label for="max_age">Max Age:</label>
+        <input type="number" id="max_age" name="max_age" min="0" max="120">
+
+        <!-- Sex -->
+        <label for="sex">Sex:</label>
+        <select id="sex" name="sex">
+            <option value="">-- Select --</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+        </select>
+
+        <!-- Race -->
+        <label for="race">Race:</label>
+        <select id="race" name="race">
+            <option value="">-- Select --</option>
+            <option value="white">White</option>
+            <option value="black">Black</option>
+            <option value="asian">Asian</option>
+            <option value="indian">Indian</option>
+            <option value="other">Other</option>
+        </select>
+
+        <!-- Illness or condition -->
+        <label for="condition">Illness or Condition:</label>
+        <input type="text" id="condition" name="condition" placeholder="E.g. Diabetes, Hypertension...">
+
+    </form>
+
+    <button onclick="location.href='VoluntariesPreFiltered.html'">Search Voluntiers</button>
+
+</div>

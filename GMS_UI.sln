@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS_UI", "GMS_UI\GMS_UI.csproj", "{420D5227-2D7D-4957-A17E-518B87D976CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS.BL", "GMS.BL\GMS.BL.csproj", "{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS.Objects", "..\GMS.BackEnd\GMS.Objects\GMS.Objects.csproj", "{D0CE3FBF-0EEC-F162-624A-C658F8CFE3F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{420D5227-2D7D-4957-A17E-518B87D976CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{420D5227-2D7D-4957-A17E-518B87D976CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{420D5227-2D7D-4957-A17E-518B87D976CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{420D5227-2D7D-4957-A17E-518B87D976CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0CE3FBF-0EEC-F162-624A-C658F8CFE3F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0CE3FBF-0EEC-F162-624A-C658F8CFE3F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0CE3FBF-0EEC-F162-624A-C658F8CFE3F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0CE3FBF-0EEC-F162-624A-C658F8CFE3F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D395037-04A7-41D7-8C72-70220F843DC5}
+	EndGlobalSection
+EndGlobal

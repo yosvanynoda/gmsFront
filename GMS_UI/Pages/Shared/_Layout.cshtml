@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GMS_UI</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/sidebars.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GMS_UI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+ 
+     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <div class="sidebar" id="sidebar">
+            <button id="toggleSidebar" class="btn btn-light toggle-btn">
+                <i id="toggleIcon" class="bi bi-list"></i>
+            </button>
+            <ul>
+                <li>
+                    <a href="/Index">
+                        <i class="bi bi-house-door-fill"></i>
+                        <span class="link-text">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/CMN/Staff/Index">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span class="link-text"> Staff List</span>
+                    </a>
+                </li>              
+                <li>
+                    <a id="volunteer" href="#">
+                        <i class="bi bi-person-fill"></i>
+                        <span class="link-text"> Volunteer</span>
+                    </a>                   
+                    <ul class="submenu">
+                        <li><a href="/VLT/Volunteer/Index"><i class="bi bi-person-lines-fill"></i> Volunteers</a></li>
+                        <li><a href="/VLT/Volunteer/Filter"><i class="bi bi-person-fill-check"></i> Filter List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a id="studies" href="#">
+                        <i class="bi bi-bounding-box-circles"></i>
+                        <span class="link-text"> Studies</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="/STD/StudioListData/Index"><i class="bi bi-card-text"></i> Studies List </a></li>
+@*                         <li><a href="/STD/Study/Index"><i class="bi bi-card-text"></i> Studies </a></li>
+                        <li><a href="/STD/StudioData/Index"><i class="bi bi-card-text"></i> Study Data </a></li>
+ *@                     <li><a href="/STD/Monitor/Index"><i class="bi bi-speedometer2"></i> Monitor</a></li>
+@*                         <li><a href="/STD/Protocol/Index"><i class="bi bi-speedometer2"></i> Protocol</a></li>
+ *@                      <li><a href="/STD/Sponsor/Index"><i class="bi bi-person-lines-fill"></i> Sponsor </a></li>
+                        <li><a href="/STD/StudioDoc/Index"><i class="bi bi-journals"></i> Documents </a></li>
+                        <li><a href="/STD/Windows/Index"><i class="bi bi-person-lines-fill"></i> Windows </a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a id="subjects" href="#">
+                        <i class="bi bi-file-earmark-person"></i>
+                        <span class="link-text"> Subjects</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="/STD/Subject/Index"><i class="bi bi-file-earmark-person-fill"></i> Subjects</a></li>
+                        <li><a href="/STD/Subject/Waiting"><i class="bi bi-person-bounding-box"></i> Waiting List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a id="appointments" href="#">
+                        <i class="bi bi-calendar-day"></i>
+                        <span class="link-text"> Appointments</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="/GNR/Appointment/Index"><i class="bi bi-calendar2-week"></i> Appointments</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/CMN/ReferenceData/Index">
+                        <i class="bi bi-bookmark"></i>
+                        <span class="link-text">ReferenceData</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/GNR/Dashboard/Index">
+                        <i class="bi bi-speedometer2"></i>
+                        <span class="link-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/GNR/Configuration/Index">
+                        <i class="bbi bi-gear-wide"></i>
+                        <span class="link-text">Configuration</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Index">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span class="link-text">Sign out</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </header>
+    <div class="container-fluid" style="margin-top: 5px;">
+        <main role="main" class="pb-3" style="height:93vh;">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    toggleBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("collapsed");
+
+        if (sidebar.classList.contains("collapsed")) {
+            toggleIcon.classList.remove("bi-list");
+            toggleIcon.classList.add("bi-arrow-right-square");
+        } else {
+            toggleIcon.classList.remove("bi-arrow-right-square");
+            toggleIcon.classList.add("bi-list");
+        }
+    });
+</script>

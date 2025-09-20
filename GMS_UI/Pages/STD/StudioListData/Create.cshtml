@@ -1,0 +1,258 @@
+﻿@page
+@model GMS_UI.Pages.STD.StudioListData.CreateModel
+@{
+    ViewData["Title"] = "Create Studio";
+}
+<div class="wizard-container">
+    <h2 class="text-center mb-4">
+        <i class="fas fa-flask text-primary"></i>
+        Create Clinical Research Study
+    </h2>
+
+    <form asp-page-handler="Create" method="post" id="wizardForm">
+
+        <!-- Progress Indicator -->
+        <div class="step-indicator">
+            <div class="step-circle active" id="step1-indicator">1</div>
+            <div class="step-line" id="line1"></div>
+            <div class="step-circle" id="step2-indicator">2</div>
+            <div class="step-line" id="line2"></div>
+            <div class="step-circle" id="step3-indicator">3</div>
+            <div class="step-line" id="line3"></div>
+            <div class="step-circle" id="step4-indicator">4</div>
+        </div>
+
+        <!-- Step 1: Basic Information -->
+        <div class="wizard-step active" id="step1">
+            <div class="form-section">
+                <h5><i class="fas fa-info-circle"></i> Basic Study Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Title *</label> <!--asp-for="StudyTitle"-->
+                            <input class="form-control" placeholder="Enter study title" required> <!--asp-for="StudyTitle"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyTitle"-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Phase *</label> <!--asp-for="StudyPhase"-->
+                            <select class="form-select" required>
+                                <!--asp-for="StudyPhase"-->
+                                <option value="">Select Phase</option>
+                                <option value="Phase I">Phase I</option>
+                                <option value="Phase II">Phase II</option>
+                                <option value="Phase III">Phase III</option>
+                                <option value="Phase IV">Phase IV</option>
+                            </select>
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyPhase"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Type *</label> <!--asp-for="StudyType"-->
+                            <select class="form-select" required>
+                                <!--asp-for="StudyType"-->
+                                <option value="">Select Type</option>
+                                <option value="Interventional">Interventional</option>
+                                <option value="Observational">Observational</option>
+                                <option value="Expanded Access">Expanded Access</option>
+                            </select>
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyType"-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Principal Investigator *</label> <!--asp-for="PrincipalInvestigator"-->
+                            <input class="form-control" placeholder="Dr. John Smith" required> <!--asp-for="PrincipalInvestigator"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="PrincipalInvestigator"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Study Description *</label> <!--asp-for="StudyDescription"-->
+                    <textarea class="form-control" rows="4" placeholder="Provide a detailed description of the study..." required></textarea> <!--asp-for="StudyDescription"-->
+                    <span class="text-danger"></span> <!--asp-validation-for="StudyDescription"-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Study Design -->
+        <div class="wizard-step" id="step2">
+            <div class="form-section">
+                <h5><i class="fas fa-cogs"></i> Study Design & Methodology</h5>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date *</label> <!--asp-for="StartDate"-->
+                            <input type="date" class="form-control" required> <!--asp-for="StartDate"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="StartDate"-->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">End Date *</label> <!--asp-for="EndDate"-->
+                            <input type="date" class="form-control" required> <!--asp-for="EndDate"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="EndDate"-->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Duration (months)</label> <!--asp-for="Duration"-->
+                            <input type="number" class="form-control" min="1" placeholder="12"> <!--asp-for="Duration"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="Duration"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Target Enrollment *</label> <!--asp-for="TargetEnrollment"-->
+                            <input type="number" class="form-control" min="1" placeholder="100" required> <!--asp-for="TargetEnrollment"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="TargetEnrollment"-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Number of Study Arms</label> <!--asp-for="StudyArms"-->
+                            <input type="number" class="form-control" min="1" placeholder="2"> <!--asp-for="StudyArms"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyArms"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Inclusion Criteria *</label> <!--asp-for="InclusionCriteria"-->
+                    <textarea class="form-control" rows="3" placeholder="List inclusion criteria..." required></textarea> <!--asp-for="InclusionCriteria"-->
+                    <span class="text-danger"></span> <!--asp-validation-for="InclusionCriteria"-->
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Exclusion Criteria *</label> <!--asp-for="ExclusionCriteria"-->
+                    <textarea class="form-control" rows="3" placeholder="List exclusion criteria..." required></textarea> <!--asp-for="ExclusionCriteria"-->
+                    <span class="text-danger"></span> <!--asp-validation-for="ExclusionCriteria"-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Regulatory & Ethics -->
+        <div class="wizard-step" id="step3">
+            <div class="form-section">
+                <h5><i class="fas fa-shield-alt"></i> Regulatory & Ethics Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label lass="form-label">IRB Approval Number</label> <!--asp-for="IRBApprovalNumber"-->
+                            <input class="form-control" placeholder="IRB-2024-001"> <!--asp-for="IRBApprovalNumber"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="IRBApprovalNumber"-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">ClinicalTrials.gov ID</label> <!--asp-for="ClinicalTrialsGovID"-->
+                            <input class="form-control" placeholder="NCT12345678"> <!--asp-for="ClinicalTrialsGovID"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="ClinicalTrialsGovID"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Sponsor Name *</label> <!--asp-for="SponsorName"-->
+                            <input class="form-control" placeholder="Pharmaceutical Company Inc." required> <!--asp-for="SponsorName"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="SponsorName"-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Budget ($)</label> <!--asp-for="StudyBudget"-->
+                            <input type="number" step="0.01" class="form-control" placeholder="500000.00"> <!--asp-for="StudyBudget"-->
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyBudget"-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"> <!--asp-for="GCPCompliant"-->
+                        <label class="form-check-label">
+                            <!--asp-for="GCPCompliant"-->
+                            This study follows Good Clinical Practice (GCP) guidelines
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"> <!--asp-for="FDARegulated"-->
+                        <label class="form-check-label">
+                            <!--asp-for="FDARegulated"-->
+                            This study is FDA regulated
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="wizard-step" id="step4">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Review & Submit</h5>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Please review all information before submitting. You can go back to previous steps to make changes.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Study Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-navigation">
+            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-success btn-wizard" id="submitBtn" style="display: none;">
+                    <i class="fas fa-check"></i> Submit Study
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/STD/StudioListData';
+</script>
+<script src="/js/std/studioListData/studioCreate.js"></script>

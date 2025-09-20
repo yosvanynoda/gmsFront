@@ -1,0 +1,300 @@
+﻿@page
+@model GMS_UI.Pages.CMN.Staff.IndexModel
+@{
+    ViewData["Title"] = "Staff";
+}
+
+<div class="container-gms">
+
+    <div class="alert alert-success collapse" role="alert" id="successAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('successAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="successTitle"></h4>
+        <p id="successMsg"></p>
+    </div>
+
+    <div class="alert alert-danger collapse" role="alert" id="failedAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('failedAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="failedTitle"></h4>
+        <p id="failedMsg"></p>
+    </div>
+
+    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4>Staff</h4>
+                </div>
+                <div class="col">
+                    <a data-bs-toggle="modal" data-bs-target="#staffNewModal" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="staffGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="studyAssign" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Assign Study</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="text" placeholder="Coordinator Name">
+                <input type="text" placeholder="Study">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="assingStudy()"> Save</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Start Modals Create Edit and Delete Staff-->
+
+<div id="staffNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="staffNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Staff</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="firstName">First Name</label>
+                    <input type="text" class="form-control pt-4" id="firstName" placeholder="First Name">
+                    <span id="validateFirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="lastName">Last Name</label>
+                    <input type="text" class="form-control pt-4" id="lastName" placeholder="Last Name">
+                    <span id="validateLastName" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="email">Email</label>
+                    <input type="text" class="form-control pt-4" id="email" placeholder="Email">
+                    @* <span id="validateEmail" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="phone">Phone</label>
+                    <input type="text" class="form-control pt-4" id="phone" placeholder="Phone">
+                    @* <span id="validatePhone" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="position">Position</label>
+                    <input type="text" class="form-control pt-4" id="position" placeholder="Position">
+                    @* <span id="validatePosition" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="department">Department</label>
+                    <input type="text" class="form-control pt-4" id="department" placeholder="Department">
+                    @* <span id="validatedepartment" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="status">Status</label>
+                    <input type="text" class="form-control pt-4" id="status" placeholder="Status">
+                    @* <span id="validateStatus" class="text-danger"></span> *@
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudStaff(1)"> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="editstaff" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editstaffLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Edit staff</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="firstNameEdit">First Name</label>
+                    <input type="text" class="form-control pt-4" id="firstNameEdit" placeholder="First Name">
+                    <span id="validateFirstNameEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="lastNameEdit">Last Name</label>
+                    <input type="text" class="form-control pt-4" id="lastNameEdit" placeholder="Last Name">
+                    <span id="validateLastNameEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="emailEdit">Email</label>
+                    <input type="text" class="form-control pt-4" id="emailEdit" placeholder="Email">
+                    @* <span id="validateEmailEdit" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="phoneEdit">Phone</label>
+                    <input type="text" class="form-control pt-4" id="phoneEdit" placeholder="Phone">
+                    @* <span id="validatePhoneEdit" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="positionEdit">Position</label>
+                    <input type="text" class="form-control pt-4" id="positionEdit" placeholder="Position">
+                    @* <span id="validatePositionEdit" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="departmentEdit">Department</label>
+                    <input type="text" class="form-control pt-4" id="departmentEdit" placeholder="Department">
+                    @* <span id="validatedepartmentEdit" class="text-danger"></span> *@
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="statusEdit">Status</label>
+                    <input type="text" class="form-control pt-4" id="statusEdit" placeholder="Status">
+                    @* <span id="validateStatusEdit" class="text-danger"></span> *@
+                </div>
+                <input type="hidden" id="staffIdEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudStaff(2)"> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="deletestaff" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deletestaffLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Are you sure you want to delete this staff?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="staffIdDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            First Name:
+                        </dt>
+                        <dd class="col-sm-6" id="firstNameD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Last Name:
+                        </dt>
+                        <dd class="col-sm-6" id="lastNameD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Email:
+                        </dt>
+                        <dd class="col-sm-6" id="emailD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Phone:
+                        </dt>
+                        <dd class="col-sm-6" id="phoneD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Position:
+                        </dt>
+                        <dd class="col-sm-6" id="positionD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Department:
+                        </dt>
+                        <dd class="col-sm-6" id="departmentD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Status:
+                        </dt>
+                        <dd class="col-sm-6" id="statusD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" onclick="crudStaff(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="studiostaff" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deletestaffLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Are you sure you want to delete this staff?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="staffIdDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            First Name:
+                        </dt>
+                        <dd class="col-sm-6" id="firstNameD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Last Name:
+                        </dt>
+                        <dd class="col-sm-6" id="lastNameD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Email:
+                        </dt>
+                        <dd class="col-sm-6" id="emailD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Phone:
+                        </dt>
+                        <dd class="col-sm-6" id="phoneD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Position:
+                        </dt>
+                        <dd class="col-sm-6" id="positionD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Department:
+                        </dt>
+                        <dd class="col-sm-6" id="departmentD">
+
+                        </dd>
+                        <dt class="col-sm-6">
+                            Status:
+                        </dt>
+                        <dd class="col-sm-6" id="statusD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" onclick="crudStaff(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End Modals Create Edit and Delete Staff-->
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/CMN/Staff';
+</script>
+<script src="/js/cmn/staff/staff.js"></script>

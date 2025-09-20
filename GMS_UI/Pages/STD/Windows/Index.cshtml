@@ -1,0 +1,151 @@
+﻿@* @page
+@model VisitWindowDefinitionsModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Definición de Visit Windows";
+}
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <button id="btnAddVisit" class="btn btn-primary mb-3">+ Nueva Visita</button>
+    <table id="tblVisits" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Visita</th>
+                <th>Offset (días)</th>
+                <th>Pre-window</th>
+                <th>Post-window</th>
+                <th>Orden</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Filas inyectadas por JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal para Agregar/Editar -->
+<div class="modal fade" id="visitModal" tabindex="-1" aria-labelledby="visitModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="frmVisit" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="visitModalLabel">Nueva Visita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="visitId" />
+                <div class="mb-3">
+                    <label for="visitName" class="form-label">Nombre de Visita</label>
+                    <input type="text" class="form-control" id="visitName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="dayOffset" class="form-label">Offset (días)</label>
+                    <input type="number" class="form-control" id="dayOffset" required />
+                </div>
+                <div class="mb-3">
+                    <label for="preWindow" class="form-label">Pre-window (días)</label>
+                    <input type="number" class="form-control" id="preWindow" required />
+                </div>
+                <div class="mb-3">
+                    <label for="postWindow" class="form-label">Post-window (días)</label>
+                    <input type="number" class="form-control" id="postWindow" required />
+                </div>
+                <div class="mb-3">
+                    <label for="visitOrder" class="form-label">Orden</label>
+                    <input type="number" class="form-control" id="visitOrder" required />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const tblBody = document.querySelector('#tblVisits tbody');
+          const modal = new bootstrap.Modal(document.getElementById('visitModal'));
+          const frm = document.getElementById('frmVisit');
+          let isEditing = false;
+
+          async function loadVisits() {
+            const res = await fetch('@Url.Page("./VisitWindowDefinitions", "Load")');
+            const list = await res.json();
+            tblBody.innerHTML = '';
+            list.forEach(v => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${v.visitName}</td>
+                <td>${v.dayOffset}</td>
+                <td>${v.windowPreDays}</td>
+                <td>${v.windowPostDays}</td>
+                <td>${v.visitOrder}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary btn-edit">Editar</button>
+                  <button class="btn btn-sm btn-outline-danger btn-delete">Borrar</button>
+                </td>`;
+              tr.dataset.id = v.visitId;
+              tblBody.appendChild(tr);
+            });
+          }
+
+          document.getElementById('btnAddVisit').addEventListener('click', () => {
+            isEditing = false;
+            frm.reset();
+            document.getElementById('visitModalLabel').textContent = 'Nueva Visita';
+            modal.show();
+          });
+
+          tblBody.addEventListener('click', async e => {
+            const tr = e.target.closest('tr');
+            const id = tr?.dataset.id;
+            if (e.target.matches('.btn-edit') && id) {
+              isEditing = true;
+              const v = await (await fetch('@Url.Page("./VisitWindowDefinitions", "Get")?id=' + id)).json();
+              Object.keys(v).forEach(k => {
+                const el = document.getElementById(k.charAt(0).toLowerCase() + k.slice(1));
+                if (el) el.value = v[k];
+              });
+              document.getElementById('visitModalLabel').textContent = 'Editar Visita';
+              modal.show();
+            }
+            if (e.target.matches('.btn-delete') && id) {
+              if (confirm('¿Borrar esta visita?')) {
+                await fetch('@Url.Page("./VisitWindowDefinitions", "Delete")?id=' + id, { method: 'DELETE' });
+                loadVisits();
+              }
+            }
+          });
+
+          frm.addEventListener('submit', async e => {
+            e.preventDefault();
+            const payload = {
+              visitId: document.getElementById('visitId').value,
+              visitName: document.getElementById('visitName').value,
+              dayOffset: parseInt(document.getElementById('dayOffset').value, 10),
+              windowPreDays: parseInt(document.getElementById('preWindow').value, 10),
+              windowPostDays: parseInt(document.getElementById('postWindow').value, 10),
+              visitOrder: parseInt(document.getElementById('visitOrder').value, 10)
+            };
+            const method = isEditing ? 'PUT' : 'POST';
+            const url = isEditing
+              ? '@Url.Page("./VisitWindowDefinitions", "Edit")'
+              : '@Url.Page("./VisitWindowDefinitions", "Create")';
+            const res = await fetch(url, {
+              method,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Error guardando');
+            modal.hide();
+            loadVisits();
+          });
+
+          loadVisits();
+        });
+    </script>
+}
+ *@

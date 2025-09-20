@@ -1,0 +1,191 @@
+﻿@page
+@model GMS_UI.Pages.STD.Protocol.IndexModel
+@{
+    ViewData["Title"] = "Protocol";
+}
+
+<div class="container-gms">
+
+    <div class="alert alert-success collapse" studio="alert" id="successAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('successAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="successTitle"></h4>
+        <p id="successMsg"></p>
+    </div>
+
+    <div class="alert alert-danger collapse" studio="alert" id="failedAlert">
+        <button type="button" class="btn-close float-end" onclick="hideAlerts('failedAlert')" aria-label="Close"></button>
+        <h4 class="alert-heading" id="failedTitle"></h4>
+        <p id="failedMsg"></p>
+    </div>
+
+    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4>Protocol</h4>
+                </div>
+                <div class="col">
+                    <button data-bs-toggle="modal" data-bs-target="#protocolNewModal" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="protocolGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        </div>
+    </div>
+</div>
+
+ <div id="protocolNewModal" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="protocolNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" studio="document">
+            <div class="modal-header">
+                <h2>Add Protocol</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="protocol">Protocol</label>
+                    <input type="text" class="form-control pt-4" id="protocol" placeholder="Protocol">
+                    <span id="validateProtocol" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="version">Version</label>
+                    <input type="text" class="form-control pt-4" id="version" placeholder="Version">
+                    <span id="validateVersion" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative mb-3">
+                    <label class="floating-label" for="study">Study</label>
+                    <select class="form-select" aria-label="Default select example" id="study">
+                        <option selected>Open this select menu</option>
+                    </select>
+                    <span id="validatestudy" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="approvedDate">Approved Date</label>
+                    <input type="date" class="form-control pt-4" id="approvedDate" placeholder="Approved Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="startDate">Start Date</label>
+                    <input type="date" class="form-control pt-4" id="startDate" placeholder="Start Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="endDate">End Date</label>
+                    <input type="date" class="form-control pt-4" id="endDate" placeholder="End Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="notes">Notes</label>
+                    <textarea class="form-control pt-4" id="notes" placeholder="Notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudProtocol(1)"> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editProtocol" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="editProtocolLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" studio="document">
+            <div class="modal-header">
+                <h2>Edit Protocol</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="protocolEdit">Protocol</label>
+                    <input type="text" class="form-control pt-4" id="protocolEdit" placeholder="Protocol">
+                    <span id="validateProtocolEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="versionEdit">Version</label>
+                    <input type="text" class="form-control pt-4" id="versionEdit" placeholder="Version">
+                    <span id="validateVersionEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative mb-3">
+                    <label class="floating-label" for="studyEdit">Study</label>
+                    <select class="form-select" aria-label="Default select example" id="studyEdit">
+                        <option selected>Open this select menu</option>
+                    </select>
+                    <span id="validatestudyEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="approvedDateEdit">Approved Date</label>
+                    <input type="date" class="form-control pt-4" id="approvedDateEdit" placeholder="Approved Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="startDateEdit">Start Date</label>
+                    <input type="date" class="form-control pt-4" id="startDateEdit" placeholder="Start Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="endDateEdit">End Date</label>
+                    <input type="date" class="form-control pt-4" id="endDateEdit" placeholder="End Date">
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="notesEdit">Notes</label>
+                    <textarea class="form-control pt-4" id="notesEdit" placeholder="Notes"></textarea>
+                </div>
+                             
+                <input type="hidden" id="protocolidEdit" />
+                <input type="hidden" id="studyidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudProtocol(2)"> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteProtocol" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="deleteProtocolLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" studio="document">
+            <div class="modal-header">
+                <h2>Are you sure you want to delete this protocol?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="protocolidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <dl class="row">
+                        <dt class="col-sm-6">Protocol:</dt>
+                        <dd class="col-sm-6" id="protocolD"> </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">Version:</dt>
+                        <dd class="col-sm-6" id="versionD">  </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">Study:</dt>
+                        <dd class="col-sm-6" id="studyD"></dd>
+                    </dl>   
+                    <dl class="row">
+                        <dt class="col-sm-6">Approved Date:</dt>
+                        <dd class="col-sm-6" id="approvedDateD"></dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">Start Date:</dt>
+                        <dd class="col-sm-6" id="startDateD"></dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">End Date:</dt>
+                        <dd class="col-sm-6" id="endDateD"></dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">Notes:</dt>
+                        <dd class="col-sm-6" id="notesD"></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" onclick="crudProtocol(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>   
+</div>
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/STD/Protocol';
+</script>
+<script src="/js/std/protocol/protocol.js"></script>
+

@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/GMS_UI/copilot-chat/2c37dc8c/sessions
+/.vs/GMS_UI/CopilotIndices
+/.vs/GMS_UI/DesignTimeBuild
+/.vs/GMS_UI/FileContentIndex
+/.vs/GMS_UI/v17
+/.vs/ProjectEvaluation
+/.vs/GMS_UI/ColorByRegexConfig.txt
+/GMS.BL/bin
+/GMS.BL/obj
+/GMS_UI/bin
+/GMS_UI/obj

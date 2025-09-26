@@ -130,7 +130,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BK\GMS.Objects\GMS.Objects.csproj" />
+    <ProjectReference Include="..\..\GMS.BackEnd\GMS.Objects\GMS.Objects.csproj" />
     <ProjectReference Include="..\GMS.BL\GMS.BL.csproj" />
   </ItemGroup>
 

@@ -40,11 +40,13 @@ function createActionLink(title, href, linkClass, iconClass, mainvalue, secondVa
 
         if (href == "#editDisease") {
             $('#diseaseEdit').val(mainvalue);
+            $('#diseaseCodeEdit').val(secondValue);
             $('#diseaseidEdit').val(id);
         }
 
         if (href == "#deleteDisease") {
             $('#diseaseD').html(mainvalue);
+            $('#diseaseCodeD').html(secondValue);
             $('#diseaseidDelete').val(id);
         }
 
@@ -191,6 +193,18 @@ function createActionLink(title, href, linkClass, iconClass, mainvalue, secondVa
             $('#siteEmailD').html(fiveValue);
             $('#siteCodeD').html(sixValue);
             $('#siteidDelete').val(id);
+        }
+
+        if (href == "#editCRO") {
+            $('#croEdit').val(mainvalue);
+            $('textarea#commentCROEdit').val(secondValue);
+            $('#croidEdit').val(id);
+        }
+
+        if (href == "#deleteCRO") {
+            $('#croD').html(mainvalue);
+            $('#commentCROD').html(secondValue);
+            $('#croidDelete').val(id);
         }
 
         $(href).modal('show');
@@ -595,8 +609,8 @@ function crudAllergy(action) {
 class DiseaseButtonRenderer {
     init(params) {
         this.eGui = document.createElement('div')
-        const editLink = createActionLink('Edit', '#editDisease', 'link-success', 'bi bi-pencil-fill', params.data.diseaseName, '', params.data.diseaseId);
-        const deleteLink = createActionLink('Delete', '#deleteDisease', 'link-danger', 'bi bi-x-octagon-fill', params.data.diseaseName, '', params.data.diseaseId);
+        const editLink = createActionLink('Edit', '#editDisease', 'link-success', 'bi bi-pencil-fill', params.data.diseaseName, params.data.diseaseCode, params.data.diseaseId);
+        const deleteLink = createActionLink('Delete', '#deleteDisease', 'link-danger', 'bi bi-x-octagon-fill', params.data.diseaseName, params.data.diseaseCode, params.data.diseaseId);
         this.eGui.appendChild(editLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(deleteLink);
@@ -628,6 +642,7 @@ const gridDiseaseOptions = {
     columnDefs: [
         { field: "diseaseId", filter: 'agTextColumnFilter', hide: true },
         { field: "diseaseName", filter: 'agTextColumnFilter' },
+        { field: "diseaseCode", filter: 'agTextColumnFilter' },
         { field: "companyId", filter: true, hide: true },
         { field: "userName", filter: true, hide: true },
         { field: "actionDateTime", filter: true, hide: true },
@@ -684,6 +699,7 @@ function crudDisease(action) {
     $('#validateDisease').html('');
     $('#validateDiseaseEdit').html('');
     let disease = '';
+    let diseaseCode = '';
     let id = 0;
     switch (action) {
         case 1: // Add
@@ -691,6 +707,12 @@ function crudDisease(action) {
             if (disease === "") {
                 $('#validateDisease').html('Please enter an disease');
                 $('#validateDisease').show();
+                return;
+            }
+            diseaseCode = $('#diseaseCode').val();
+            if (diseaseCode === "") {
+                $('#validateDiseaseCode').html('Please enter a code');
+                $('#validateDiseaseCode').show();
                 return;
             }
             id = 0; // New disease, so id is 0
@@ -702,6 +724,12 @@ function crudDisease(action) {
             if (disease === "") {
                 $('#validateDiseaseEdit').html('Please enter an disease');
                 $('#validateDiseaseEdit').show();
+                return;
+            }
+            diseaseCode = $('#diseaseCodeEdit').val();
+            if (diseaseCode === "") {
+                $('#validateDiseaseCodeEdit').html('Please enter a code');
+                $('#validateDiseaseCodeEdit').show();
                 return;
             }
             id = $("#diseaseidEdit").val(); // Get the id from the hidden input
@@ -721,7 +749,7 @@ function crudDisease(action) {
         type: "POST",
         url: urlIndex + '?handler=CrudDisease',
         headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "disease": disease, "action": action, "id": id },
+        data: { "disease": disease, "action": action, "id": id, "diseaseCode": diseaseCode },
         success: function (data) {
             if (data.success === false) {
                 $('#failedTitle').html('Disease');
@@ -2937,3 +2965,196 @@ function crudSite(action) {
 //#endregion
 
 //#endregion
+
+//#region ====== CRO =======
+
+//#region Grid...
+class CROButtonRenderer {
+    init(params) {
+        this.eGui = document.createElement('div')
+        const editLink = createActionLink('Edit', '#editCRO', 'link-success', 'bi bi-pencil-fill', params.data.cro, params.data.comment, params.data.id);
+        const deleteLink = createActionLink('Delete', '#deleteCRO', 'link-danger', 'bi bi-x-octagon-fill', params.data.cro, params.data.comment, params.data.id);
+        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
+        this.eGui.appendChild(deleteLink);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    // Optional: Implement refresh or destroy methods if needed
+    refresh(params) {
+        return false; // Return true if the component can refresh, false otherwise
+    }
+
+    destroy() {
+        // Clean up resources if necessary
+        this.eGui.removeEventListener('click', () => { });
+    }
+}
+
+let gridCROApi;
+
+
+// Grid Options: Contains all of the grid configurations
+const gridCROOptions = {
+    // Data to be displayed
+    rowData: [],
+
+    // Columns to be displayed (Should match rowData properties)
+    columnDefs: [
+        { field: "id", filter: 'agTextColumnFilter', hide: true },
+        { field: "cro", filter: 'agTextColumnFilter' },
+        { field: "comment", filter: 'agTextColumnFilter' },
+        { field: "companyId", filter: true, hide: true },
+        { field: "userName", filter: true, hide: true },
+        { field: "actionDateTime", filter: true, hide: true },
+        { field: "active", filter: true, hide: true },
+        { field: "lastUpdateAt", filter: true, hide: true },
+        {
+            field: "button",
+            headerName: "Actions",
+            cellRenderer: CROButtonRenderer,
+        }
+    ],
+    defaultColDef: {
+        flex: 1,
+    },
+    enableFilter: true,
+    pagination: true,
+
+};
+// Create Grid: Create new grid within the #myGrid div, using the Grid Options object
+
+
+window.getCROList = function () {
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CROList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            setupCROGrid(data.data);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('CRO');
+            $('#failedMsg').html('CRO failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('CRO');
+            $('#failedMsg').html('CRO failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+function setupCROGrid(data) {
+    //console.log(data);
+    $('#croGrid').html('');
+    gridCROOptions.rowData = data;
+    gridCROApi = agGrid.createGrid(document.querySelector("#croGrid"), gridCROOptions);
+    //alert('done');
+}
+//#endregion
+
+//#region Add CRO
+
+function crudCRO(action) {
+    $('#validateCRO').html('');
+    $('#validateCROEdit').html('');
+    let cro = '';
+    let comment = '';
+    let id = 0;
+    switch (action) {
+        case 1: // Add
+            cro = $("#cro").val();
+            if (cro === "") {
+                $('#validateCRO').html('Please enter an cro');
+                $('#validateCRO').show();
+                return;
+            }
+            comment = $("textarea#commentCRO").val();
+            id = 0; // New cro, so id is 0
+            $('#cro').val('');
+            $('textarea#commentCRO').val('');
+            $('#croNewModal').modal('hide');
+            break;
+        case 2: // Edit
+            cro = $("#croEdit").val();
+            if (cro === "") {
+                $('#validateCROEdit').html('Please enter an cro');
+                $('#validateCROEdit').show();
+                return;
+            }
+            comment = $("textarea#commentCROEdit").val();
+            id = $("#croidEdit").val(); // Get the id from the hidden input
+            $('#croEdit').val('');
+            $('textarea#commentCROEdit').val('');
+            $('#croidEdit').val('');
+            $('#editCRO').modal('hide');
+            break;
+        case 3: // Delete
+            cro = 'N/A';
+            id = $("#croidDelete").val(); // Get the id from the hidden input
+            $('#croidDelete').val('');
+            $('#deleteCRO').modal('hide');
+            break;
+    }
+
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CrudCRO',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "cro": cro, "comment": comment, "action": action, "id": id },
+        success: function (data) {
+            if (data.success === false) {
+                $('#failedTitle').html('CRO');
+                $('#failedMsg').html('CRO failed. Please try again');
+                $('#failedAlert').show();
+            }
+            else {
+                $('#successTitle').html('CRO');
+                $('#successMsg').html('CRO was saved successfully');
+                $('#successAlert').show();
+                // Refresh the grid with the new data
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=CROList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupCROGrid(data.data);
+                    },
+                    failure: function (response) {
+                        $('#failedTitle').html('CRO');
+                        $('#failedMsg').html('CRO failed. Please try again');
+                        $('#failedAlert').show();
+                    },
+                    error: function (response) {
+                        $('#failedTitle').html('CRO');
+                        $('#failedMsg').html('CRO failed. Please try again');
+                        $('#failedAlert').show();
+                    }
+                });
+
+            }
+        },
+        failure: function (response) {
+            $('#failedTitle').html('CRO');
+            $('#failedMsg').html('CRO failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('CRO');
+            $('#failedMsg').html('CRO failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+
+
+}
+
+//#endregion
+
+//#endregion
+

@@ -69,6 +69,10 @@
         
         public string Endpoint_CreateLanguage() => _config["Endpoint_CreateLanguage"] ?? "";
 
+        public string Endpoint_GetCROList() => _config["Endpoint_GetCROList"] ?? "";
+
+        public string Endpoint_CreateCRO() => _config["Endpoint_CreateCRO"] ?? "";
+
         #endregion
 
         #region STD....

@@ -358,6 +358,27 @@
                     </div>
                 </div>
 
+                <!-- CRO -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCRO">
+                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getCROList()" data-bs-toggle="collapse" data-bs-target="#collapseCRO">
+                            CROs
+                        </button>
+                    </h2>
+                    <div id="collapseCRO" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                        <div class="accordion-body p-0">
+                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                                <div class="card-header headerReference">
+                                    <button data-bs-toggle="modal" data-bs-target="#croNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="croGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -568,6 +589,11 @@
                     <input type="text" class="form-control pt-4" id="disease" placeholder="Disease">
                     <span id="validateDisease" class="text-danger"></span>
                 </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="diseaseCode">Code</label>
+                    <textarea class="form-control pt-4" placeholder="Code" id="diseaseCode"></textarea>
+                    <span id="validateDose" class="text-danger"></span>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-success" onclick="crudDisease(1)"> Save</button>
@@ -587,6 +613,11 @@
                     <label class="floating-label" for="disease">Disease</label>
                     <input type="text" class="form-control pt-4" id="diseaseEdit" placeholder="Disease">
                     <span id="validateDiseaseEdit" class="text-danger"></span>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="diseaseCode">Code</label>
+                    <textarea class="form-control pt-4" placeholder="Code" id="diseaseCodeEdit"></textarea>
+                    <span id="validatediseaseCodeEdit" class="text-danger"></span>
                 </div>
                 <input type="hidden" id="diseaseidEdit" />
             </div>
@@ -1699,6 +1730,101 @@
 
 </div>
 <!-- End Site Modals -->
+
+<!-- Cros Modals -->
+<div id="croNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="croNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add CRO</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="cro">CRO</label>
+                    <input type="text" class="form-control pt-4" id="cro" placeholder="CRO">
+                    <span id="validateCRO" class="text-danger"></span>
+                </div>
+
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="comment">Comment</label>
+                    <textarea class="form-control pt-4" placeholder="Comment" id="commentCRO"></textarea>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudCRO(1)"> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="editCRO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editCROLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Edit CRO</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="cro">CRO</label>
+                    <input type="text" class="form-control pt-4" id="croEdit" placeholder="CRO">
+                    <span id="validateCROEdit" class="text-danger"></span>
+                </div>
+
+                <div class="form-group position-relative">
+                    <label class="floating-label" for="comment">Comment</label>
+                    <textarea class="form-control pt-4" placeholder="Comment" id="commentCROEdit"></textarea>
+                </div>
+                <input type="hidden" id="croidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="crudCRO(2)"> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="deleteCRO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteCROLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Are you sure you want to delete this cro?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="croidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            CRO:
+                        </dt>
+                        <dd class="col-sm-6" id="croD">
+
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Comment:
+                        </dt>
+                        <dd class="col-sm-6" id="commentCROD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" onclick="crudCRO(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End Cros Modals -->
+
 
 
  <script>

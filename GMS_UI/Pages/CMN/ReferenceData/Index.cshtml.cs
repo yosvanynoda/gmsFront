@@ -267,7 +267,7 @@ namespace GMS_UI.Pages.CMN.ReferenceData
 
         }
 
-        public async Task<JsonResult> OnPostCrudDisease(string disease, int action, int id)
+        public async Task<JsonResult> OnPostCrudDisease(string disease, int action, int id, string diseasecode)
         {
             try
             {
@@ -277,6 +277,7 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                     DiseaseName = disease,
                     Username = 1, // Assuming a default user name for the system
                     Action = action,
+                    DiseaseCode = diseasecode,
                     DiseaseId = id
                 };
 
@@ -1359,6 +1360,102 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                 };
 
                 var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateSite(), "a Site", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        #endregion
+
+        #region ====== CRO ======
+
+        public async Task<JsonResult> OnPostCROList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse cro = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetCROList(), "a CRO List", "", requestData);
+
+                if (cro == null || cro.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Contract research List",
+                        success = false,
+                        data = new List<CROBaseResponse>()
+                    });
+                }
+
+                if (cro.Success && cro.Data != null)
+                {
+                    List<CROBaseResponse> result = JsonConvert.DeserializeObject<List<CROBaseResponse>>(cro.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Contract research list was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = cro.Message,
+                        success = false,
+                        data = new List<CROBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<CROBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudCRO(string cro, string? comment, int action, int id)
+        {
+            try
+            {
+                var createRequest = new CreateCRORequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    CRO = cro,
+                    Comment = comment,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    Id = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateCRO(), "a CRO", "", createRequest);
 
                 return new JsonResult(new
                 {

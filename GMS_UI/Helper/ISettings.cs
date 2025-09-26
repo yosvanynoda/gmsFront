@@ -65,7 +65,11 @@
 
         string Endpoint_CreateLanguage();
 
-        string Endpoint_CreateRace();           
+        string Endpoint_CreateRace();
+
+        string Endpoint_GetCROList();
+
+        string Endpoint_CreateCRO();
 
         #endregion
 

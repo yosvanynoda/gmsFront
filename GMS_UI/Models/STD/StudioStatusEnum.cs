@@ -2,14 +2,32 @@
 {
     public enum StudioStatusEnum
     {
-        //Planned|Active|Completed|Terminated
+        //Planned|Active|Completed|Terminated old values
 
-        Planned = 1,
+        // New values Ongoing Hold Screening Closing
+        //
+        // Closed, on hold, canceled , screening , ongoing, closing , not allocated
 
-        Active = 2,
+        //Planned = 1,
 
-        Completed = 3,
+        //Active = 2,
 
-        Terminated = 4,
+        //Completed = 3,
+
+        //Terminated = 4,
+
+        Closed = 1,
+
+        Hold = 2,
+
+        Canceled = 3,
+
+        Screening = 4,
+
+        Ongoing = 5,
+
+        Closing = 6,
+
+        NotAllocated = 7
     }
 }

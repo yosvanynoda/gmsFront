@@ -1,0 +1,6 @@
+﻿namespace GMS_UI.Models.STD
+{
+    public class STDMonitorViewModel
+    {
+    }
+}

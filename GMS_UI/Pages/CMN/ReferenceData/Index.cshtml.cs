@@ -4,6 +4,7 @@ using GMS.Objects.CMN;
 using GMS.Objects.General;
 using GMS_UI.Helper;
 using GMS_UI.Models.CMN;
+using GMS_UI.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

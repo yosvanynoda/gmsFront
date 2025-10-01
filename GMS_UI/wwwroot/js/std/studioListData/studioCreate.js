@@ -1,5 +1,5 @@
 ﻿let currentStep = 1;
-const totalSteps = 4;
+const totalSteps = 7;
 
 function changeStep(direction) {
     if (direction === 1) {
@@ -51,22 +51,22 @@ function changeStep(direction) {
 }
 
 function validateStep(step) {
-    const stepElement = document.getElementById(`step${step}`);
-    const requiredFields = stepElement.querySelectorAll('[required]');
+    //const stepElement = document.getElementById(`step${step}`);
+    //const requiredFields = stepElement.querySelectorAll('[required]');
     let isValid = true;
 
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            field.classList.remove('is-invalid');
-        }
-    });
+    //requiredFields.forEach(field => {
+    //    if (!field.value.trim()) {
+    //        field.classList.add('is-invalid');
+    //        isValid = false;
+    //    } else {
+    //        field.classList.remove('is-invalid');
+    //    }
+    //});
 
-    if (!isValid) {
-        alert('Please fill in all required fields before proceeding.');
-    }
+    //if (!isValid) {
+    //    alert('Please fill in all required fields before proceeding.');
+    //}
 
     return isValid;
 }
@@ -82,23 +82,51 @@ function updateNavigationButtons() {
 }
 
 function updateReviewSummary() {
-    const summary = document.getElementById('reviewSummary');
-    const studyTitle = document.querySelector('[name="StudyTitle"]').value;
-    const studyPhase = document.querySelector('[name="StudyPhase"]').value;
-    const studyType = document.querySelector('[name="StudyType"]').value;
-    const principalInvestigator = document.querySelector('[name="PrincipalInvestigator"]').value;
-    const targetEnrollment = document.querySelector('[name="TargetEnrollment"]').value;
-    const sponsorName = document.querySelector('[name="SponsorName"]').value;
+    //const summary = document.getElementById('reviewSummary');
+    //const studyTitle = document.querySelector('[name="StudyTitle"]').value;
+    //const studyPhase = document.querySelector('[name="StudyPhase"]').value;
+    //const studyType = document.querySelector('[name="StudyType"]').value;
+    //const principalInvestigator = document.querySelector('[name="PrincipalInvestigator"]').value;
+    //const targetEnrollment = document.querySelector('[name="TargetEnrollment"]').value;
+    //const sponsorName = document.querySelector('[name="SponsorName"]').value;
 
-    summary.innerHTML = `
-            <strong>Study Title:</strong> ${studyTitle}<br>
-            <strong>Phase:</strong> ${studyPhase}<br>
-            <strong>Type:</strong> ${studyType}<br>
-            <strong>Principal Investigator:</strong> ${principalInvestigator}<br>
-            <strong>Target Enrollment:</strong> ${targetEnrollment} participants<br>
-            <strong>Sponsor:</strong> ${sponsorName}
-        `;
+    //summary.innerHTML = `
+    //        <strong>Study Title:</strong> ${studyTitle}<br>
+    //        <strong>Phase:</strong> ${studyPhase}<br>
+    //        <strong>Type:</strong> ${studyType}<br>
+    //        <strong>Principal Investigator:</strong> ${principalInvestigator}<br>
+    //        <strong>Target Enrollment:</strong> ${targetEnrollment} participants<br>
+    //        <strong>Sponsor:</strong> ${sponsorName}
+    //    `;
 }
 
 // Initialize navigation buttons
 updateNavigationButtons();
+
+//#region Starting Page...
+$(function () {
+
+    const blinding = JSON.parse($("#blindingType").val());
+
+    setCombos("#blindingList", blinding, -1);
+
+    const phase = JSON.parse($("#phaseType").val());
+
+    setCombos("#phaseList", phase, -1);
+
+});
+
+function setCombos(comboName, values, selectedValue) {
+    $.each(values, function (index, item) {
+        if (item.Value == selectedValue) {
+            $(comboName).append($(`<option value=${item.Value} selected="selected">${item.Text}</option>`))
+        }
+        else {
+            $(comboName).append($('<option>', {
+                value: item.Value,
+                text: item.Text
+            }));
+        }
+
+    });
+}

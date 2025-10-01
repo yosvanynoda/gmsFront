@@ -4,12 +4,35 @@
     ViewData["Title"] = "Create Studio";
 }
 <div class="wizard-container">
-    <h2 class="text-center mb-4">
-        <i class="fas fa-flask text-primary"></i>
-        Create Clinical Research Study
-    </h2>
+    <div class="row">
+        <div class="col">
+            <h2 class="text-center">
+                <i class="fas fa-flask text-primary"></i>
+                Create Study Research
+            </h2>
+        </div>
+        <div class="col-3 float-end">
+            <button type="submit" class="btn btn-outline-primary" id="saveLaterBtn" style="margin-top: 0;">
+                <i class="bi bi-bookmark-check-fill"></i> Save
+            </button>
+        </div>
+    </div>
+    
 
     <form asp-page-handler="Create" method="post" id="wizardForm">
+
+        <input type="hidden" id="blindingType" value="@Model.BlindingTypeSL" />
+        <input type="hidden" id="phaseType" value="@Model.PhaseTypeSL" />
+        <input type="hidden" id="randomizationType" value="@Model.RandomizationTypeSL" />
+        <input type="hidden" id="studioStatus" value="@Model.StudioStatusSL" />
+
+        <input type="hidden" id="studioID" value="@Model.Input.STDGeneralData.STDId" />
+
+        @* <input type="hidden" id="sponsor" value="@Model.SponsorSL" />
+        <input type="hidden" id="disease" value="@Model.DiseaseSL" />
+        <input type="hidden" id="cro" value="@Model.CROSL" />
+        <input type="hidden" id="documentType" value="@Model.DocumentTypeSL" />
+        <input type="hidden" id="monitor" value="@Model.MonitorSL" /> *@
 
         <!-- Progress Indicator -->
         <div class="step-indicator">
@@ -20,31 +43,53 @@
             <div class="step-circle" id="step3-indicator">3</div>
             <div class="step-line" id="line3"></div>
             <div class="step-circle" id="step4-indicator">4</div>
+            <div class="step-line" id="line4"></div>
+            <div class="step-circle" id="step5-indicator">5</div>
+            <div class="step-line" id="line5"></div>
+            <div class="step-circle" id="step6-indicator">6</div>
+            <div class="step-line" id="line6"></div>
+            <div class="step-circle" id="step7-indicator">7</div>
         </div>
 
-        <!-- Step 1: Basic Information -->
+        <!-- Step 1: Studio Data -->
         <div class="wizard-step active" id="step1">
             <div class="form-section">
-                <h5><i class="fas fa-info-circle"></i> Basic Study Information</h5>
+                <h5><i class="fa fa-info-circle"></i> Basic Study Information</h5>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Study Title *</label> <!--asp-for="StudyTitle"-->
-                            <input class="form-control" placeholder="Enter study title" required> <!--asp-for="StudyTitle"-->
-                            <span class="text-danger"></span> <!--asp-validation-for="StudyTitle"-->
+                            <label class="form-label" asp-for="Input.STDGeneralData.Code">Study Code *</label> 
+                            <input class="form-control" asp-for="Input.STDGeneralData.Code" placeholder="Enter study code" required> 
+                            <span class="text-danger" asp-validation-for="Input.STDGeneralData.Code"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="Input.STDGeneralData.Name">Study Name *</label> 
+                            <input class="form-control" asp-for="Input.STDGeneralData.Name" placeholder="Enter study Name" required>
+                            <span class="text-danger" asp-validation-for="Input.STDGeneralData.Name"></span>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Phase *</label> <!--asp-for="StudyPhase"-->
+                            <select id="phaseList" class="form-select" required>
+                                <!--asp-for="StudyPhase"-->
+                                <option value="-1">Select Phase</option>
+                            </select>
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyPhase"-->
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Study Phase *</label> <!--asp-for="StudyPhase"-->
-                            <select class="form-select" required>
+                            <select id="phaseList" class="form-select" required>
                                 <!--asp-for="StudyPhase"-->
-                                <option value="">Select Phase</option>
-                                <option value="Phase I">Phase I</option>
-                                <option value="Phase II">Phase II</option>
-                                <option value="Phase III">Phase III</option>
-                                <option value="Phase IV">Phase IV</option>
+                                <option value="-1">Select Phase</option>
                             </select>
                             <span class="text-danger"></span> <!--asp-validation-for="StudyPhase"-->
                         </div>
@@ -82,10 +127,10 @@
             </div>
         </div>
 
-        <!-- Step 2: Study Design -->
+        <!-- Step 2: Monitor -->
         <div class="wizard-step" id="step2">
             <div class="form-section">
-                <h5><i class="fas fa-cogs"></i> Study Design & Methodology</h5>
+                <h5><i class="fa fa-cogs"></i> Study Design & Methodology</h5>
 
                 <div class="row">
                     <div class="col-md-4">
@@ -142,7 +187,7 @@
             </div>
         </div>
 
-        <!-- Step 3: Regulatory & Ethics -->
+        <!-- Step 3: Protocol -->
         <div class="wizard-step" id="step3">
             <div class="form-section">
                 <h5><i class="fas fa-shield-alt"></i> Regulatory & Ethics Information</h5>
@@ -203,8 +248,98 @@
             </div>
         </div>
 
-        <!-- Step 4: Review & Submit -->
+        <!-- Step 4: Documentation -->
         <div class="wizard-step" id="step4">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i>Visits</h5>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                   Visits
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Study Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Arms -->
+        <div class="wizard-step" id="step5">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Review & Submit</h5>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Please review all information before submitting. You can go back to previous steps to make changes.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Study Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Visits -->
+        <div class="wizard-step" id="step6">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Review & Submit</h5>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Please review all information before submitting. You can go back to previous steps to make changes.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Study Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Reviw and Confirm -->
+        <div class="wizard-step" id="step7">
             <div class="form-section">
                 <h5><i class="fas fa-check-circle"></i> Review & Submit</h5>
 

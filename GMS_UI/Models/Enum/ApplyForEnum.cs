@@ -1,4 +1,4 @@
-﻿namespace GMS_UI.Models.CMN
+﻿namespace GMS_UI.Models.Enum
 {
     public enum ApplyForEnum
     {

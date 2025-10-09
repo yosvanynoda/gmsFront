@@ -86,9 +86,11 @@ html, body {
 
 /*Start Wizard styles....*/
 .wizard-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .wizard-progress {
@@ -97,6 +99,9 @@ html, body {
 
 .wizard-step {
     display: none;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
     .wizard-step.active {

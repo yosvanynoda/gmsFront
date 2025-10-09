@@ -4,7 +4,7 @@
     {
         public STDGeneralDataViewModel STDGeneralData { get; set; } = new();
 
-        public List<CMNDocumentationViewModel> STDDocumentation { get; set; } = [];
+        public List<STDDocumentationViewModel> STDDocumentation { get; set; } = [];
 
         public List<STDMonitorViewModel> STDMonitor { get; set; } = [];
 

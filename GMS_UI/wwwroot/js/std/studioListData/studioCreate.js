@@ -1,5 +1,5 @@
 ﻿let currentStep = 1;
-const totalSteps = 7;
+const totalSteps = 9;
 
 function changeStep(direction) {
     if (direction === 1) {
@@ -50,6 +50,50 @@ function changeStep(direction) {
     }
 }
 
+function goToStep(step) {
+    const elements = document.querySelectorAll(".wizard-step");
+    let eStep
+
+    elements.forEach((element) => {
+        if (element.id == `step${step}`) {
+            element.classList.add('active')
+        } else {
+            element.classList.remove('active')
+        }
+    });
+
+    const indicators = document.querySelectorAll(".step-circle");
+
+    indicators.forEach((element) => {
+        eStep = parseInt(element.id.replace('step', ''));
+        if (eStep < step) {
+            const line = document.getElementById(`line${eStep}`);
+            if (!validateStep(eStep)) {
+                element.classList.add('fail')
+                element.classList.remove('completed')
+                element.innerHTML = '<i class="fas fa-times"></i>';
+                line.classList.add('fail');
+                line.classList.remove('completed');
+            }
+            else {
+                element.classList.add('completed')
+                element.classList.remove('fail')
+                element.innerHTML = '<i class="fas fa-check"></i>';
+                line.classList.add('completed');
+                line.classList.remove('fail');
+            }
+        }
+        if (element.id == `step${step}-indicator`) {
+            element.classList.add('active')
+        } else {
+            element.classList.remove('active')
+        }
+    });
+
+    currentStep = step;
+
+}
+
 function validateStep(step) {
     //const stepElement = document.getElementById(`step${step}`);
     //const requiredFields = stepElement.querySelectorAll('[required]');
@@ -67,6 +111,9 @@ function validateStep(step) {
     //if (!isValid) {
     //    alert('Please fill in all required fields before proceeding.');
     //}
+
+    if (step == 3)
+        return false;
 
     return isValid;
 }
@@ -108,23 +155,131 @@ $(function () {
 
     const blinding = JSON.parse($("#blindingType").val());
 
-    setCombos("#blindingList", blinding, -1);
+    setCombos("#blidingList", blinding, -1);
 
     const phase = JSON.parse($("#phaseType").val());
 
     setCombos("#phaseList", phase, -1);
 
+    const randomization = JSON.parse($("#randomizationType").val());
+
+    setCombos("#randomizationList", randomization, -1);
+
+    const studystatus = JSON.parse($("#studioStatus").val());
+
+    setCombos("#studystatusList", studystatus, -1);
+
+    const sponsorId = $("#sponsorId").val()
+
+    getSponsor(-1);
+
 });
 
+function getSponsor(selectedValue) {
+    $.ajax({
+        type: "POST",
+        url: urlIndexSponsor + '?handler=SponsorDropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            // Clear existing options (optional)
+
+            setCombos("#sponsorList", data.data, selectedValue);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function getCRO(selectedValue) {
+    $.ajax({
+        type: "POST",
+        url: urlIndexReferenceData + '?handler=CRODropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            // Clear existing options (optional)
+
+            setCombos("#croList", data.data, selectedValue);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function getDisease(selectedValue) {
+    $.ajax({
+        type: "POST",
+        url: urlIndexReferenceData + '?handler=DiseaseDropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            // Clear existing options (optional)
+
+            setCombos("#diseaseList", data.data, selectedValue);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function getMonitorList(sponsorId) {
+    $.ajax({
+        type: "POST",
+        url: urlIndexReferenceData + '?handler=DiseaseDropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "sponsorId": sponsorId },
+        success: function (data) {
+            // Clear existing options (optional)
+
+            setCombos("#diseaseList", data.data, selectedValue);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Sponsor');
+            $('#failedMsg').html('Sponsor failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
 function setCombos(comboName, values, selectedValue) {
+    //empty combo
+    $(comboName).empty();
+
     $.each(values, function (index, item) {
-        if (item.Value == selectedValue) {
-            $(comboName).append($(`<option value=${item.Value} selected="selected">${item.Text}</option>`))
+        if (item.id == selectedValue) {
+            $(comboName).append($(`<option value=${item.id} selected="selected">${item.name}</option>`))
         }
         else {
             $(comboName).append($('<option>', {
-                value: item.Value,
-                text: item.Text
+                value: item.id,
+                text: item.name
             }));
         }
 

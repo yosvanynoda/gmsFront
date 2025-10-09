@@ -1,9 +1,14 @@
-﻿namespace GMS_UI.Models.STD
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
+namespace GMS_UI.Models.STD
 {
     public class ComboValues
     {
-        public string Text { get; set; } = string.Empty;
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
 
-        public int Value { get; set; } = 0;
+        [JsonPropertyName("id")]
+        public int Id { get; set; } = 0;
     }
 }

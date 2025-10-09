@@ -108,6 +108,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .step-circle {
@@ -130,6 +131,12 @@ html, body {
     color: white;
 }
 
+.step-circle.fail {
+    background-color: #D10D3C;
+    border-color: #D10D3C;
+    color: white;
+}
+
 .step-circle.active {
     background-color: #0d6efd;
     border-color: #0d6efd;
@@ -147,6 +154,12 @@ html, body {
     background-color: #198754;
 }
 
+step-line.fail {
+    background-color: #D10D3C;
+}
+
+
+
 .form-section {
     background: #f8f9fa;
     padding: 20px;
@@ -163,7 +176,7 @@ html, body {
 
 .wizard-navigation {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     gap: 10px;
     margin-top: 30px;
 }
@@ -172,6 +185,12 @@ html, body {
     padding: 10px 25px;
     border-radius: 25px;
 }
+
+.wizard-body {
+  max-height: 550px;
+  overflow-y: auto;
+}
+
 
 
 

@@ -113,44 +113,50 @@ namespace GMS_UI.Pages.STD.Monitor
             }
         }
 
-        public async Task<JsonResult> OnPostSponsorList()
+        public async Task<JsonResult> OnPostMonitorDropList(int sponsorId)
         {
             try
             {
+
                 var requestData = new GeneralRequest
                 {
                     CompanyId = 1, // Assuming CompanyId is always 1
                 };
-                BaseResponse sponsors = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetSponsorDropList(), "a Sponsor List", "", requestData);
-                if (sponsors == null || sponsors.Data == null)
+
+                BaseResponse monitors = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetMonitorDropList(), "a Monitor List", "", requestData);
+
+                if (monitors == null || monitors.Data == null)
                 {
                     return new JsonResult(new
                     {
                         errorCode = 500,
-                        errorMessage = "Error reading Sponsor List",
+                        errorMessage = "Error reading Monitor List",
                         success = false,
-                        data = new List<SponsorBaseResponse>()
+                        data = new List<MonitorBaseResponse>()
                     });
                 }
-                if (sponsors.Success && sponsors.Data != null)
+
+                if (monitors.Success && monitors.Data != null)
                 {
-                    List<SponsorBaseResponse> result = JsonConvert.DeserializeObject<List<SponsorBaseResponse>>(sponsors.Data.ToString());
+                    List<MonitorBaseResponse> result = JsonConvert.DeserializeObject<List<MonitorBaseResponse>>(monitors.Data.ToString());
+
                     return new JsonResult(new
                     {
                         errorCode = 200,
-                        errorMessage = "Sponsor List was read successfully",
+                        errorMessage = "Monitor List was read successfully",
                         success = true,
                         data = result
                     });
+
                 }
                 else
                 {
                     return new JsonResult(new
                     {
                         errorCode = 500,
-                        errorMessage = sponsors.Message,
+                        errorMessage = monitors.Message,
                         success = false,
-                        data = new List<SponsorBaseResponse>()
+                        data = new List<MonitorBaseResponse>()
                     });
                 }
             }
@@ -161,9 +167,10 @@ namespace GMS_UI.Pages.STD.Monitor
                     errorCode = 500,
                     errorMessage = ex.Message,
                     success = false,
-                    data = new List<SponsorBaseResponse>()
+                    data = new List<MonitorBaseResponse>()
                 });
             }
+
         }
     }
 }

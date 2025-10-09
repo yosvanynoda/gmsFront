@@ -309,7 +309,7 @@ $('#monitorNewModal').on('shown.bs.modal', function (e) {
 function setupCombo(selectedValue, comboName) {
     $.ajax({
         type: "POST",
-        url: urlIndex + '?handler=SponsorList',
+        url: urlIndexSponsor + '?handler=SponsorDropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
             // Clear existing options (optional)

@@ -45,12 +45,12 @@ namespace GMS_UI.Pages.STD.StudioListData
 
                 comboValue.Add(new ComboValues
                 {
-                    Value = value,
-                    Text = text,
+                    Id = value,
+                    Name = text,
                 });
             }
 
-            BlindingTypeSL = JsonSerializer.Serialize(comboValue);
+            BlindingTypeSL = JsonSerializer.Serialize(comboValue.OrderBy(e => e.Name));
             #endregion
 
             // Load PhaseTypeSL from Enum
@@ -63,12 +63,12 @@ namespace GMS_UI.Pages.STD.StudioListData
 
                 comboValue.Add(new ComboValues
                 {
-                    Value = value,
-                    Text = text,
+                    Id = value,
+                    Name = text,
                 });
             }
 
-            PhaseTypeSL = JsonSerializer.Serialize(comboValue);
+            PhaseTypeSL = JsonSerializer.Serialize(comboValue.OrderBy(e => e.Name));
             #endregion
 
             // Load RandomizationTypeSL from Enum
@@ -81,12 +81,12 @@ namespace GMS_UI.Pages.STD.StudioListData
 
                 comboValue.Add(new ComboValues
                 {
-                    Value = value,
-                    Text = text,
+                    Id = value,
+                    Name = text,
                 });
             }
 
-            RandomizationTypeSL = JsonSerializer.Serialize(comboValue);
+            RandomizationTypeSL = JsonSerializer.Serialize(comboValue.OrderBy(e => e.Name));
             #endregion
 
             // Load StudioStatusSL from Enum
@@ -99,13 +99,15 @@ namespace GMS_UI.Pages.STD.StudioListData
 
                 comboValue.Add(new ComboValues
                 {
-                    Value = value,
-                    Text = text,
+                    Id = value,
+                    Name = text,
                 });
             }
 
-            StudioStatusSL = JsonSerializer.Serialize(comboValue);
+            StudioStatusSL = JsonSerializer.Serialize(comboValue.OrderBy(e => e.Name));
             #endregion
+
+
 
         }
     }

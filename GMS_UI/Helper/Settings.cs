@@ -35,6 +35,8 @@
 
         public string Endpoint_GetDiseaseList()=> _config["Endpoint_GetDiseaseList"] ?? "";
 
+        public string Endpoint_GetDiseaseDropList() => _config["Endpoint_GetDiseaseDropList"] ?? "";
+
         public string Endpoint_GetDocType()=> _config["Endpoint_GetDocType"] ?? "";
 
         public string Endpoint_GetRoleTypeList()=> _config["Endpoint_GetRoleTypeList"] ?? "";
@@ -70,6 +72,8 @@
         public string Endpoint_CreateLanguage() => _config["Endpoint_CreateLanguage"] ?? "";
 
         public string Endpoint_GetCROList() => _config["Endpoint_GetCROList"] ?? "";
+
+        public string Endpoint_GetCRODropList() => _config["Endpoint_GetCRODropList"] ?? "";
 
         public string Endpoint_CreateCRO() => _config["Endpoint_CreateCRO"] ?? "";
 

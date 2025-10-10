@@ -118,9 +118,10 @@ namespace GMS_UI.Pages.STD.Monitor
             try
             {
 
-                var requestData = new GeneralRequest
+                var requestData = new MonitorRequest
                 {
                     CompanyId = 1, // Assuming CompanyId is always 1
+                    SponsorId = sponsorId
                 };
 
                 BaseResponse monitors = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetMonitorDropList(), "a Monitor List", "", requestData);
@@ -132,13 +133,13 @@ namespace GMS_UI.Pages.STD.Monitor
                         errorCode = 500,
                         errorMessage = "Error reading Monitor List",
                         success = false,
-                        data = new List<MonitorBaseResponse>()
+                        data = new List<DropListBaseResponse>()
                     });
                 }
 
                 if (monitors.Success && monitors.Data != null)
                 {
-                    List<MonitorBaseResponse> result = JsonConvert.DeserializeObject<List<MonitorBaseResponse>>(monitors.Data.ToString());
+                    List<DropListBaseResponse> result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(monitors.Data.ToString());
 
                     return new JsonResult(new
                     {
@@ -156,7 +157,7 @@ namespace GMS_UI.Pages.STD.Monitor
                         errorCode = 500,
                         errorMessage = monitors.Message,
                         success = false,
-                        data = new List<MonitorBaseResponse>()
+                        data = new List<DropListBaseResponse>()
                     });
                 }
             }
@@ -167,7 +168,7 @@ namespace GMS_UI.Pages.STD.Monitor
                     errorCode = 500,
                     errorMessage = ex.Message,
                     success = false,
-                    data = new List<MonitorBaseResponse>()
+                    data = new List<DropListBaseResponse>()
                 });
             }
 

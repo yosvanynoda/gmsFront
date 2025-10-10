@@ -155,23 +155,29 @@ $(function () {
 
     const blinding = JSON.parse($("#blindingType").val());
 
-    setCombos("#blidingList", blinding, -1);
+    setCombos("#blidingList", blinding, -1, 'Blinding Type');
 
     const phase = JSON.parse($("#phaseType").val());
 
-    setCombos("#phaseList", phase, -1);
+    setCombos("#phaseList", phase, -1, 'Phase Type');
 
     const randomization = JSON.parse($("#randomizationType").val());
 
-    setCombos("#randomizationList", randomization, -1);
+    setCombos("#randomizationList", randomization, -1, 'Randomization Type');
 
     const studystatus = JSON.parse($("#studioStatus").val());
 
-    setCombos("#studystatusList", studystatus, -1);
+    setCombos("#studystatusList", studystatus, -1, 'Study Status');
 
     const sponsorId = $("#sponsorId").val()
 
     getSponsor(-1);
+
+    getDisease(-1);
+
+    /*getMonitorList(-1);*/
+
+    getCRO(-1);
 
 });
 
@@ -183,7 +189,7 @@ function getSponsor(selectedValue) {
         success: function (data) {
             // Clear existing options (optional)
 
-            setCombos("#sponsorList", data.data, selectedValue);
+            setCombos("#sponsorList", data.data, selectedValue, 'Sponsor');
         },
         failure: function (response) {
             $('#failedTitle').html('Sponsor');
@@ -206,7 +212,7 @@ function getCRO(selectedValue) {
         success: function (data) {
             // Clear existing options (optional)
 
-            setCombos("#croList", data.data, selectedValue);
+            setCombos("#croList", data.data, selectedValue, 'CRO');
         },
         failure: function (response) {
             $('#failedTitle').html('Sponsor');
@@ -229,7 +235,7 @@ function getDisease(selectedValue) {
         success: function (data) {
             // Clear existing options (optional)
 
-            setCombos("#diseaseList", data.data, selectedValue);
+            setCombos("#diseaseList", data.data, selectedValue, 'Disease');
         },
         failure: function (response) {
             $('#failedTitle').html('Sponsor');
@@ -244,16 +250,17 @@ function getDisease(selectedValue) {
     });
 }
 
-function getMonitorList(sponsorId) {
+function getMonitorList(selectedValue) {
+    const sponsorId = $("#sponsorList").val();
     $.ajax({
         type: "POST",
-        url: urlIndexReferenceData + '?handler=DiseaseDropList',
+        url: urlIndexMonitor + '?handler=MonitorDropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         data: { "sponsorId": sponsorId },
         success: function (data) {
             // Clear existing options (optional)
 
-            setCombos("#diseaseList", data.data, selectedValue);
+            //setCombos("#diseaseList", data.data, selectedValue, 'Monitor');
         },
         failure: function (response) {
             $('#failedTitle').html('Sponsor');
@@ -268,9 +275,15 @@ function getMonitorList(sponsorId) {
     });
 }
 
-function setCombos(comboName, values, selectedValue) {
+function setCombos(comboName, values, selectedValue, firstElement) {
     //empty combo
     $(comboName).empty();
+
+    //set first element
+    $(comboName).append($('<option>', {
+        value: -1,
+        text: `Select ${firstElement ? firstElement : '...'}`
+    }));
 
     $.each(values, function (index, item) {
         if (item.id == selectedValue) {

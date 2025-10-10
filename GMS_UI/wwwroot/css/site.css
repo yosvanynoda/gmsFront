@@ -86,11 +86,14 @@ html, body {
 
 /*Start Wizard styles....*/
 .wizard-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    max-height: 90vh;
-    overflow-y: auto;
+    /*max-width: 77vw;*/
+/*    margin: 0;*/
+    padding: 0;
+    /*max-height: 75vh;*/
+    /*overflow-y: auto;*/
+    width: 73vw;
+    height: 75vh;
+    margin-left:20vw !important;
 }
 
 .wizard-progress {
@@ -99,8 +102,8 @@ html, body {
 
 .wizard-step {
     display: none;
-    max-height: 60vh;
-    overflow-y: auto;
+    max-height: 55vh;
+    /*overflow-y: auto;*/
     padding-right: 10px;
 }
 
@@ -192,8 +195,9 @@ step-line.fail {
 }
 
 .wizard-body {
-  max-height: 550px;
-  overflow-y: auto;
+  /*max-height: 550px;*/
+  /*overflow-y: auto;*/
+  height: 550px !important;
 }
 
 

@@ -111,10 +111,11 @@ namespace GMS_UI.Pages.VLT.Volunteer
 
             if (volunteerResponse?.Success == true && volunteerResponse.Data != null)
             {
-                // Just assign the Data directly - it's already deserialized
-                VolunteerData = volunteerResponse.Data;
+                // Serialize and deserialize to ensure we have a clean object
+                var jsonString = JsonConvert.SerializeObject(volunteerResponse.Data);
+                _logger.LogInformation("Volunteer data JSON: {Json}", jsonString);
+                VolunteerData = JsonConvert.DeserializeObject<dynamic>(jsonString);
                 _logger.LogInformation("Volunteer data assigned. Type: {Type}", VolunteerData?.GetType().Name);
-                _logger.LogInformation("Volunteer data content: {Content}", JsonConvert.SerializeObject(VolunteerData));
             }
             else
             {

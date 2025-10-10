@@ -97,6 +97,7 @@ function addEmergencyContact() {
     contactDiv.id = `emergencyContact${emergencyContactCounter}`;
     contactDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="contactRecordId${emergencyContactCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Emergency Contact ${emergencyContactCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeEmergencyContact(${emergencyContactCounter})">
@@ -151,6 +152,7 @@ function addAllergy() {
 
     allergyDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="allergyRecordId${allergyCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Allergy ${allergyCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeAllergy(${allergyCounter})">
@@ -200,6 +202,7 @@ function addDisease() {
 
     diseaseDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="diseaseRecordId${diseaseCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Disease ${diseaseCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeDisease(${diseaseCounter})">
@@ -249,6 +252,7 @@ function addMedication() {
 
     medicationDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="medicationRecordId${medicationCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Medication ${medicationCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeMedication(${medicationCounter})">
@@ -295,6 +299,7 @@ function addDocument() {
 
     documentDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="documentRecordId${documentCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Document ${documentCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeDocument(${documentCounter})">
@@ -378,6 +383,7 @@ function submitForm() {
     // Collect all form data
     const volunteerData = {
         VolunteerGeneralData: [{
+            VolunteerId: 0, // Will be set below
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
             MiddleName: document.getElementById('middleName').value,
@@ -385,6 +391,7 @@ function submitForm() {
             SubjectSS: document.getElementById('subjectSS').value,
             Phone: document.getElementById('phone').value,
             SubjectEmail: document.getElementById('subjectEmail').value,
+            Email: document.getElementById('subjectEmail').value, // Duplicate for Email field
             SubjectId: document.getElementById('subjectId').value,
             Weight: document.getElementById('weight').value,
             Height: document.getElementById('height').value,
@@ -393,6 +400,7 @@ function submitForm() {
             Race: parseInt(document.getElementById('race').value) || 0,
             Ethnicity: parseInt(document.getElementById('ethnicity').value) || 0,
             Language: parseInt(document.getElementById('language').value) || 0,
+            AddressId: 0,
             Address1: document.getElementById('address1').value,
             Address2: document.getElementById('address2').value,
             City: document.getElementById('city').value,
@@ -400,9 +408,13 @@ function submitForm() {
             ZipCode: document.getElementById('zipCode').value,
             Country: document.getElementById('country').value,
             LegalRepresentative: document.getElementById('legalRepresentative').value,
-            CompanyId: 1,
-            SiteId: 1,
-            Active: true
+            DateCreated: new Date().toISOString(),
+            CompanyId: "1",
+            CurrentStatus: "",
+            Picture: "",
+            UserName: 1,
+            Active: true,
+            SiteId: 1
         }],
         VolunteerEmergencyContactData: [],
         VolunteerAllergyData: [],
@@ -415,13 +427,19 @@ function submitForm() {
     for (let i = 1; i <= emergencyContactCounter; i++) {
         const contactName = document.getElementById(`contactName${i}`);
         if (contactName && contactName.value) {
+            const contactRecordId = document.getElementById(`contactRecordId${i}`);
+            const recordId = contactRecordId ? parseInt(contactRecordId.value) || 0 : 0;
+
             volunteerData.VolunteerEmergencyContactData.push({
+                VoluntierId: parseInt(document.getElementById('volunteerId').value) || 0,  // Note: "VoluntierId" matches UDT typo
+                ContactId: recordId,
                 ContactName: contactName.value,
                 ContactPhone: document.getElementById(`contactPhone${i}`).value,
                 ContactRelation: parseInt(document.getElementById(`contactRelation${i}`).value) || 0,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
@@ -430,15 +448,27 @@ function submitForm() {
     for (let i = 1; i <= allergyCounter; i++) {
         const allergyId = document.getElementById(`allergyId${i}`);
         if (allergyId && allergyId.value) {
+            const allergyRecordId = document.getElementById(`allergyRecordId${i}`);
+            const recordIdStr = allergyRecordId ? allergyRecordId.value : '0';
+
+            // Parse composite key (VId_AllergyId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+            }
+
             const startDate = document.getElementById(`allergyStartDate${i}`).value || '0001-01-01';
             const endDate = document.getElementById(`allergyEndDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerAllergyData.push({
+                VId: vId,
                 AllergyId: parseInt(allergyId.value),
                 StartDate: startDate,
                 EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
@@ -447,15 +477,27 @@ function submitForm() {
     for (let i = 1; i <= diseaseCounter; i++) {
         const diseaseId = document.getElementById(`diseaseId${i}`);
         if (diseaseId && diseaseId.value) {
+            const diseaseRecordId = document.getElementById(`diseaseRecordId${i}`);
+            const recordIdStr = diseaseRecordId ? diseaseRecordId.value : '0';
+
+            // Parse composite key (VId_DiseaseId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+            }
+
             const startDate = document.getElementById(`diseaseStartDate${i}`).value || '0001-01-01';
             const endDate = document.getElementById(`diseaseEndDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerDiseaseData.push({
-                DiseaseId: parseInt(diseaseId.value),
+                VId: vId,
+                DeseaseId: parseInt(diseaseId.value),  // Note: Using "DeseaseId" to match UDT typo
                 StartDate: startDate,
                 EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
@@ -464,16 +506,31 @@ function submitForm() {
     for (let i = 1; i <= medicationCounter; i++) {
         const medicationName = document.getElementById(`medicationName${i}`);
         if (medicationName && medicationName.value) {
+            const medicationRecordId = document.getElementById(`medicationRecordId${i}`);
+            const recordIdStr = medicationRecordId ? medicationRecordId.value : '0';
+
+            // Parse composite key (VId_MedicationId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            let medId = 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+                medId = parseInt(parts[1]) || 0;
+            }
+
             const startDate = document.getElementById(`medicationStartDate${i}`).value || '0001-01-01';
             const endDate = document.getElementById(`medicationEndDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerMedicationData.push({
+                VId: vId,
+                MedicationId: medId,
                 DrogName: medicationName.value,
                 DrogDose: document.getElementById(`medicationDose${i}`).value,
                 StartDate: startDate,
                 EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
@@ -482,8 +539,12 @@ function submitForm() {
     for (let i = 1; i <= documentCounter; i++) {
         const docName = document.getElementById(`docName${i}`);
         if (docName && docName.value) {
+            const documentRecordId = document.getElementById(`documentRecordId${i}`);
+            const recordId = documentRecordId ? parseInt(documentRecordId.value) || 0 : 0;
+
             const docDate = document.getElementById(`docDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerDocumentationData.push({
+                DocId: recordId,
                 DocumentTypeId: parseInt(document.getElementById(`documentTypeId${i}`).value) || 0,
                 DocName: docName.value,
                 DocDate: docDate,
@@ -492,22 +553,21 @@ function submitForm() {
                 Notes: document.getElementById(`docNotes${i}`).value,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
 
     // Get volunteer ID
     const volunteerId = document.getElementById('volunteerId').value;
+    console.log('Volunteer ID from hidden field:', volunteerId);
 
     // Add volunteer ID to general data
     volunteerData.VolunteerGeneralData[0].VolunteerId = parseInt(volunteerId);
+    console.log('VolunteerId set to:', volunteerData.VolunteerGeneralData[0].VolunteerId);
 
     // Submit via AJAX
-    console.log('Updating volunteer data:', volunteerData);
-    console.log('URL:', window.location.pathname + '?handler=Update');
-    console.log('CSRF Token:', window._csrfToken);
-
     $.ajax({
         type: "POST",
         url: window.location.pathname + '?handler=Update',
@@ -664,43 +724,127 @@ function populateFormData() {
     if (emergencyContacts.length > 0) {
         emergencyContacts.forEach(contact => {
             addEmergencyContact();
-            document.getElementById(`contactName${emergencyContactCounter}`).value = contact.contactName || '';
-            document.getElementById(`contactPhone${emergencyContactCounter}`).value = contact.contactPhone || '';
-            document.getElementById(`contactRelation${emergencyContactCounter}`).value = contact.relationTypeId || '0';
+            const currentCounter = emergencyContactCounter;
+
+            // Store the contact ID for update
+            const contactRecordId = document.getElementById(`contactRecordId${currentCounter}`);
+            if (contactRecordId && contact.emergencyContactId) {
+                contactRecordId.value = contact.emergencyContactId;
+            }
+
+            document.getElementById(`contactName${currentCounter}`).value = contact.contactName || '';
+            document.getElementById(`contactPhone${currentCounter}`).value = contact.contactPhone || '';
+            document.getElementById(`contactRelation${currentCounter}`).value = contact.relationTypeId || '0';
         });
     }
 
     // Populate allergies
     const allergies = data.allergies || [];
     if (allergies.length > 0) {
-        allergies.forEach(allergy => {
+        allergies.forEach((allergy, index) => {
             addAllergy();
-            document.getElementById(`allergyId${allergyCounter}`).value = allergy.allergyId || '';
-            document.getElementById(`allergyStartDate${allergyCounter}`).value = parseDate(allergy.startDate);
-            document.getElementById(`allergyEndDate${allergyCounter}`).value = parseDate(allergy.endDate);
+            const currentCounter = allergyCounter;
+
+            // Use setTimeout to ensure DOM is updated
+            setTimeout(() => {
+                const allergySelect = document.getElementById(`allergyId${currentCounter}`);
+                const allergyRecordId = document.getElementById(`allergyRecordId${currentCounter}`);
+
+                if (allergySelect) {
+                    // Store the volunteer allergy record ID for update
+                    if (allergyRecordId && allergy.volunteerId) {
+                        allergyRecordId.value = allergy.volunteerId + '_' + allergy.allergyId; // Composite key
+                    }
+
+                    // Try to find by ID first
+                    let foundValue = allergy.allergyId || '';
+                    allergySelect.value = foundValue;
+
+                    // If not found by ID, try to match by name
+                    if (!allergySelect.value && allergy.allergy && window.allergyList) {
+                        const matchingItem = window.allergyList.find(item =>
+                            item.text && item.text.toLowerCase() === allergy.allergy.toLowerCase()
+                        );
+                        if (matchingItem) {
+                            foundValue = matchingItem.value;
+                            allergySelect.value = foundValue;
+                            console.log(`Matched allergy "${allergy.allergy}" by name to ID ${foundValue}`);
+                        }
+                    }
+
+                    document.getElementById(`allergyStartDate${currentCounter}`).value = parseDate(allergy.startDate);
+                    document.getElementById(`allergyEndDate${currentCounter}`).value = parseDate(allergy.endDate);
+                } else {
+                    console.error(`Could not find allergyId${currentCounter}`);
+                }
+            }, 50 * (index + 1));
         });
     }
 
     // Populate diseases
     const diseases = data.diseases || [];
     if (diseases.length > 0) {
-        diseases.forEach(disease => {
+        diseases.forEach((disease, index) => {
             addDisease();
-            document.getElementById(`diseaseId${diseaseCounter}`).value = disease.diseaseId || '';
-            document.getElementById(`diseaseStartDate${diseaseCounter}`).value = parseDate(disease.startDate);
-            document.getElementById(`diseaseEndDate${diseaseCounter}`).value = parseDate(disease.endDate);
+            const currentCounter = diseaseCounter;
+            setTimeout(() => {
+                const diseaseSelect = document.getElementById(`diseaseId${currentCounter}`);
+                const diseaseRecordId = document.getElementById(`diseaseRecordId${currentCounter}`);
+
+                if (diseaseSelect) {
+                    // Store the volunteer disease record ID for update (composite key)
+                    if (diseaseRecordId && disease.volunteerId && disease.diseaseId) {
+                        diseaseRecordId.value = disease.volunteerId + '_' + disease.diseaseId;
+                    }
+
+                    // Try to find by ID first
+                    let foundValue = disease.diseaseId || '';
+                    diseaseSelect.value = foundValue;
+
+                    // If not found by ID, try to match by name
+                    if (!diseaseSelect.value && disease.diseaseName && window.diseaseList) {
+                        const matchingItem = window.diseaseList.find(item =>
+                            item.text && item.text.toLowerCase() === disease.diseaseName.toLowerCase()
+                        );
+                        if (matchingItem) {
+                            foundValue = matchingItem.value;
+                            diseaseSelect.value = foundValue;
+                            console.log(`Matched disease "${disease.diseaseName}" by name to ID ${foundValue}`);
+                        }
+                    }
+
+                    document.getElementById(`diseaseStartDate${currentCounter}`).value = parseDate(disease.startDate);
+                    document.getElementById(`diseaseEndDate${currentCounter}`).value = parseDate(disease.endDate);
+                }
+            }, 50 * (index + 1));
         });
     }
 
     // Populate medications
     const medications = data.medications || [];
     if (medications.length > 0) {
-        medications.forEach(med => {
+        medications.forEach((med, index) => {
             addMedication();
-            document.getElementById(`medicationName${medicationCounter}`).value = med.drogName || '';
-            document.getElementById(`medicationDose${medicationCounter}`).value = med.drogDose || '';
-            document.getElementById(`medicationStartDate${medicationCounter}`).value = parseDate(med.startDate);
-            document.getElementById(`medicationEndDate${medicationCounter}`).value = parseDate(med.endDate);
+            const currentCounter = medicationCounter;
+            setTimeout(() => {
+                const medicationRecordId = document.getElementById(`medicationRecordId${currentCounter}`);
+
+                // Store the volunteer medication record ID for update (composite key)
+                if (medicationRecordId && med.volunteerId && med.medicationId) {
+                    medicationRecordId.value = med.volunteerId + '_' + med.medicationId;
+                }
+
+                // Use drogName if available, otherwise try to find from medicationList using medicationId
+                let medName = med.drogName || '';
+                if (!medName && med.medicationId && window.medicationList) {
+                    const medItem = window.medicationList.find(m => m.value == med.medicationId);
+                    medName = medItem ? medItem.text : '';
+                }
+                document.getElementById(`medicationName${currentCounter}`).value = medName;
+                document.getElementById(`medicationDose${currentCounter}`).value = med.drogDose || '';
+                document.getElementById(`medicationStartDate${currentCounter}`).value = parseDate(med.startDate);
+                document.getElementById(`medicationEndDate${currentCounter}`).value = parseDate(med.endDate);
+            }, 10 * index);
         });
     }
 
@@ -709,12 +853,20 @@ function populateFormData() {
     if (documentations.length > 0) {
         documentations.forEach(doc => {
             addDocument();
-            document.getElementById(`documentTypeId${documentCounter}`).value = doc.docTypeId || '0';
-            document.getElementById(`docName${documentCounter}`).value = doc.docName || '';
-            document.getElementById(`docDate${documentCounter}`).value = parseDate(doc.docDate);
-            document.getElementById(`docVersion${documentCounter}`).value = doc.docVersion || '';
-            document.getElementById(`docActive${documentCounter}`).value = doc.docActive ? 'true' : 'false';
-            document.getElementById(`docNotes${documentCounter}`).value = doc.notes || '';
+            const currentCounter = documentCounter;
+
+            // Store the document ID for update
+            const documentRecordId = document.getElementById(`documentRecordId${currentCounter}`);
+            if (documentRecordId && doc.docId) {
+                documentRecordId.value = doc.docId;
+            }
+
+            document.getElementById(`documentTypeId${currentCounter}`).value = doc.docTypeId || '0';
+            document.getElementById(`docName${currentCounter}`).value = doc.docName || '';
+            document.getElementById(`docDate${currentCounter}`).value = parseDate(doc.docDate);
+            document.getElementById(`docVersion${currentCounter}`).value = doc.docVersion || '';
+            document.getElementById(`docActive${currentCounter}`).value = doc.docActive ? 'true' : 'false';
+            document.getElementById(`docNotes${currentCounter}`).value = doc.notes || '';
         });
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GMS_UI.Models.STD
+﻿namespace GMS_UI.Models.Enum
 {
     public enum StudioPhaseEnum
     {

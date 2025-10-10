@@ -109,6 +109,8 @@
 
         string Endpoint_CreateVolunteer();
 
+        string Endpoint_UpdateVolunteer();
+
         string Endpoint_CreateEthniciy();
 
         #endregion

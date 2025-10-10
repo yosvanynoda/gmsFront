@@ -111,6 +111,8 @@
 
         public string Endpoint_CreateVolunteer() => _config["Endpoint_CreateVolunteer"] ?? "";
 
+        public string Endpoint_UpdateVolunteer() => _config["Endpoint_UpdateVolunteer"] ?? "";
+
         public string Endpoint_CreateEthniciy()
         {
             throw new NotImplementedException();

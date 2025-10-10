@@ -31,6 +31,8 @@
 
         string Endpoint_GetDiseaseList();
 
+        string Endpoint_GetDiseaseDropList();
+
         string Endpoint_GetMedicationList();
 
         string Endpoint_GetDocType();
@@ -68,6 +70,8 @@
         string Endpoint_CreateRace();
 
         string Endpoint_GetCROList();
+
+        string Endpoint_GetCRODropList();
 
         string Endpoint_CreateCRO();
 

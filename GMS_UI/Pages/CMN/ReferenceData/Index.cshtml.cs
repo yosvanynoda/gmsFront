@@ -4,6 +4,7 @@ using GMS.Objects.CMN;
 using GMS.Objects.General;
 using GMS_UI.Helper;
 using GMS_UI.Models.CMN;
+using GMS_UI.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -297,6 +298,66 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                     message = ex.Message,
                 });
             }
+        }
+
+        public async Task<JsonResult> OnPostDiseaseDropList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse diseases = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDiseaseDropList(), "a Disease List", "", requestData);
+
+                if (diseases == null || diseases.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Disease List",
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+
+                if (diseases.Success && diseases.Data != null)
+                {
+                    List<DropListBaseResponse> result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(diseases.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Disease List was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = diseases.Message,
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DropListBaseResponse>()
+                });
+            }
+
         }
         #endregion
 
@@ -1471,6 +1532,66 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                     message = ex.Message,
                 });
             }
+        }
+
+        public async Task<JsonResult> OnPostCRODropList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse cro = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetCRODropList(), "a CRO List", "", requestData);
+
+                if (cro == null || cro.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Contract research List",
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+
+                if (cro.Success && cro.Data != null)
+                {
+                    List<DropListBaseResponse> result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(cro.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Contract research list was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = cro.Message,
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DropListBaseResponse>()
+                });
+            }
+
         }
 
         #endregion

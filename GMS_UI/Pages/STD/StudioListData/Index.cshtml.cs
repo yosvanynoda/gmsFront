@@ -2,6 +2,7 @@ using GMS.BL.Generic;
 using GMS.Objects.API;
 using GMS.Objects.STD;
 using GMS_UI.Helper;
+using GMS_UI.Models.Enum;
 using GMS_UI.Models.STD;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

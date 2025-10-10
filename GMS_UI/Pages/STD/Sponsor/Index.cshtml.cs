@@ -113,5 +113,59 @@ namespace GMS_UI.Pages.STD.Sponsor
                 });
             }
         }
+
+
+        public async Task<JsonResult> OnPostSponsorDropList()
+        {
+            try
+            {
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+                BaseResponse sponsors = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetSponsorDropList(), "a Sponsor List", "", requestData);
+                if (sponsors == null || sponsors.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Sponsor List",
+                        success = false,
+                        data = new List<SponsorBaseResponse>()
+                    });
+                }
+                if (sponsors.Success && sponsors.Data != null)
+                {
+                    List<DropListBaseResponse> result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(sponsors.Data.ToString());
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Sponsor List was read successfully",
+                        success = true,
+                        data = result
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = sponsors.Message,
+                        success = false,
+                        data = new List<SponsorBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<SponsorBaseResponse>()
+                });
+            }
+        }
     }
 }

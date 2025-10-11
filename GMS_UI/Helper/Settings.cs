@@ -104,6 +104,9 @@
 
         public string Endpoint_CreateStudioDoc() => _config["Endpoint_CreateStudioDoc"] ?? "";
 
+        public string Endpoint_CreateStudioStaff() => _config["Endpoint_CreateStudioStaff"] ?? "";
+
+        public string Endpoint_GetStaffStudio() => _config["Endpoint_GetStaffStudio"] ?? "";
 
         #endregion
 

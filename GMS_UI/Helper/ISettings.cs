@@ -103,6 +103,10 @@
 
         string Endpoint_CreateStudioDoc();
 
+        string Endpoint_CreateStudioStaff();
+
+        string Endpoint_GetStaffStudio();
+
         #endregion
 
         #region VLT...

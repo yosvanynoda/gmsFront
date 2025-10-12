@@ -1,5 +1,5 @@
 let currentStep = 1;
-const totalSteps = 6;
+const totalSteps = 8;
 
 // Counters for dynamic lists
 let emergencyContactCounter = 0;
@@ -7,6 +7,66 @@ let allergyCounter = 0;
 let diseaseCounter = 0;
 let medicationCounter = 0;
 let documentCounter = 0;
+
+// Date formatting for DOB field
+$(document).ready(function() {
+    // Auto-format DOB as user types
+    $('#subjectDOB').on('input', function(e) {
+        let value = $(this).val().replace(/\D/g, ''); // Remove non-digits
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+        if (value.length >= 5) {
+            value = value.substring(0, 5) + '/' + value.substring(5, 9);
+        }
+        $(this).val(value);
+    });
+
+    // Validate date on blur
+    $('#subjectDOB').on('blur', function() {
+        const dateStr = $(this).val();
+        if (dateStr && !isValidDate(dateStr)) {
+            $(this).addClass('is-invalid');
+            alert('Please enter a valid date in MM/DD/YYYY format');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+});
+
+// Validate date format
+function isValidDate(dateStr) {
+    if (!dateStr) return true; // Allow empty
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return false;
+
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+
+    if (month < 1 || month > 12) return false;
+    if (day < 1 || day > 31) return false;
+    if (year < 1900 || year > 2100) return false;
+
+    // Check if date is valid
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === year &&
+           date.getMonth() === month - 1 &&
+           date.getDate() === day;
+}
+
+// Convert MM/DD/YYYY to YYYY-MM-DD for backend
+function convertDateToISO(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return dateStr; // Return as-is if not in expected format
+
+    const month = parts[0].padStart(2, '0');
+    const day = parts[1].padStart(2, '0');
+    const year = parts[2];
+
+    return `${year}-${month}-${day}`;
+}
 
 function changeStep(direction) {
     if (direction === 1) {
@@ -83,9 +143,94 @@ function updateNavigationButtons() {
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
 
-    prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
-    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+    prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
+    submitBtn.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+}
+
+// Cancel wizard and return to volunteer list
+function cancelWizard() {
+    if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+        window.location.href = '/VLT/Volunteer/Index';
+    }
+}
+
+// Jump to a specific step by clicking on step indicator
+function jumpToStep(targetStep) {
+    if (targetStep === currentStep) return; // Already on this step
+
+    // If going forward, validate all steps in between
+    if (targetStep > currentStep) {
+        for (let i = currentStep; i < targetStep; i++) {
+            if (!validateStep(i)) {
+                alert(`Please complete step ${i} before jumping ahead.`);
+                return;
+            }
+        }
+    }
+
+    // Remove active/completed from current step
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    currentStepElement.classList.remove('active');
+    const currentIndicator = document.getElementById(`step${currentStep}-indicator`);
+    currentIndicator.classList.remove('active');
+
+    // Mark steps as completed or active based on direction
+    if (targetStep > currentStep) {
+        // Going forward - mark intermediate steps as completed
+        for (let i = currentStep; i < targetStep; i++) {
+            const indicator = document.getElementById(`step${i}-indicator`);
+            indicator.classList.add('completed');
+            indicator.classList.remove('active');
+            indicator.innerHTML = '<i class="bi bi-check"></i>';
+
+            if (i < totalSteps) {
+                const line = document.getElementById(`line${i}`);
+                line.classList.add('completed');
+            }
+        }
+    } else {
+        // Going backward - remove completed status
+        for (let i = targetStep; i < currentStep; i++) {
+            const indicator = document.getElementById(`step${i}-indicator`);
+            indicator.classList.remove('completed');
+            indicator.innerHTML = i;
+
+            if (i < totalSteps) {
+                const line = document.getElementById(`line${i}`);
+                line.classList.remove('completed');
+            }
+        }
+    }
+
+    // Update current step
+    currentStep = targetStep;
+
+    // Show new step
+    const newStepElement = document.getElementById(`step${currentStep}`);
+    newStepElement.classList.add('active');
+    const newIndicator = document.getElementById(`step${currentStep}-indicator`);
+    newIndicator.classList.add('active');
+
+    // Update navigation buttons
+    updateNavigationButtons();
+
+    // Load dropdowns and grids for medical steps
+    if (currentStep === 5) {
+        loadAllergiesDropdown();
+        setupAllergiesGrid();
+    } else if (currentStep === 6) {
+        loadDiseasesDropdown();
+        setupDiseasesGrid();
+    } else if (currentStep === 7) {
+        loadMedicationsDropdown();
+        setupMedicationsGrid();
+    }
+
+    // Update review summary on last step
+    if (currentStep === totalSteps) {
+        updateReviewSummary();
+    }
 }
 
 // Emergency Contact Functions
@@ -387,7 +532,7 @@ function submitForm() {
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
             MiddleName: document.getElementById('middleName').value,
-            SubjectDOB: document.getElementById('subjectDOB').value,
+            SubjectDOB: convertDateToISO(document.getElementById('subjectDOB').value),
             SubjectSS: document.getElementById('subjectSS').value,
             Phone: document.getElementById('phone').value,
             SubjectEmail: document.getElementById('subjectEmail').value,
@@ -672,12 +817,13 @@ function populateFormData() {
     document.getElementById('middleName').value = header.middleName || '';
     document.getElementById('lastName').value = header.lastName || '';
 
-    // Parse date from format "MM/DD/YYYY HH:mm:ss" to "YYYY-MM-DD"
+    // Parse date from format "MM/DD/YYYY HH:mm:ss" to "MM/DD/YYYY" for text input
     let dobValue = '';
     if (header.subjectDOB) {
         const dobParts = header.subjectDOB.split(' ')[0].split('/');
         if (dobParts.length === 3) {
-            dobValue = `${dobParts[2]}-${dobParts[0].padStart(2, '0')}-${dobParts[1].padStart(2, '0')}`;
+            // Keep in MM/DD/YYYY format for text input
+            dobValue = `${dobParts[0].padStart(2, '0')}/${dobParts[1].padStart(2, '0')}/${dobParts[2]}`;
         }
     }
     document.getElementById('subjectDOB').value = dobValue;
@@ -869,4 +1015,322 @@ function populateFormData() {
             document.getElementById(`docNotes${currentCounter}`).value = doc.notes || '';
         });
     }
+}
+
+// ========== Grid-Based Medical Information (Steps 5-7) ==========
+
+// Arrays to store medical data
+let allergiesData = [];
+let diseasesData = [];
+let medicationsData = [];
+
+// Grid APIs
+let allergiesGridApi;
+let diseasesGridApi;
+let medicationsGridApi;
+
+// Load Allergies Dropdown
+function loadAllergiesDropdown() {
+    const select = $('#allergySelect');
+    select.empty();
+    select.append('<option value="">Select Allergy</option>');
+    if (window.allergyList && window.allergyList.length > 0) {
+        window.allergyList.forEach(allergy => {
+            select.append($('<option>', {
+                value: allergy.value,
+                text: allergy.text
+            }));
+        });
+    }
+}
+
+// Setup Allergies Grid
+function setupAllergiesGrid() {
+    const gridOptions = {
+        rowData: allergiesData,
+        columnDefs: [
+            { field: "id", hide: true },
+            { field: "name", headerName: "Allergy", flex: 2 },
+            {
+                field: "startDate",
+                headerName: "Start Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                field: "endDate",
+                headerName: "End Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: function (params) {
+                    return `
+                        <button class="btn btn-sm btn-danger" onclick="deleteAllergy(${params.node.rowIndex})">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    `;
+                }
+            }
+        ],
+        domLayout: 'normal'
+    };
+
+    const gridDiv = document.querySelector('#allergiesGrid');
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        allergiesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
+}
+
+// Save Allergy
+function saveAllergy() {
+    const allergyId = $('#allergySelect').val();
+    const startDate = $('#allergyStartDate').val();
+    const endDate = $('#allergyEndDate').val();
+
+    if (!allergyId) {
+        $('#validateAllergy').text('Please select an allergy');
+        return;
+    }
+
+    $('#validateAllergy').text('');
+
+    const allergyName = $('#allergySelect option:selected').text();
+    const allergyItem = {
+        id: parseInt(allergyId),
+        name: allergyName,
+        startDate: startDate || '0001-01-01',
+        endDate: endDate || '0001-01-01'
+    };
+
+    // Check if already exists
+    if (allergiesData.some(a => a.id === allergyItem.id)) {
+        $('#validateAllergy').text('This allergy is already added');
+        return;
+    }
+
+    // Add new
+    allergiesData.push(allergyItem);
+    setupAllergiesGrid();
+
+    // Reset form
+    $('#allergySelect').val('');
+    $('#allergyStartDate').val('');
+    $('#allergyEndDate').val('');
+}
+
+// Delete Allergy
+function deleteAllergy(index) {
+    if (!confirm('Are you sure you want to remove this allergy?')) {
+        return;
+    }
+    allergiesData.splice(index, 1);
+    setupAllergiesGrid();
+}
+
+// Load Diseases Dropdown
+function loadDiseasesDropdown() {
+    const select = $('#diseaseSelect');
+    select.empty();
+    select.append('<option value="">Select Disease</option>');
+    if (window.diseaseList && window.diseaseList.length > 0) {
+        window.diseaseList.forEach(disease => {
+            select.append($('<option>', {
+                value: disease.value,
+                text: disease.text
+            }));
+        });
+    }
+}
+
+// Setup Diseases Grid
+function setupDiseasesGrid() {
+    const gridOptions = {
+        rowData: diseasesData,
+        columnDefs: [
+            { field: "id", hide: true },
+            { field: "name", headerName: "Disease", flex: 2 },
+            {
+                field: "startDate",
+                headerName: "Start Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                field: "endDate",
+                headerName: "End Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: function (params) {
+                    return `
+                        <button class="btn btn-sm btn-danger" onclick="deleteDisease(${params.node.rowIndex})">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    `;
+                }
+            }
+        ],
+        domLayout: 'normal'
+    };
+
+    const gridDiv = document.querySelector('#diseasesGrid');
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        diseasesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
+}
+
+// Save Disease
+function saveDisease() {
+    const diseaseId = $('#diseaseSelect').val();
+    const startDate = $('#diseaseStartDate').val();
+    const endDate = $('#diseaseEndDate').val();
+
+    if (!diseaseId) {
+        $('#validateDisease').text('Please select a disease');
+        return;
+    }
+
+    $('#validateDisease').text('');
+
+    const diseaseName = $('#diseaseSelect option:selected').text();
+    const diseaseItem = {
+        id: parseInt(diseaseId),
+        name: diseaseName,
+        startDate: startDate || '0001-01-01',
+        endDate: endDate || '0001-01-01'
+    };
+
+    // Check if already exists
+    if (diseasesData.some(d => d.id === diseaseItem.id)) {
+        $('#validateDisease').text('This disease is already added');
+        return;
+    }
+
+    // Add new
+    diseasesData.push(diseaseItem);
+    setupDiseasesGrid();
+
+    // Reset form
+    $('#diseaseSelect').val('');
+    $('#diseaseStartDate').val('');
+    $('#diseaseEndDate').val('');
+}
+
+// Delete Disease
+function deleteDisease(index) {
+    if (!confirm('Are you sure you want to remove this disease?')) {
+        return;
+    }
+    diseasesData.splice(index, 1);
+    setupDiseasesGrid();
+}
+
+// Load Medications Dropdown
+function loadMedicationsDropdown() {
+    const select = $('#medicationSelect');
+    select.empty();
+    select.append('<option value="">Select Medication</option>');
+    if (window.medicationList && window.medicationList.length > 0) {
+        window.medicationList.forEach(medication => {
+            select.append($('<option>', {
+                value: medication.value,
+                text: medication.text
+            }));
+        });
+    }
+}
+
+// Setup Medications Grid
+function setupMedicationsGrid() {
+    const gridOptions = {
+        rowData: medicationsData,
+        columnDefs: [
+            { field: "id", hide: true },
+            { field: "name", headerName: "Medication", flex: 2 },
+            {
+                field: "startDate",
+                headerName: "Start Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                field: "endDate",
+                headerName: "End Date",
+                flex: 1,
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: function (params) {
+                    return `
+                        <button class="btn btn-sm btn-danger" onclick="deleteMedication(${params.node.rowIndex})">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    `;
+                }
+            }
+        ],
+        domLayout: 'normal'
+    };
+
+    const gridDiv = document.querySelector('#medicationsGrid');
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        medicationsGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
+}
+
+// Save Medication
+function saveMedication() {
+    const medicationId = $('#medicationSelect').val();
+    const startDate = $('#medicationStartDate').val();
+    const endDate = $('#medicationEndDate').val();
+
+    if (!medicationId) {
+        $('#validateMedication').text('Please select a medication');
+        return;
+    }
+
+    $('#validateMedication').text('');
+
+    const medicationName = $('#medicationSelect option:selected').text();
+    const medicationItem = {
+        id: parseInt(medicationId),
+        name: medicationName,
+        startDate: startDate || '0001-01-01',
+        endDate: endDate || '0001-01-01'
+    };
+
+    // Check if already exists
+    if (medicationsData.some(m => m.id === medicationItem.id)) {
+        $('#validateMedication').text('This medication is already added');
+        return;
+    }
+
+    // Add new
+    medicationsData.push(medicationItem);
+    setupMedicationsGrid();
+
+    // Reset form
+    $('#medicationSelect').val('');
+    $('#medicationStartDate').val('');
+    $('#medicationEndDate').val('');
+}
+
+// Delete Medication
+function deleteMedication(index) {
+    if (!confirm('Are you sure you want to remove this medication?')) {
+        return;
+    }
+    medicationsData.splice(index, 1);
+    setupMedicationsGrid();
 }

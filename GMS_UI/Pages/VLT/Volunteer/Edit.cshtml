@@ -17,17 +17,21 @@
 
         <!-- Progress Indicator -->
         <div class="step-indicator">
-            <div class="step-circle active" id="step1-indicator">1</div>
+            <div class="step-circle active" id="step1-indicator" onclick="jumpToStep(1)" style="cursor: pointer;" title="General Information">1</div>
             <div class="step-line" id="line1"></div>
-            <div class="step-circle" id="step2-indicator">2</div>
+            <div class="step-circle" id="step2-indicator" onclick="jumpToStep(2)" style="cursor: pointer;" title="Physical & Demographics">2</div>
             <div class="step-line" id="line2"></div>
-            <div class="step-circle" id="step3-indicator">3</div>
+            <div class="step-circle" id="step3-indicator" onclick="jumpToStep(3)" style="cursor: pointer;" title="Address">3</div>
             <div class="step-line" id="line3"></div>
-            <div class="step-circle" id="step4-indicator">4</div>
+            <div class="step-circle" id="step4-indicator" onclick="jumpToStep(4)" style="cursor: pointer;" title="Emergency Contacts">4</div>
             <div class="step-line" id="line4"></div>
-            <div class="step-circle" id="step5-indicator">5</div>
+            <div class="step-circle" id="step5-indicator" onclick="jumpToStep(5)" style="cursor: pointer;" title="Allergies">5</div>
             <div class="step-line" id="line5"></div>
-            <div class="step-circle" id="step6-indicator">6</div>
+            <div class="step-circle" id="step6-indicator" onclick="jumpToStep(6)" style="cursor: pointer;" title="Diseases">6</div>
+            <div class="step-line" id="line6"></div>
+            <div class="step-circle" id="step7-indicator" onclick="jumpToStep(7)" style="cursor: pointer;" title="Medications">7</div>
+            <div class="step-line" id="line7"></div>
+            <div class="step-circle" id="step8-indicator" onclick="jumpToStep(8)" style="cursor: pointer;" title="Review & Submit">8</div>
         </div>
 
         <!-- Step 1: General Information -->
@@ -59,8 +63,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Date of Birth *</label>
-                            <input type="date" class="form-control" id="subjectDOB" required>
+                            <label class="form-label">Date of Birth * (MM/DD/YYYY)</label>
+                            <input type="text" class="form-control" id="subjectDOB" placeholder="MM/DD/YYYY" required>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -263,42 +267,158 @@
             </div>
         </div>
 
-        <!-- Step 5: Medical Information -->
+        <!-- Step 5: Allergies -->
         <div class="wizard-step" id="step5">
             <div class="form-section">
-                <h5><i class="bi bi-heart-pulse-fill"></i> Medical Information</h5>
+                <h5><i class="bi bi-exclamation-triangle-fill"></i> Allergies</h5>
 
-                <!-- Allergies -->
-                <h6 class="mt-3">Allergies</h6>
-                <div id="allergiesContainer">
-                    <!-- Allergies will be added here dynamically -->
+                <!-- Add Allergy Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Allergy</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Allergy *</label>
+                                <select class="form-select" id="allergySelect">
+                                    <option value="">Select Allergy</option>
+                                </select>
+                                <span id="validateAllergy" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="allergyStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="allergyEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveAllergy()">
+                                    <i class="bi bi-plus-circle"></i> Add Allergy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addAllergy()">
-                    <i class="bi bi-plus-circle"></i> Add Allergy
-                </button>
 
-                <!-- Diseases -->
-                <h6 class="mt-3">Diseases</h6>
-                <div id="diseasesContainer">
-                    <!-- Diseases will be added here dynamically -->
+                <!-- Current Allergies Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Allergies</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="allergiesGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addDisease()">
-                    <i class="bi bi-plus-circle"></i> Add Disease
-                </button>
-
-                <!-- Medications -->
-                <h6 class="mt-3">Medications</h6>
-                <div id="medicationsContainer">
-                    <!-- Medications will be added here dynamically -->
-                </div>
-                <button type="button" class="btn btn-sm btn-primary" onclick="addMedication()">
-                    <i class="bi bi-plus-circle"></i> Add Medication
-                </button>
             </div>
         </div>
 
-        <!-- Step 6: Documentation & Review -->
+        <!-- Step 6: Diseases -->
         <div class="wizard-step" id="step6">
+            <div class="form-section">
+                <h5><i class="bi bi-heart-pulse-fill"></i> Diseases</h5>
+
+                <!-- Add Disease Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Disease</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Disease *</label>
+                                <select class="form-select" id="diseaseSelect">
+                                    <option value="">Select Disease</option>
+                                </select>
+                                <span id="validateDisease" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="diseaseStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="diseaseEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveDisease()">
+                                    <i class="bi bi-plus-circle"></i> Add Disease
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Diseases Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Diseases</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="diseasesGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Medications -->
+        <div class="wizard-step" id="step7">
+            <div class="form-section">
+                <h5><i class="bi bi-capsule-pill"></i> Medications</h5>
+
+                <!-- Add Medication Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Medication</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Medication *</label>
+                                <select class="form-select" id="medicationSelect">
+                                    <option value="">Select Medication</option>
+                                </select>
+                                <span id="validateMedication" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="medicationStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="medicationEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveMedication()">
+                                    <i class="bi bi-plus-circle"></i> Add Medication
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Medications Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Medications</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="medicationsGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 8: Documentation & Review -->
+        <div class="wizard-step" id="step8">
             <div class="form-section">
                 <h5><i class="bi bi-file-earmark-text-fill"></i> Documentation & Review</h5>
 
@@ -337,15 +457,20 @@
 
         <!-- Navigation Buttons -->
         <div class="wizard-navigation">
-            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
-                <i class="bi bi-arrow-left"></i> Previous
-            </button>
+            <div>
+                <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                    <i class="bi bi-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-danger btn-wizard" id="cancelBtn" onclick="cancelWizard()">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
             <div class="ms-auto">
                 <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
                     Next <i class="bi bi-arrow-right"></i>
                 </button>
                 <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
-                    <i class="bi bi-check"></i> Submit Volunteer
+                    <i class="bi bi-check"></i> Update Volunteer
                 </button>
             </div>
         </div>

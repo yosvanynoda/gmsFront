@@ -103,7 +103,7 @@ html, body {
 .wizard-step {
     display: none;
     max-height: 55vh;
-    /*overflow-y: auto;*/
+    overflow-y: auto;
     padding-right: 10px;
 }
 

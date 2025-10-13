@@ -468,8 +468,23 @@ function setupStudioStaffGrid(data) {
                 headerName: "Start Date",
                 flex: 1,
                 valueFormatter: params => {
-                    if (!params.value) return '';
-                    return new Date(params.value).toLocaleDateString();
+                    if (!params.value || params.value === null) return '';
+
+                    // Check if it's a default/min date
+                    const dateStr = String(params.value);
+                    if (dateStr.startsWith('0001-01-01') || dateStr.startsWith('1/1/0001')) {
+                        return '';
+                    }
+
+                    try {
+                        const date = new Date(params.value);
+                        if (isNaN(date.getTime()) || date.getFullYear() < 1900) {
+                            return '';
+                        }
+                        return date.toLocaleDateString();
+                    } catch (e) {
+                        return '';
+                    }
                 }
             },
             {
@@ -477,8 +492,23 @@ function setupStudioStaffGrid(data) {
                 headerName: "End Date",
                 flex: 1,
                 valueFormatter: params => {
-                    if (!params.value) return 'Ongoing';
-                    return new Date(params.value).toLocaleDateString();
+                    if (!params.value || params.value === null) return 'Ongoing';
+
+                    // Check if it's a default/min date
+                    const dateStr = String(params.value);
+                    if (dateStr.startsWith('0001-01-01') || dateStr.startsWith('1/1/0001')) {
+                        return 'Ongoing';
+                    }
+
+                    try {
+                        const date = new Date(params.value);
+                        if (isNaN(date.getTime()) || date.getFullYear() < 1900) {
+                            return 'Ongoing';
+                        }
+                        return date.toLocaleDateString();
+                    } catch (e) {
+                        return 'Ongoing';
+                    }
                 }
             },
             {
@@ -527,6 +557,8 @@ function setupStudioStaffGrid(data) {
 
 // Save studio-staff assignment (Add or Edit)
 function saveStudioStaffAssignment() {
+    console.log('saveStudioStaffAssignment called');
+
     // Clear validation messages
     $('#validateStudio').html('');
     $('#validateRole').html('');
@@ -538,6 +570,8 @@ function saveStudioStaffAssignment() {
     const endDate = $('#endDate').val();
     const staffId = $('#currentStaffId').val();
     const action = parseInt($('#assignmentAction').val());
+
+    console.log('Save data:', { studioId, roleId, startDate, endDate, staffId, action });
 
     // Validation
     let isValid = true;
@@ -613,33 +647,120 @@ function saveStudioStaffAssignment() {
 
 // Edit studio-staff assignment
 function editStudioStaffAssignment(data) {
+    console.log('editStudioStaffAssignment called with data:', data);
     $('#assignmentFormTitle').text('Edit Studio Assignment');
     $('#assignmentAction').val('2');
     $('#studioSelect').val(data.studioId);
     $('#roleSelect').val(data.roleId);
-    $('#startDate').val(data.startDate ? data.startDate.split('T')[0] : '');
-    $('#endDate').val(data.endDate ? data.endDate.split('T')[0] : '');
+
+    // Handle date formatting - convert to YYYY-MM-DD for input[type="date"]
+    let startDateValue = '';
+    let endDateValue = '';
+
+    if (data.startDate) {
+        const dateStr = String(data.startDate);
+        // Skip default/min dates
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(data.startDate);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1900) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    startDateValue = `${year}-${month}-${day}`;
+                }
+            } catch (e) {
+                console.error('Error parsing startDate:', e);
+            }
+        }
+    }
+
+    if (data.endDate) {
+        const dateStr = String(data.endDate);
+        // Skip default/min dates
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(data.endDate);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1900) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    endDateValue = `${year}-${month}-${day}`;
+                }
+            } catch (e) {
+                console.error('Error parsing endDate:', e);
+            }
+        }
+    }
+
+    $('#startDate').val(startDateValue);
+    $('#endDate').val(endDateValue);
+
+    console.log('Form populated - Studio:', data.studioId, 'Role:', data.roleId, 'StartDate:', startDateValue, 'EndDate:', endDateValue);
 }
 
 // Delete studio-staff assignment
 function deleteStudioStaffAssignment(data) {
+    console.log('deleteStudioStaffAssignment called with data:', data);
+
     if (!confirm(`Are you sure you want to remove the assignment to "${data.studioName}"?`)) {
         return;
     }
 
     const staffId = $('#currentStaffId').val();
+    console.log('Deleting assignment for staffId:', staffId);
+
+    // Convert dates to valid format or null
+    let startDate = null;
+    let endDate = null;
+
+    if (data.startDate) {
+        const dateStr = String(data.startDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(data.startDate);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1753) {
+                    startDate = date.toISOString();
+                }
+            } catch (e) {
+                console.error('Error parsing startDate for delete:', e);
+            }
+        }
+    }
+
+    if (data.endDate) {
+        const dateStr = String(data.endDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(data.endDate);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1753) {
+                    endDate = date.toISOString();
+                }
+            } catch (e) {
+                console.error('Error parsing endDate for delete:', e);
+            }
+        }
+    }
 
     const requestData = {
         StudioId: data.studioId,
         StaffId: parseInt(staffId),
         RoleId: data.roleId,
-        StartDate: data.startDate,
-        EndDate: data.endDate,
         CompanyId: 1,
         SiteId: 1,
         UserName: 1,
         Action: 3
     };
+
+    // Only add dates if they are valid
+    if (startDate !== null) {
+        requestData.StartDate = startDate;
+    }
+    if (endDate !== null) {
+        requestData.EndDate = endDate;
+    }
+
+    console.log('Delete request data:', requestData);
 
     $.ajax({
         type: "POST",

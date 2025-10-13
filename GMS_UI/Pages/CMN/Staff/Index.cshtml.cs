@@ -293,7 +293,7 @@ namespace GMS_UI.Pages.CMN.Staff
         }
 
         public async Task<JsonResult> OnPostSaveStudioStaffAssignment(int studioId, int staffId, int roleId,
-            DateTime startDate, DateTime? endDate, int companyId, int siteId, int userName, int action)
+            DateTime? startDate, DateTime? endDate, int companyId, int siteId, int userName, int action)
         {
             try
             {

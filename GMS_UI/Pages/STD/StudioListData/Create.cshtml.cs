@@ -24,6 +24,9 @@ namespace GMS_UI.Pages.STD.StudioListData
         [TempData]
         public string StudioStatusSL { get; set; } = string.Empty;
 
+        [TempData]
+        public string ArmSL { get; set; } = string.Empty;
+
 
         public IActionResult OnGet()
         {
@@ -108,7 +111,23 @@ namespace GMS_UI.Pages.STD.StudioListData
             #endregion
 
 
+            // Load ArmSL from Enum
+            #region ArmSL...
+            comboValue.Clear();
+            foreach (var item in Enum.GetValues(typeof(ArmEnum)))
+            {
+                var value = (int)item;
+                var text = Enum.GetName(typeof(ArmEnum), value) ?? "";
 
+                comboValue.Add(new ComboValues
+                {
+                    Id = value,
+                    Name = text,
+                });
+            }
+
+            ArmSL = JsonSerializer.Serialize(comboValue.OrderBy(e => e.Name));
+            #endregion
         }
     }
 }

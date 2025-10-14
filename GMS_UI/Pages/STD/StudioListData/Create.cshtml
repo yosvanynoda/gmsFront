@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create Studio";
 }
+
 <div class="wizard-container">
     <div class="row">
         <div class="col">
@@ -25,7 +26,6 @@
         <input type="hidden" id="phaseType" value="@Model.PhaseTypeSL" />
         <input type="hidden" id="randomizationType" value="@Model.RandomizationTypeSL" />
         <input type="hidden" id="studioStatus" value="@Model.StudioStatusSL" />
-
         <input type="hidden" id="studioID" value="@Model.Input.STDGeneralData.STDId" />
 
         @* <input type="hidden" id="sponsor" value="@Model.SponsorSL" />
@@ -85,14 +85,14 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" asp-for="Input.STDGeneralData.Code">Code *</label> 
-                            <input class="form-control" asp-for="Input.STDGeneralData.Code" placeholder="Code" required /> 
+                            <input class="form-control" asp-for="Input.STDGeneralData.Code" placeholder="Code" /> 
                             <span class="text-danger" id="validateStudyCode"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" asp-for="Input.STDGeneralData.Name">Name *</label> 
-                            <input class="form-control" asp-for="Input.STDGeneralData.Name" placeholder="Name" required />
+                            <input class="form-control" asp-for="Input.STDGeneralData.Name" placeholder="Name"  />
                             <span class="text-danger" id="validateStudyName"></span>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" asp-for="Input.STDGeneralData.Goal">Goal *</label>
-                            <input type="number" class="form-control" asp-for="Input.STDGeneralData.Goal" placeholder="Goal" required />
+                            <input type="number" class="form-control" asp-for="Input.STDGeneralData.Goal" placeholder="Goal"  />
                             <span class="text-danger" id="validateStudyGoal"></span>
                         </div>
                     </div>
@@ -138,6 +138,7 @@
                                 <option value="-1">Select Phase</option>
                             </select>
                             <span class="text-danger"></span> 
+                            
                         </div>
                     </div>
 
@@ -147,7 +148,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" asp-for="Input.STDGeneralData.Indication">Indication *</label>
-                            <input class="form-control" asp-for="Input.STDGeneralData.Indication" placeholder="Indication" required />
+                            <input class="form-control" asp-for="Input.STDGeneralData.Indication" placeholder="Indication"  />
                             <span class="text-danger" id="validateStudyIndication"></span>
                         </div>
                     </div>
@@ -155,7 +156,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" asp-for="Input.STDGeneralData.TherapeuticArea">Therapeutic Area *</label>
-                            <input class="form-control" asp-for="Input.STDGeneralData.TherapeuticArea" placeholder="Therapeutic Area" required />
+                            <input class="form-control" asp-for="Input.STDGeneralData.TherapeuticArea" placeholder="Therapeutic Area"  />
                             <span class="text-danger" id="validateStudyTherapeuticArea"></span>
                         </div>
                     </div>
@@ -257,7 +258,7 @@
 
                 <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
                     <div class="card-header headerReference">
-                        <button data-bs-toggle="modal" data-bs-target="#monitorNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                        <a data-bs-toggle="modal" data-bs-target="#monitorModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
                         <div id="monitorGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
@@ -274,7 +275,7 @@
 
                 <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
                     <div class="card-header headerReference">
-                        <button data-bs-toggle="modal" data-bs-target="#documentNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                        <a data-bs-toggle="modal" data-bs-target="#documentModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
                         <div id="documentGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
@@ -291,7 +292,7 @@
 
                 <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
                     <div class="card-header headerReference">
-                        <button data-bs-toggle="modal" data-bs-target="#protocolNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                        <a data-bs-toggle="modal" data-bs-target="#protocolModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
                         <div id="protocolGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
@@ -308,7 +309,7 @@
 
                 <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
                     <div class="card-header headerReference">
-                        <button data-bs-toggle="modal" data-bs-target="#armsNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                        <a data-bs-toggle="modal" data-bs-target="#armsModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
                         <div id="armsGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
@@ -325,7 +326,7 @@
 
                 <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
                     <div class="card-header headerReference">
-                        <button data-bs-toggle="modal" data-bs-target="#visitsNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</button>
+                        <a data-bs-toggle="modal" data-bs-target="#visitModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
                         <div id="visitsGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
@@ -382,7 +383,346 @@
         </div>
 
     </form>
+
+    
+
 </div>
+
+@*Start Modals.....*@
+
+@*Start Monitor*@
+<div id="monitorModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="monitorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Monitor</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="monitorSelectGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addMonitor()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Monitor*@
+
+@*Start Documents*@
+<div id="documentModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="documentModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Document</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                    <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Document Type *</label>
+                                <select id="documentTypeList" class="form-select">
+                                    <option value="-1">Select Document Type</option>
+                                </select>
+                                <span id="validatedocumentType" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="documentName" class="form-label">Document Name *</label>
+                                <input id="documentName" type="text" class="form-control inputsmmodal" placeholder="Document Name" required />
+                                <span class="text-danger" id="validateDocumentType"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docDate" class="form-label">Document Date *</label>
+                                <input type="date" class="form-control inputsmmodal" id="docDate" placeholder="Document Date" required />
+                                <span class="text-danger" id="docDateValidate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docVersion" class="form-label">Document Version *</label>
+                                <input type="text" class="form-control inputsmmodal" id="docVersion" placeholder="Document Version" required />
+                                <span class="text-danger" id="docVersionValidate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docNotes" class="form-label">Document Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="docNotes" placeholder="Document Notes"></textarea>
+                                <span class="text-danger" id="docNotesValidate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3 ">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input chkmodal" type="checkbox" id="docActive">
+                                    <label class="form-check-label" for="docActive">&nbsp;Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success" onclick="addDocument()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Documents*@
+
+@*Start Protocol*@
+<div id="protocolModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="protocolModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Protocol</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="protocolName" class="form-label">Protocol Name *</label>
+                                <input id="protocolName" type="text" class="form-control inputsmmodal" placeholder="Protocol Name" required />
+                                <span class="text-danger" id="validateProtocolName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="protocolVersion" class="form-label">Version *</label>
+                                <input id="protocolVersion" type="text" class="form-control inputsmmodal" placeholder="Version" required />
+                                <span class="text-danger" id="validateProtocolVersion"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Approved Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="approvedDate" placeholder="Approved Date" />
+                                <span class="text-danger" id="validateApprovedDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="startDate" placeholder="Start Date" />
+                                <span class="text-danger" id="validateStartDate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="endDate" placeholder="End Date" />
+                                <span class="text-danger" id="validateEndDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="protocolNotes" placeholder="Notes"></textarea>
+                                <span class="text-danger" id="validateprotocolNotes"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addProtocol()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Protocol*@
+
+@*Start Arms*@
+<div id="armsModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="armsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Arms</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="armName" class="form-label">Arm Name *</label>
+                                <input id="armName" type="text" class="form-control inputsmmodal" placeholder="Arm Name" required />
+                                <span class="text-danger" id="validateArmName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Target Enrollment *</label>
+                                <select id="targetEnrollmentList" class="form-select">
+                                    <option value="-1">Select Target Enrollment</option>
+                                </select>
+                                <span id="validateTargetEnrollment" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Dose Level *</label>
+                                <input type="text" class="form-control inputsmmodal" id="doseLevel" placeholder="Dose Level" required />
+                                <span class="text-danger" id="validateDoseLevel"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="description" placeholder="Description"></textarea>
+                                <span class="text-danger" id="validateDescription"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addArm()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Arms*@
+
+@*Start Visits*@
+<div id="visitModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="visitModal" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2>Add Visit</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="visitName" class="form-label">Visit Name *</label>
+                                <input id="visitName" type="text" class="form-control inputsmmodal" placeholder="Visit Name" required />
+                                <span class="text-danger" id="validatevisitName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Arm *</label>
+                                <select id="armList" class="form-select">
+                                    <option value="-1">Select Arm</option>
+                                </select>
+                                <span id="validateArm" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Day Of Set *</label>
+                                <input type="number" class="form-control inputsmmodal" id="dayOfSet" placeholder="Day Of Set" required />
+                                <span class="text-danger" id="validateDayOfSet"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="sortOrder" class="form-label">Sort order *</label>
+                                <input id="sortOrder" type="number" class="form-control inputsmmodal" placeholder="Sort order" required />
+                                <span class="text-danger" id="validateSortOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Windows Minus *</label>
+                                <input type="number" class="form-control inputsmmodal" id="windowsMinus" placeholder="Windows Minus" />
+                                <span class="text-danger" id="validateWindowsMinus"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Windows Plus *</label>
+                                <input type="number" class="form-control inputsmmodal" id="windowsPlus" placeholder="Windows Plus" />
+                                <span class="text-danger" id="validateWindowsPlus"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Comment</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="comment" placeholder="comment"></textarea>
+                                <span class="text-danger" id="validateComment"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3 ">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input chkmodal" style="margin-left:2px !important;" type="checkbox" id="requiredFlag">
+                                    <label class="form-check-label" for="requiredFlag">&nbsp;Required Flag</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addVisit()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Visits*@
+
+@*End Modals.....*@
+
 
 <script>
     window._csrfToken = $('@Html.AntiForgeryToken()').val();

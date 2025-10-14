@@ -1,16 +1,18 @@
 @page
-@model GMS_UI.Pages.VLT.Volunteer.CreateModel
+@model GMS_UI.Pages.VLT.Volunteer.EditModel
 @{
-    ViewData["Title"] = "Create Volunteer";
+    ViewData["Title"] = "Edit Volunteer";
 }
 
 <div class="wizard-container">
     <h2 class="text-center mb-4">
-        <i class="bi bi-person-plus-fill text-primary"></i>
-        Create New Volunteer
+        <i class="bi bi-pencil-fill text-primary"></i>
+        Edit Volunteer
     </h2>
 
-    <form asp-page-handler="Create" method="post" id="wizardFormVolunteer">
+    <input type="hidden" id="volunteerId" value="@Model.VolunteerId" />
+
+    <form asp-page-handler="Update" method="post" id="wizardForm">
         @Html.AntiForgeryToken()
 
         <!-- Progress Indicator -->
@@ -322,7 +324,7 @@
 
                 <!-- Add Disease Form -->
                 <div class="card mb-3">
-                    <div class="card-header bg-danger text-white">
+                    <div class="card-header bg-primary text-white">
                         <h6 class="mb-0">Add Disease</h6>
                     </div>
                     <div class="card-body">
@@ -372,7 +374,7 @@
 
                 <!-- Add Medication Form -->
                 <div class="card mb-3">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header bg-primary text-white">
                         <h6 class="mb-0">Add Medication</h6>
                     </div>
                     <div class="card-body">
@@ -468,7 +470,7 @@
                     Next <i class="bi bi-arrow-right"></i>
                 </button>
                 <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
-                    <i class="bi bi-check"></i> Submit Volunteer
+                    <i class="bi bi-check"></i> Update Volunteer
                 </button>
             </div>
         </div>
@@ -484,9 +486,15 @@
     window.diseaseList = @Html.Raw(Json.Serialize(Model.DiseaseList));
     window.medicationList = @Html.Raw(Json.Serialize(Model.MedicationList));
 
+    // Pass volunteer data to JavaScript
+    // Use Newtonsoft.Json serialization to match the API response format
+    @{
+        var volunteerDataJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.VolunteerData);
+    }
+    window.volunteerData = @Html.Raw(volunteerDataJson);
+
     console.log('CSRF Token:', window._csrfToken);
-    console.log('Allergy List loaded:', window.allergyList);
-    console.log('Disease List loaded:', window.diseaseList);
-    console.log('Medication List loaded:', window.medicationList);
+    console.log('Volunteer Data:', window.volunteerData);
+    console.log('Volunteer Data JSON:', JSON.stringify(window.volunteerData, null, 2));
 </script>
-<script src="/js/vlt/volunteer/volunteerCreate.js"></script>
+<script src="/js/vlt/volunteer/volunteerEdit.js"></script>

@@ -103,6 +103,10 @@
 
         string Endpoint_CreateStudioDoc();
 
+        string Endpoint_CreateStudioStaff();
+
+        string Endpoint_GetStaffStudio();
+
         #endregion
 
         #region VLT...
@@ -112,6 +116,8 @@
         string Endpoint_GetVolunteerData();
 
         string Endpoint_CreateVolunteer();
+
+        string Endpoint_UpdateVolunteer();
 
         string Endpoint_CreateEthniciy();
 

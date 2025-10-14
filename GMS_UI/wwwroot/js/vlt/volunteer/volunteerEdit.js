@@ -111,22 +111,6 @@ function changeStep(direction) {
     // Update navigation buttons
     updateNavigationButtons();
 
-    // Load dropdowns and grids for medical steps
-    console.log('Current step:', currentStep);
-    if (currentStep === 5) {
-        console.log('Loading allergies for step 5');
-        loadAllergiesDropdown();
-        setupAllergiesGrid();
-    } else if (currentStep === 6) {
-        console.log('Loading diseases for step 6');
-        loadDiseasesDropdown();
-        setupDiseasesGrid();
-    } else if (currentStep === 7) {
-        console.log('Loading medications for step 7');
-        loadMedicationsDropdown();
-        setupMedicationsGrid();
-    }
-
     // Update review summary on last step
     if (currentStep === totalSteps) {
         updateReviewSummary();
@@ -166,7 +150,7 @@ function updateNavigationButtons() {
 
 // Cancel wizard and return to volunteer list
 function cancelWizard() {
-    if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
+    if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
         window.location.href = '/VLT/Volunteer/Index';
     }
 }
@@ -232,17 +216,13 @@ function jumpToStep(targetStep) {
     updateNavigationButtons();
 
     // Load dropdowns and grids for medical steps
-    console.log('Current step:', currentStep);
     if (currentStep === 5) {
-        console.log('Loading allergies for step 5');
         loadAllergiesDropdown();
         setupAllergiesGrid();
     } else if (currentStep === 6) {
-        console.log('Loading diseases for step 6');
         loadDiseasesDropdown();
         setupDiseasesGrid();
     } else if (currentStep === 7) {
-        console.log('Loading medications for step 7');
         loadMedicationsDropdown();
         setupMedicationsGrid();
     }
@@ -262,6 +242,7 @@ function addEmergencyContact() {
     contactDiv.id = `emergencyContact${emergencyContactCounter}`;
     contactDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="contactRecordId${emergencyContactCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Emergency Contact ${emergencyContactCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeEmergencyContact(${emergencyContactCounter})">
@@ -316,6 +297,7 @@ function addAllergy() {
 
     allergyDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="allergyRecordId${allergyCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Allergy ${allergyCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeAllergy(${allergyCounter})">
@@ -365,6 +347,7 @@ function addDisease() {
 
     diseaseDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="diseaseRecordId${diseaseCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Disease ${diseaseCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeDisease(${diseaseCounter})">
@@ -414,6 +397,7 @@ function addMedication() {
 
     medicationDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="medicationRecordId${medicationCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Medication ${medicationCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeMedication(${medicationCounter})">
@@ -460,6 +444,7 @@ function addDocument() {
 
     documentDiv.innerHTML = `
         <div class="card-body">
+            <input type="hidden" id="documentRecordId${documentCounter}" value="0" />
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Document ${documentCounter}</h6>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeDocument(${documentCounter})">
@@ -527,9 +512,9 @@ function updateReviewSummary() {
         <strong>Email:</strong> ${email}<br>
         <strong>Address:</strong> ${address}, ${city}, ${state}<br>
         <strong>Emergency Contacts:</strong> ${emergencyContactCounter}<br>
-        <strong>Allergies:</strong> ${allergiesData.length}<br>
-        <strong>Diseases:</strong> ${diseasesData.length}<br>
-        <strong>Medications:</strong> ${medicationsData.length}<br>
+        <strong>Allergies:</strong> ${allergyCounter}<br>
+        <strong>Diseases:</strong> ${diseaseCounter}<br>
+        <strong>Medications:</strong> ${medicationCounter}<br>
         <strong>Documents:</strong> ${documentCounter}
     `;
 }
@@ -543,6 +528,7 @@ function submitForm() {
     // Collect all form data
     const volunteerData = {
         VolunteerGeneralData: [{
+            VolunteerId: 0, // Will be set below
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
             MiddleName: document.getElementById('middleName').value,
@@ -550,6 +536,7 @@ function submitForm() {
             SubjectSS: document.getElementById('subjectSS').value,
             Phone: document.getElementById('phone').value,
             SubjectEmail: document.getElementById('subjectEmail').value,
+            Email: document.getElementById('subjectEmail').value, // Duplicate for Email field
             SubjectId: document.getElementById('subjectId').value,
             Weight: document.getElementById('weight').value,
             Height: document.getElementById('height').value,
@@ -558,6 +545,7 @@ function submitForm() {
             Race: parseInt(document.getElementById('race').value) || 0,
             Ethnicity: parseInt(document.getElementById('ethnicity').value) || 0,
             Language: parseInt(document.getElementById('language').value) || 0,
+            AddressId: 0,
             Address1: document.getElementById('address1').value,
             Address2: document.getElementById('address2').value,
             City: document.getElementById('city').value,
@@ -565,13 +553,17 @@ function submitForm() {
             ZipCode: document.getElementById('zipCode').value,
             Country: document.getElementById('country').value,
             LegalRepresentative: document.getElementById('legalRepresentative').value,
-            CompanyId: 1,
-            SiteId: 1,
-            Active: true
+            DateCreated: new Date().toISOString(),
+            CompanyId: "1",
+            CurrentStatus: "",
+            Picture: "",
+            UserName: 1,
+            Active: true,
+            SiteId: 1
         }],
         VolunteerEmergencyContactData: [],
         VolunteerAllergyData: [],
-        VolunteerDeseaseData: [],
+        VolunteerDiseaseData: [],
         VolunteerMedicationData: [],
         VolunteerDocumentationData: []
     };
@@ -580,67 +572,124 @@ function submitForm() {
     for (let i = 1; i <= emergencyContactCounter; i++) {
         const contactName = document.getElementById(`contactName${i}`);
         if (contactName && contactName.value) {
+            const contactRecordId = document.getElementById(`contactRecordId${i}`);
+            const recordId = contactRecordId ? parseInt(contactRecordId.value) || 0 : 0;
+
             volunteerData.VolunteerEmergencyContactData.push({
+                VoluntierId: parseInt(document.getElementById('volunteerId').value) || 0,  // Note: "VoluntierId" matches UDT typo
+                ContactId: recordId,
                 ContactName: contactName.value,
                 ContactPhone: document.getElementById(`contactPhone${i}`).value,
                 ContactRelation: parseInt(document.getElementById(`contactRelation${i}`).value) || 0,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
 
-    // Collect allergies from step data - only if there are any
-    if (allergiesData.length > 0) {
-        allergiesData.forEach(allergy => {
+    // Collect allergies
+    for (let i = 1; i <= allergyCounter; i++) {
+        const allergyId = document.getElementById(`allergyId${i}`);
+        if (allergyId && allergyId.value) {
+            const allergyRecordId = document.getElementById(`allergyRecordId${i}`);
+            const recordIdStr = allergyRecordId ? allergyRecordId.value : '0';
+
+            // Parse composite key (VId_AllergyId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+            }
+
+            const startDate = document.getElementById(`allergyStartDate${i}`).value || '0001-01-01';
+            const endDate = document.getElementById(`allergyEndDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerAllergyData.push({
-                AllergyId: allergy.id,
-                StartDate: allergy.startDate || '0001-01-01',
-                EndDate: allergy.endDate || '0001-01-01',
+                VId: vId,
+                AllergyId: parseInt(allergyId.value),
+                StartDate: startDate,
+                EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
-        });
+        }
     }
 
-    // Collect diseases from step data - only if there are any
-    if (diseasesData.length > 0) {
-        diseasesData.forEach(disease => {
-            volunteerData.VolunteerDeseaseData.push({
-                DiseaseId: disease.id,
-                StartDate: disease.startDate && disease.startDate !== '0001-01-01' ? disease.startDate : '0001-01-01',
-                EndDate: disease.endDate && disease.endDate !== '0001-01-01' ? disease.endDate : '0001-01-01',
+    // Collect diseases
+    for (let i = 1; i <= diseaseCounter; i++) {
+        const diseaseId = document.getElementById(`diseaseId${i}`);
+        if (diseaseId && diseaseId.value) {
+            const diseaseRecordId = document.getElementById(`diseaseRecordId${i}`);
+            const recordIdStr = diseaseRecordId ? diseaseRecordId.value : '0';
+
+            // Parse composite key (VId_DiseaseId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+            }
+
+            const startDate = document.getElementById(`diseaseStartDate${i}`).value || '0001-01-01';
+            const endDate = document.getElementById(`diseaseEndDate${i}`).value || '0001-01-01';
+            volunteerData.VolunteerDiseaseData.push({
+                VId: vId,
+                DeseaseId: parseInt(diseaseId.value),  // Note: Using "DeseaseId" to match UDT typo
+                StartDate: startDate,
+                EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
-        });
+        }
     }
 
-    // Collect medications from step data - only if there are any
-    if (medicationsData.length > 0) {
-        medicationsData.forEach(medication => {
+    // Collect medications
+    for (let i = 1; i <= medicationCounter; i++) {
+        const medicationName = document.getElementById(`medicationName${i}`);
+        if (medicationName && medicationName.value) {
+            const medicationRecordId = document.getElementById(`medicationRecordId${i}`);
+            const recordIdStr = medicationRecordId ? medicationRecordId.value : '0';
+
+            // Parse composite key (VId_MedicationId) if exists
+            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
+            let medId = 0;
+            if (recordIdStr && recordIdStr.includes('_')) {
+                const parts = recordIdStr.split('_');
+                vId = parseInt(parts[0]) || vId;
+                medId = parseInt(parts[1]) || 0;
+            }
+
+            const startDate = document.getElementById(`medicationStartDate${i}`).value || '0001-01-01';
+            const endDate = document.getElementById(`medicationEndDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerMedicationData.push({
-                MedicationId: medication.id,
-                DrogName: medication.name,
-                DrogDose: '',
-                StartDate: medication.startDate || '0001-01-01',
-                EndDate: medication.endDate || '0001-01-01',
+                VId: vId,
+                MedicationId: medId,
+                DrogName: medicationName.value,
+                DrogDose: document.getElementById(`medicationDose${i}`).value,
+                StartDate: startDate,
+                EndDate: endDate,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
-        });
+        }
     }
 
     // Collect documents
     for (let i = 1; i <= documentCounter; i++) {
         const docName = document.getElementById(`docName${i}`);
         if (docName && docName.value) {
+            const documentRecordId = document.getElementById(`documentRecordId${i}`);
+            const recordId = documentRecordId ? parseInt(documentRecordId.value) || 0 : 0;
+
             const docDate = document.getElementById(`docDate${i}`).value || '0001-01-01';
             volunteerData.VolunteerDocumentationData.push({
+                DocId: recordId,
                 DocumentTypeId: parseInt(document.getElementById(`documentTypeId${i}`).value) || 0,
                 DocName: docName.value,
                 DocDate: docDate,
@@ -649,23 +698,24 @@ function submitForm() {
                 Notes: document.getElementById(`docNotes${i}`).value,
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: true,
+                UserName: 1
             });
         }
     }
 
-    // Submit via AJAX
-    console.log('=== SUBMITTING VOLUNTEER DATA ===');
-    console.log('Volunteer Data:', JSON.stringify(volunteerData, null, 2));
-    console.log('URL:', window.location.pathname + '?handler=Create');
-    console.log('CSRF Token:', window._csrfToken);
-    console.log('Allergies count:', volunteerData.VolunteerAllergyData.length);
-    console.log('Diseases count:', volunteerData.VolunteerDeseaseData.length);
-    console.log('Medications count:', volunteerData.VolunteerMedicationData.length);
+    // Get volunteer ID
+    const volunteerId = document.getElementById('volunteerId').value;
+    console.log('Volunteer ID from hidden field:', volunteerId);
 
+    // Add volunteer ID to general data
+    volunteerData.VolunteerGeneralData[0].VolunteerId = parseInt(volunteerId);
+    console.log('VolunteerId set to:', volunteerData.VolunteerGeneralData[0].VolunteerId);
+
+    // Submit via AJAX
     $.ajax({
         type: "POST",
-        url: window.location.pathname + '?handler=Create',
+        url: window.location.pathname + '?handler=Update',
         data: JSON.stringify(volunteerData),
         contentType: "application/json",
         headers: {
@@ -674,17 +724,15 @@ function submitForm() {
         },
         beforeSend: function(xhr) {
             xhr.setRequestHeader("XSRF-TOKEN", window._csrfToken);
-            console.log('Request being sent...');
         },
         success: function (response) {
-            console.log('=== RESPONSE RECEIVED ===');
             console.log('Full Response:', response);
             console.log('Response.success:', response.success);
             console.log('Response.message:', response.message);
             console.log('Response type:', typeof response);
 
             if (response.success) {
-                alert('Volunteer created successfully!');
+                alert('Volunteer updated successfully!');
                 window.location.href = '/VLT/Volunteer/Index';
             } else {
                 const errorMsg = response.message || response.Message || 'Unknown error occurred';
@@ -694,7 +742,6 @@ function submitForm() {
             }
         },
         error: function (xhr, status, error) {
-            console.error('=== AJAX ERROR ===');
             console.error('AJAX Error:', {
                 status: status,
                 error: error,
@@ -720,7 +767,257 @@ function submitForm() {
 // Initialize navigation buttons
 updateNavigationButtons();
 
-// ========== Medical Information Steps ==========
+// Populate form with existing data
+if (window.volunteerData) {
+    console.log('Loading volunteer data for editing:', window.volunteerData);
+    console.log('Type of volunteerData:', typeof window.volunteerData);
+    console.log('volunteerData keys:', Object.keys(window.volunteerData));
+
+    // Check if data has the expected structure
+    if (window.volunteerData.Header) {
+        console.log('Header found:', window.volunteerData.Header);
+        console.log('Header keys:', Object.keys(window.volunteerData.Header));
+    } else if (window.volunteerData.header) {
+        console.log('header (lowercase) found:', window.volunteerData.header);
+        console.log('header keys:', Object.keys(window.volunteerData.header));
+    } else {
+        console.error('No Header or header property found in volunteerData');
+    }
+
+    populateFormData();
+} else {
+    console.error('window.volunteerData is null or undefined');
+}
+
+function populateFormData() {
+    const data = window.volunteerData;
+
+    console.log('populateFormData called with data:', data);
+    console.log('data is null?', data === null);
+    console.log('data is undefined?', data === undefined);
+
+    if (!data) {
+        console.error('volunteerData is null or undefined in populateFormData');
+        return;
+    }
+
+    // Handle both lowercase and uppercase property names (API returns camelCase)
+    const header = data.header || data.Header;
+
+    console.log('Extracted header:', header);
+
+    if (!header) {
+        console.error('No header data found in volunteer data');
+        console.error('Available properties:', Object.keys(data));
+        return;
+    }
+
+    // Populate general information - API returns camelCase
+    document.getElementById('firstName').value = header.firstName || '';
+    document.getElementById('middleName').value = header.middleName || '';
+    document.getElementById('lastName').value = header.lastName || '';
+
+    // Parse date from format "MM/DD/YYYY HH:mm:ss" to "MM/DD/YYYY" for text input
+    let dobValue = '';
+    if (header.subjectDOB) {
+        const dobParts = header.subjectDOB.split(' ')[0].split('/');
+        if (dobParts.length === 3) {
+            // Keep in MM/DD/YYYY format for text input
+            dobValue = `${dobParts[0].padStart(2, '0')}/${dobParts[1].padStart(2, '0')}/${dobParts[2]}`;
+        }
+    }
+    document.getElementById('subjectDOB').value = dobValue;
+
+    document.getElementById('subjectSS').value = header.subjectSS || '';
+    document.getElementById('phone').value = header.phone || '';
+    document.getElementById('subjectEmail').value = header.subjectEmail || '';
+    document.getElementById('subjectId').value = header.subjectId || '';
+
+    // Populate physical & demographics
+    document.getElementById('weight').value = (header.weight || '').trim();
+    document.getElementById('height').value = (header.height || '').trim();
+
+    // Use the ID fields returned from the API
+    document.getElementById('sex').value = header.sexId || '';
+    document.getElementById('gender').value = header.genderId || '';
+    document.getElementById('race').value = header.raceId || '';
+    document.getElementById('ethnicity').value = header.ethnicityId || '';
+    document.getElementById('language').value = header.languageId || '';
+
+    // Populate address
+    document.getElementById('address1').value = header.address1 || '';
+    document.getElementById('address2').value = header.address2 || '';
+    document.getElementById('city').value = header.city || '';
+    document.getElementById('state').value = header.state || '';
+    document.getElementById('zipCode').value = header.zipCode || '';
+    document.getElementById('country').value = header.country || '';
+    document.getElementById('legalRepresentative').value = header.legalRepresentative || '';
+
+    // Helper function to parse date from "MM/DD/YYYY HH:mm:ss" to "YYYY-MM-DD"
+    function parseDate(dateStr) {
+        if (!dateStr) return '';
+        const dateParts = dateStr.split(' ')[0].split('/');
+        if (dateParts.length === 3) {
+            // Check if it's the min date (01/01/0001)
+            if (dateParts[2] === '0001') return '';
+            return `${dateParts[2]}-${dateParts[0].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}`;
+        }
+        return '';
+    }
+
+    // Populate emergency contacts
+    const emergencyContacts = data.emergencyContacts || [];
+    if (emergencyContacts.length > 0) {
+        emergencyContacts.forEach(contact => {
+            addEmergencyContact();
+            const currentCounter = emergencyContactCounter;
+
+            // Store the contact ID for update
+            const contactRecordId = document.getElementById(`contactRecordId${currentCounter}`);
+            if (contactRecordId && contact.emergencyContactId) {
+                contactRecordId.value = contact.emergencyContactId;
+            }
+
+            document.getElementById(`contactName${currentCounter}`).value = contact.contactName || '';
+            document.getElementById(`contactPhone${currentCounter}`).value = contact.contactPhone || '';
+            document.getElementById(`contactRelation${currentCounter}`).value = contact.relationTypeId || '0';
+        });
+    }
+
+    // Populate allergies
+    const allergies = data.allergies || [];
+    if (allergies.length > 0) {
+        allergies.forEach((allergy, index) => {
+            addAllergy();
+            const currentCounter = allergyCounter;
+
+            // Use setTimeout to ensure DOM is updated
+            setTimeout(() => {
+                const allergySelect = document.getElementById(`allergyId${currentCounter}`);
+                const allergyRecordId = document.getElementById(`allergyRecordId${currentCounter}`);
+
+                if (allergySelect) {
+                    // Store the volunteer allergy record ID for update
+                    if (allergyRecordId && allergy.volunteerId) {
+                        allergyRecordId.value = allergy.volunteerId + '_' + allergy.allergyId; // Composite key
+                    }
+
+                    // Try to find by ID first
+                    let foundValue = allergy.allergyId || '';
+                    allergySelect.value = foundValue;
+
+                    // If not found by ID, try to match by name
+                    if (!allergySelect.value && allergy.allergy && window.allergyList) {
+                        const matchingItem = window.allergyList.find(item =>
+                            item.text && item.text.toLowerCase() === allergy.allergy.toLowerCase()
+                        );
+                        if (matchingItem) {
+                            foundValue = matchingItem.value;
+                            allergySelect.value = foundValue;
+                            console.log(`Matched allergy "${allergy.allergy}" by name to ID ${foundValue}`);
+                        }
+                    }
+
+                    document.getElementById(`allergyStartDate${currentCounter}`).value = parseDate(allergy.startDate);
+                    document.getElementById(`allergyEndDate${currentCounter}`).value = parseDate(allergy.endDate);
+                } else {
+                    console.error(`Could not find allergyId${currentCounter}`);
+                }
+            }, 50 * (index + 1));
+        });
+    }
+
+    // Populate diseases
+    const diseases = data.diseases || [];
+    if (diseases.length > 0) {
+        diseases.forEach((disease, index) => {
+            addDisease();
+            const currentCounter = diseaseCounter;
+            setTimeout(() => {
+                const diseaseSelect = document.getElementById(`diseaseId${currentCounter}`);
+                const diseaseRecordId = document.getElementById(`diseaseRecordId${currentCounter}`);
+
+                if (diseaseSelect) {
+                    // Store the volunteer disease record ID for update (composite key)
+                    if (diseaseRecordId && disease.volunteerId && disease.diseaseId) {
+                        diseaseRecordId.value = disease.volunteerId + '_' + disease.diseaseId;
+                    }
+
+                    // Try to find by ID first
+                    let foundValue = disease.diseaseId || '';
+                    diseaseSelect.value = foundValue;
+
+                    // If not found by ID, try to match by name
+                    if (!diseaseSelect.value && disease.diseaseName && window.diseaseList) {
+                        const matchingItem = window.diseaseList.find(item =>
+                            item.text && item.text.toLowerCase() === disease.diseaseName.toLowerCase()
+                        );
+                        if (matchingItem) {
+                            foundValue = matchingItem.value;
+                            diseaseSelect.value = foundValue;
+                            console.log(`Matched disease "${disease.diseaseName}" by name to ID ${foundValue}`);
+                        }
+                    }
+
+                    document.getElementById(`diseaseStartDate${currentCounter}`).value = parseDate(disease.startDate);
+                    document.getElementById(`diseaseEndDate${currentCounter}`).value = parseDate(disease.endDate);
+                }
+            }, 50 * (index + 1));
+        });
+    }
+
+    // Populate medications
+    const medications = data.medications || [];
+    if (medications.length > 0) {
+        medications.forEach((med, index) => {
+            addMedication();
+            const currentCounter = medicationCounter;
+            setTimeout(() => {
+                const medicationRecordId = document.getElementById(`medicationRecordId${currentCounter}`);
+
+                // Store the volunteer medication record ID for update (composite key)
+                if (medicationRecordId && med.volunteerId && med.medicationId) {
+                    medicationRecordId.value = med.volunteerId + '_' + med.medicationId;
+                }
+
+                // Use drogName if available, otherwise try to find from medicationList using medicationId
+                let medName = med.drogName || '';
+                if (!medName && med.medicationId && window.medicationList) {
+                    const medItem = window.medicationList.find(m => m.value == med.medicationId);
+                    medName = medItem ? medItem.text : '';
+                }
+                document.getElementById(`medicationName${currentCounter}`).value = medName;
+                document.getElementById(`medicationDose${currentCounter}`).value = med.drogDose || '';
+                document.getElementById(`medicationStartDate${currentCounter}`).value = parseDate(med.startDate);
+                document.getElementById(`medicationEndDate${currentCounter}`).value = parseDate(med.endDate);
+            }, 10 * index);
+        });
+    }
+
+    // Populate documents
+    const documentations = data.documentations || [];
+    if (documentations.length > 0) {
+        documentations.forEach(doc => {
+            addDocument();
+            const currentCounter = documentCounter;
+
+            // Store the document ID for update
+            const documentRecordId = document.getElementById(`documentRecordId${currentCounter}`);
+            if (documentRecordId && doc.docId) {
+                documentRecordId.value = doc.docId;
+            }
+
+            document.getElementById(`documentTypeId${currentCounter}`).value = doc.docTypeId || '0';
+            document.getElementById(`docName${currentCounter}`).value = doc.docName || '';
+            document.getElementById(`docDate${currentCounter}`).value = parseDate(doc.docDate);
+            document.getElementById(`docVersion${currentCounter}`).value = doc.docVersion || '';
+            document.getElementById(`docActive${currentCounter}`).value = doc.docActive ? 'true' : 'false';
+            document.getElementById(`docNotes${currentCounter}`).value = doc.notes || '';
+        });
+    }
+}
+
+// ========== Grid-Based Medical Information (Steps 5-7) ==========
 
 // Arrays to store medical data
 let allergiesData = [];
@@ -734,10 +1031,7 @@ let medicationsGridApi;
 
 // Load Allergies Dropdown
 function loadAllergiesDropdown() {
-    console.log('loadAllergiesDropdown called');
-    console.log('window.allergyList:', window.allergyList);
     const select = $('#allergySelect');
-    console.log('allergySelect element found:', select.length > 0);
     select.empty();
     select.append('<option value="">Select Allergy</option>');
     if (window.allergyList && window.allergyList.length > 0) {
@@ -747,13 +1041,10 @@ function loadAllergiesDropdown() {
                 text: allergy.text
             }));
         });
-        console.log('Loaded', window.allergyList.length, 'allergies');
-    } else {
-        console.warn('window.allergyList is empty or undefined');
     }
 }
 
-// Setup Allergies Grid (in Step 5)
+// Setup Allergies Grid
 function setupAllergiesGrid() {
     const gridOptions = {
         rowData: allergiesData,
@@ -764,13 +1055,13 @@ function setupAllergiesGrid() {
                 field: "startDate",
                 headerName: "Start Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 field: "endDate",
                 headerName: "End Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 headerName: "Actions",
@@ -788,8 +1079,10 @@ function setupAllergiesGrid() {
     };
 
     const gridDiv = document.querySelector('#allergiesGrid');
-    gridDiv.innerHTML = '';
-    allergiesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        allergiesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
 }
 
 // Save Allergy
@@ -840,10 +1133,7 @@ function deleteAllergy(index) {
 
 // Load Diseases Dropdown
 function loadDiseasesDropdown() {
-    console.log('loadDiseasesDropdown called');
-    console.log('window.diseaseList:', window.diseaseList);
     const select = $('#diseaseSelect');
-    console.log('diseaseSelect element found:', select.length > 0);
     select.empty();
     select.append('<option value="">Select Disease</option>');
     if (window.diseaseList && window.diseaseList.length > 0) {
@@ -853,13 +1143,10 @@ function loadDiseasesDropdown() {
                 text: disease.text
             }));
         });
-        console.log('Loaded', window.diseaseList.length, 'diseases');
-    } else {
-        console.warn('window.diseaseList is empty or undefined');
     }
 }
 
-// Setup Diseases Grid (in Step 6)
+// Setup Diseases Grid
 function setupDiseasesGrid() {
     const gridOptions = {
         rowData: diseasesData,
@@ -870,13 +1157,13 @@ function setupDiseasesGrid() {
                 field: "startDate",
                 headerName: "Start Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 field: "endDate",
                 headerName: "End Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 headerName: "Actions",
@@ -894,8 +1181,10 @@ function setupDiseasesGrid() {
     };
 
     const gridDiv = document.querySelector('#diseasesGrid');
-    gridDiv.innerHTML = '';
-    diseasesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        diseasesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
 }
 
 // Save Disease
@@ -946,10 +1235,7 @@ function deleteDisease(index) {
 
 // Load Medications Dropdown
 function loadMedicationsDropdown() {
-    console.log('loadMedicationsDropdown called');
-    console.log('window.medicationList:', window.medicationList);
     const select = $('#medicationSelect');
-    console.log('medicationSelect element found:', select.length > 0);
     select.empty();
     select.append('<option value="">Select Medication</option>');
     if (window.medicationList && window.medicationList.length > 0) {
@@ -959,13 +1245,10 @@ function loadMedicationsDropdown() {
                 text: medication.text
             }));
         });
-        console.log('Loaded', window.medicationList.length, 'medications');
-    } else {
-        console.warn('window.medicationList is empty or undefined');
     }
 }
 
-// Setup Medications Grid (in Step 7)
+// Setup Medications Grid
 function setupMedicationsGrid() {
     const gridOptions = {
         rowData: medicationsData,
@@ -976,13 +1259,13 @@ function setupMedicationsGrid() {
                 field: "startDate",
                 headerName: "Start Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 field: "endDate",
                 headerName: "End Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => params.value && params.value !== '0001-01-01' ? new Date(params.value).toLocaleDateString() : ''
             },
             {
                 headerName: "Actions",
@@ -1000,8 +1283,10 @@ function setupMedicationsGrid() {
     };
 
     const gridDiv = document.querySelector('#medicationsGrid');
-    gridDiv.innerHTML = '';
-    medicationsGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        medicationsGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
 }
 
 // Save Medication
@@ -1049,4 +1334,3 @@ function deleteMedication(index) {
     medicationsData.splice(index, 1);
     setupMedicationsGrid();
 }
-

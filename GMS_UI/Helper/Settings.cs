@@ -104,6 +104,9 @@
 
         public string Endpoint_CreateStudioDoc() => _config["Endpoint_CreateStudioDoc"] ?? "";
 
+        public string Endpoint_CreateStudioStaff() => _config["Endpoint_CreateStudioStaff"] ?? "";
+
+        public string Endpoint_GetStaffStudio() => _config["Endpoint_GetStaffStudio"] ?? "";
 
         #endregion
 
@@ -114,6 +117,8 @@
         public string Endpoint_GetVolunteerData() => _config["Endpoint_GetVolunteerData"] ?? "";
 
         public string Endpoint_CreateVolunteer() => _config["Endpoint_CreateVolunteer"] ?? "";
+
+        public string Endpoint_UpdateVolunteer() => _config["Endpoint_UpdateVolunteer"] ?? "";
 
         public string Endpoint_CreateEthniciy()
         {

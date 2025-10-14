@@ -228,68 +228,71 @@
 </div>
 
 
-<div id="studiostaff" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deletestaffLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="studiostaff" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studiostaffLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog" style="max-width: 95%; width: 95%;">
         <div class="modal-content" role="document">
             <div class="modal-header">
-                <h2>Are you sure you want to delete this staff?</h2>
+                <h2>Manage Studios for <span id="staffNameHeader"></span></h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
-                <input type="hidden" id="staffIdDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <dl class="row">
-                        <dt class="col-sm-6">
-                            First Name:
-                        </dt>
-                        <dd class="col-sm-6" id="firstNameD">
+                <input type="hidden" id="currentStaffId" />
 
-                        </dd>
-                        <dt class="col-sm-6">
-                            Last Name:
-                        </dt>
-                        <dd class="col-sm-6" id="lastNameD">
+                <!-- Add/Edit Assignment Section -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><span id="assignmentFormTitle">Add Studio Assignment</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" id="assignmentAction" value="1" />
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Studio *</label>
+                                <select class="form-select" id="studioSelect">
+                                    <option value="">Select Studio</option>
+                                </select>
+                                <span id="validateStudio" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Role *</label>
+                                <select class="form-select" id="roleSelect">
+                                    <option value="">Select Role</option>
+                                </select>
+                                <span id="validateRole" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Start Date *</label>
+                                <input type="date" class="form-control" id="startDate" />
+                                <span id="validateStartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" />
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-success w-100" onclick="saveStudioStaffAssignment()">
+                                    <i class="bi bi-save"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        </dd>
-                        <dt class="col-sm-6">
-                            Email:
-                        </dt>
-                        <dd class="col-sm-6" id="emailD">
-
-                        </dd>
-                        <dt class="col-sm-6">
-                            Phone:
-                        </dt>
-                        <dd class="col-sm-6" id="phoneD">
-
-                        </dd>
-                        <dt class="col-sm-6">
-                            Position:
-                        </dt>
-                        <dd class="col-sm-6" id="positionD">
-
-                        </dd>
-                        <dt class="col-sm-6">
-                            Department:
-                        </dt>
-                        <dd class="col-sm-6" id="departmentD">
-
-                        </dd>
-                        <dt class="col-sm-6">
-                            Status:
-                        </dt>
-                        <dd class="col-sm-6" id="statusD">
-
-                        </dd>
-                    </dl>
+                <!-- Current Assignments Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Current Assignments</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="studioStaffGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudStaff(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-
 </div>
 <!-- End Modals Create Edit and Delete Staff-->
 
@@ -297,4 +300,4 @@
     window._csrfToken = $('@Html.AntiForgeryToken()').val();
     urlIndex = '/CMN/Staff';
 </script>
-<script src="/js/cmn/staff/staff.js"></script>
+<script src="/js/cmn/staff/staff.js?v=@DateTime.Now.Ticks"></script>

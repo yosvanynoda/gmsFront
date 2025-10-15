@@ -1,13 +1,14 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
 using GMS.Objects.CMN;
+using GMS.Objects.General;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 
 namespace GMS_UI.Pages.VLT.Volunteer
 {
@@ -25,6 +26,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
         [BindProperty(SupportsGet = true)]
         public int VolunteerId { get; set; }
 
+        public List<SelectListItem> FlagList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> RaceList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EthnicityList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> GenderList { get; set; } = new List<SelectListItem>();
@@ -32,6 +34,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public List<SelectListItem> AllergyList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> DiseaseList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> MedicationList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> VLTStatusList { get; set; } = new List<SelectListItem>();
 
         public object? VolunteerData { get; set; }
 
@@ -44,6 +47,13 @@ namespace GMS_UI.Pages.VLT.Volunteer
             };
 
             // Load dropdown lists
+            var flagResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/CMN/getflagdroplist", "Flag List", "", requestData);
+            if (flagResponse?.Success == true && flagResponse.Data != null)
+            {
+                var flagData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(flagResponse.Data.ToString());
+                FlagList = flagData?.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Name }).ToList() ?? new List<SelectListItem>();
+            }
+
             var raceResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetRaceList(), "Race List", "", requestData);
             if (raceResponse?.Success == true && raceResponse.Data != null)
             {
@@ -93,6 +103,14 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 MedicationList = medicationData?.Select(m => new SelectListItem { Value = m.MedicationId.ToString(), Text = m.MedicationName }).ToList() ?? new List<SelectListItem>();
             }
 
+            // Load VLT Status List
+            var vltStatusResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/VLT/getvltstatusdroplist", "VLT Status List", "", requestData);
+            if (vltStatusResponse?.Success == true && vltStatusResponse.Data != null)
+            {
+                var vltStatusData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(vltStatusResponse.Data.ToString());
+                VLTStatusList = vltStatusData?.Select(v => new SelectListItem { Value = v.Id.ToString(), Text = v.Name }).ToList() ?? new List<SelectListItem>();
+            }
+
             // Load volunteer data
             var volunteerRequest = new VolunteerRequest
             {
@@ -120,6 +138,53 @@ namespace GMS_UI.Pages.VLT.Volunteer
             else
             {
                 _logger.LogWarning("Failed to load volunteer data: {Message}", volunteerResponse?.Message);
+            }
+        }
+
+        public async Task<JsonResult> OnPostFlagColorAsync(int flagId)
+        {
+            try
+            {
+                _logger.LogInformation("OnPostFlagColorAsync called with flagId: {FlagId}", flagId);
+
+                var requestData = new GeneralCompanySiteRequest
+                {
+                    CompanyId = 1,
+                    SiteId = 1
+                };
+
+                var flagResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/CMN/getflagdroplist", "Flag List", "", requestData);
+
+                if (flagResponse?.Success == true && flagResponse.Data != null)
+                {
+                    var flagData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(flagResponse.Data.ToString());
+                    var flag = flagData?.FirstOrDefault(f => f.Id == flagId);
+
+                    if (flag != null)
+                    {
+                        // Assuming DropListBaseResponse has a Color property - adjust if needed
+                        return new JsonResult(new
+                        {
+                            success = true,
+                            color = flag.Name ?? ""
+                        });
+                    }
+                }
+
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = "Flag not found"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostFlagColorAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
         }
 

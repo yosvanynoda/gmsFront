@@ -1,6 +1,8 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
 using GMS.Objects.CMN;
+using GMS.Objects.General;
+using GMS.Objects.STD;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
         [BindProperty]
         public CreateVolunteerDataRequest VolunteerData { get; set; } = new CreateVolunteerDataRequest();
 
+        public List<SelectListItem> FlagList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> RaceList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EthnicityList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> GenderList { get; set; } = new List<SelectListItem>();
@@ -31,6 +34,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public List<SelectListItem> AllergyList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> DiseaseList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> MedicationList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> VLTStatusList { get; set; } = new List<SelectListItem>();
 
         public async Task OnGetAsync()
         {
@@ -39,6 +43,14 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 CompanyId = 1,
                 SiteId = 1,
             };
+
+            // Load Flag List
+            var flagResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/CMN/getflagdroplist", "Flag List", "", requestData);
+            if (flagResponse?.Success == true && flagResponse.Data != null)
+            {
+                var flagData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(flagResponse.Data.ToString());
+                FlagList = flagData?.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Name }).ToList() ?? new List<SelectListItem>();
+            }
 
             // Load Race List
             var raceResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetRaceList(), "Race List", "", requestData);
@@ -94,6 +106,14 @@ namespace GMS_UI.Pages.VLT.Volunteer
             {
                 var medicationData = JsonConvert.DeserializeObject<List<MedicationBaseResponse>>(medicationResponse.Data.ToString());
                 MedicationList = medicationData?.Select(m => new SelectListItem { Value = m.MedicationId.ToString(), Text = m.MedicationName }).ToList() ?? new List<SelectListItem>();
+            }
+
+            // Load VLT Status List
+            var vltStatusResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/VLT/getvltstatusdroplist", "VLT Status List", "", requestData);
+            if (vltStatusResponse?.Success == true && vltStatusResponse.Data != null)
+            {
+                var vltStatusData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(vltStatusResponse.Data.ToString());
+                VLTStatusList = vltStatusData?.Select(v => new SelectListItem { Value = v.Id.ToString(), Text = v.Name }).ToList() ?? new List<SelectListItem>();
             }
         }
 

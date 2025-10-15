@@ -40,6 +40,27 @@
                 <h5><i class="bi bi-info-circle"></i> General Information</h5>
 
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Flag</label>
+                            <select class="form-select" id="flag">
+                                <option value="0">Select Flag</option>
+                                @foreach (var item in Model.FlagList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Flag Reason / Comment</label>
+                            <input type="text" class="form-control" id="flagReason" placeholder="Enter flag reason (optional)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">First Name *</label>
@@ -91,10 +112,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Subject ID</label>
                             <input type="text" class="form-control" id="subjectId" placeholder="Enter subject ID">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Current Status</label>
+                            <select class="form-select" id="currentStatus">
+                                <option value="">Select Status</option>
+                                @foreach (var item in Model.VLTStatusList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -497,4 +530,4 @@
     console.log('Volunteer Data:', window.volunteerData);
     console.log('Volunteer Data JSON:', JSON.stringify(window.volunteerData, null, 2));
 </script>
-<script src="/js/vlt/volunteer/volunteerEdit.js"></script>
+<script src="/js/vlt/volunteer/volunteerEdit.js?v=@DateTime.Now.Ticks"></script>

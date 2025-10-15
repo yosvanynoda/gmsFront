@@ -77,6 +77,10 @@
 
         public string Endpoint_CreateCRO() => _config["Endpoint_CreateCRO"] ?? "";
 
+        public string Endpoint_GetVLTStatusList() => _config["Endpoint_GetVLTStatusList"] ?? "";
+
+        public string Endpoint_CreateVLTStatus() => _config["Endpoint_CreateVLTStatus"] ?? "";
+
         #endregion
 
         #region STD....
@@ -120,10 +124,9 @@
 
         public string Endpoint_UpdateVolunteer() => _config["Endpoint_UpdateVolunteer"] ?? "";
 
-        public string Endpoint_CreateEthniciy()
-        {
-            throw new NotImplementedException();
-        }
+        public string Endpoint_GetVLTStatusDropList() => _config["Endpoint_GetVLTStatusDropList"] ?? "";
+        
+
 
         #endregion
     }

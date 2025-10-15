@@ -75,6 +75,10 @@
 
         string Endpoint_CreateCRO();
 
+        string Endpoint_GetVLTStatusList();
+
+        string Endpoint_CreateVLTStatus();
+
         #endregion
 
         #region STD....
@@ -119,7 +123,8 @@
 
         string Endpoint_UpdateVolunteer();
 
-        string Endpoint_CreateEthniciy();
+        string Endpoint_GetVLTStatusDropList();
+
 
         #endregion
     }

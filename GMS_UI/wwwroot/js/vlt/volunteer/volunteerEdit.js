@@ -8,8 +8,52 @@ let diseaseCounter = 0;
 let medicationCounter = 0;
 let documentCounter = 0;
 
+// Arrays to store medical data for grid-based approach
+let allergiesData = [];
+let diseasesData = [];
+let medicationsData = [];
+
+// Grid APIs
+let allergiesGridApi;
+let diseasesGridApi;
+let medicationsGridApi;
+
+// Store addressId for updates
+let volunteerAddressId = 0;
+
+// Store flag color for conditional updates
+let currentFlagColor = '';
+
 // Date formatting for DOB field
 $(document).ready(function() {
+    // Handle flag dropdown change to get color
+    $('#flag').on('change', function() {
+        const flagId = $(this).val();
+        if (flagId && flagId !== '0') {
+            // Fetch flag details to get color
+            $.ajax({
+                type: "POST",
+                url: '/VLT/Volunteer/Edit?handler=FlagColor',
+                data: JSON.stringify({ flagId: parseInt(flagId) }),
+                contentType: "application/json",
+                headers: {
+                    'RequestVerificationToken': window._csrfToken,
+                    'X-CSRF-TOKEN': window._csrfToken
+                },
+                success: function(response) {
+                    if (response.success) {
+                        currentFlagColor = response.color || '';
+                    }
+                },
+                error: function() {
+                    currentFlagColor = '';
+                }
+            });
+        } else {
+            currentFlagColor = '';
+        }
+    });
+
     // Auto-format DOB as user types
     $('#subjectDOB').on('input', function(e) {
         let value = $(this).val().replace(/\D/g, ''); // Remove non-digits
@@ -529,6 +573,7 @@ function submitForm() {
     const volunteerData = {
         VolunteerGeneralData: [{
             VolunteerId: 0, // Will be set below
+            Flag: parseInt(document.getElementById('flag').value) || 0,
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
             MiddleName: document.getElementById('middleName').value,
@@ -545,7 +590,7 @@ function submitForm() {
             Race: parseInt(document.getElementById('race').value) || 0,
             Ethnicity: parseInt(document.getElementById('ethnicity').value) || 0,
             Language: parseInt(document.getElementById('language').value) || 0,
-            AddressId: 0,
+            AddressId: volunteerAddressId,
             Address1: document.getElementById('address1').value,
             Address2: document.getElementById('address2').value,
             City: document.getElementById('city').value,
@@ -555,7 +600,7 @@ function submitForm() {
             LegalRepresentative: document.getElementById('legalRepresentative').value,
             DateCreated: new Date().toISOString(),
             CompanyId: "1",
-            CurrentStatus: "",
+            CurrentStatus: document.getElementById('currentStatus').selectedOptions[0]?.text || '',
             Picture: "",
             UserName: 1,
             Active: true,
@@ -712,6 +757,17 @@ function submitForm() {
     volunteerData.VolunteerGeneralData[0].VolunteerId = parseInt(volunteerId);
     console.log('VolunteerId set to:', volunteerData.VolunteerGeneralData[0].VolunteerId);
 
+    // Add FlagReason only if color is not green
+    const isGreen = currentFlagColor.toLowerCase() === 'green' ||
+                    currentFlagColor.toLowerCase() === '#00ff00' ||
+                    currentFlagColor.toLowerCase() === '#008000';
+
+    if (!isGreen) {
+        volunteerData.VolunteerGeneralData[0].FlagReason = document.getElementById('flagReason').value || '';
+    } else {
+        volunteerData.VolunteerGeneralData[0].FlagReason = ''; // Clear if green
+    }
+
     // Submit via AJAX
     $.ajax({
         type: "POST",
@@ -813,6 +869,12 @@ function populateFormData() {
     }
 
     // Populate general information - API returns camelCase
+    document.getElementById('flag').value = header.flag || 0;
+    document.getElementById('flagReason').value = header.flagReason || '';
+
+    // Store flag color from loaded data
+    currentFlagColor = header.flagColor || '';
+
     document.getElementById('firstName').value = header.firstName || '';
     document.getElementById('middleName').value = header.middleName || '';
     document.getElementById('lastName').value = header.lastName || '';
@@ -843,8 +905,10 @@ function populateFormData() {
     document.getElementById('race').value = header.raceId || '';
     document.getElementById('ethnicity').value = header.ethnicityId || '';
     document.getElementById('language').value = header.languageId || '';
+    document.getElementById('currentStatus').value = header.currentStatusId || '';
 
     // Populate address
+    volunteerAddressId = header.addressId || 0; // Store addressId for update
     document.getElementById('address1').value = header.address1 || '';
     document.getElementById('address2').value = header.address2 || '';
     document.getElementById('city').value = header.city || '';
@@ -884,113 +948,55 @@ function populateFormData() {
         });
     }
 
-    // Populate allergies
+    // Populate allergies using grid-based approach
     const allergies = data.allergies || [];
+    allergiesData = []; // Clear existing data
     if (allergies.length > 0) {
-        allergies.forEach((allergy, index) => {
-            addAllergy();
-            const currentCounter = allergyCounter;
-
-            // Use setTimeout to ensure DOM is updated
-            setTimeout(() => {
-                const allergySelect = document.getElementById(`allergyId${currentCounter}`);
-                const allergyRecordId = document.getElementById(`allergyRecordId${currentCounter}`);
-
-                if (allergySelect) {
-                    // Store the volunteer allergy record ID for update
-                    if (allergyRecordId && allergy.volunteerId) {
-                        allergyRecordId.value = allergy.volunteerId + '_' + allergy.allergyId; // Composite key
-                    }
-
-                    // Try to find by ID first
-                    let foundValue = allergy.allergyId || '';
-                    allergySelect.value = foundValue;
-
-                    // If not found by ID, try to match by name
-                    if (!allergySelect.value && allergy.allergy && window.allergyList) {
-                        const matchingItem = window.allergyList.find(item =>
-                            item.text && item.text.toLowerCase() === allergy.allergy.toLowerCase()
-                        );
-                        if (matchingItem) {
-                            foundValue = matchingItem.value;
-                            allergySelect.value = foundValue;
-                            console.log(`Matched allergy "${allergy.allergy}" by name to ID ${foundValue}`);
-                        }
-                    }
-
-                    document.getElementById(`allergyStartDate${currentCounter}`).value = parseDate(allergy.startDate);
-                    document.getElementById(`allergyEndDate${currentCounter}`).value = parseDate(allergy.endDate);
-                } else {
-                    console.error(`Could not find allergyId${currentCounter}`);
-                }
-            }, 50 * (index + 1));
+        allergies.forEach(allergy => {
+            const allergyItem = {
+                id: allergy.allergyId,
+                name: allergy.allergy || '',
+                startDate: allergy.startDate || '0001-01-01',
+                endDate: allergy.endDate || '0001-01-01'
+            };
+            allergiesData.push(allergyItem);
         });
     }
 
-    // Populate diseases
+    // Populate diseases using grid-based approach
     const diseases = data.diseases || [];
+    diseasesData = []; // Clear existing data
     if (diseases.length > 0) {
-        diseases.forEach((disease, index) => {
-            addDisease();
-            const currentCounter = diseaseCounter;
-            setTimeout(() => {
-                const diseaseSelect = document.getElementById(`diseaseId${currentCounter}`);
-                const diseaseRecordId = document.getElementById(`diseaseRecordId${currentCounter}`);
-
-                if (diseaseSelect) {
-                    // Store the volunteer disease record ID for update (composite key)
-                    if (diseaseRecordId && disease.volunteerId && disease.diseaseId) {
-                        diseaseRecordId.value = disease.volunteerId + '_' + disease.diseaseId;
-                    }
-
-                    // Try to find by ID first
-                    let foundValue = disease.diseaseId || '';
-                    diseaseSelect.value = foundValue;
-
-                    // If not found by ID, try to match by name
-                    if (!diseaseSelect.value && disease.diseaseName && window.diseaseList) {
-                        const matchingItem = window.diseaseList.find(item =>
-                            item.text && item.text.toLowerCase() === disease.diseaseName.toLowerCase()
-                        );
-                        if (matchingItem) {
-                            foundValue = matchingItem.value;
-                            diseaseSelect.value = foundValue;
-                            console.log(`Matched disease "${disease.diseaseName}" by name to ID ${foundValue}`);
-                        }
-                    }
-
-                    document.getElementById(`diseaseStartDate${currentCounter}`).value = parseDate(disease.startDate);
-                    document.getElementById(`diseaseEndDate${currentCounter}`).value = parseDate(disease.endDate);
-                }
-            }, 50 * (index + 1));
+        diseases.forEach(disease => {
+            const diseaseItem = {
+                id: disease.diseaseId,
+                name: disease.diseaseName || '',
+                startDate: disease.startDate || '0001-01-01',
+                endDate: disease.endDate || '0001-01-01'
+            };
+            diseasesData.push(diseaseItem);
         });
     }
 
-    // Populate medications
+    // Populate medications using grid-based approach
     const medications = data.medications || [];
+    medicationsData = []; // Clear existing data
     if (medications.length > 0) {
-        medications.forEach((med, index) => {
-            addMedication();
-            const currentCounter = medicationCounter;
-            setTimeout(() => {
-                const medicationRecordId = document.getElementById(`medicationRecordId${currentCounter}`);
+        medications.forEach(med => {
+            // Try to get medication name from medicationList if not available
+            let medName = med.drogName || '';
+            if (!medName && med.medicationId && window.medicationList) {
+                const medItem = window.medicationList.find(m => m.value == med.medicationId);
+                medName = medItem ? medItem.text : '';
+            }
 
-                // Store the volunteer medication record ID for update (composite key)
-                if (medicationRecordId && med.volunteerId && med.medicationId) {
-                    medicationRecordId.value = med.volunteerId + '_' + med.medicationId;
-                }
-
-                // Use drogName if available, otherwise try to find from medicationList using medicationId
-                let medName = med.drogName || '';
-                if (!medName && med.medicationId && window.medicationList) {
-                    const medItem = window.medicationList.find(m => m.value == med.medicationId);
-                    medName = medItem ? medItem.text : '';
-                }
-                document.getElementById(`medicationName${currentCounter}`).value = medName;
-                document.getElementById(`medicationDose${currentCounter}`).value = med.drogDose || '';
-                document.getElementById(`medicationStartDate${currentCounter}`).value = parseDate(med.startDate);
-                document.getElementById(`medicationEndDate${currentCounter}`).value = parseDate(med.endDate);
-            }, 10 * index);
+            const medicationItem = {
+                id: med.medicationId,
+                name: medName,
+                startDate: med.startDate || '0001-01-01',
+                endDate: med.endDate || '0001-01-01'
+            };
+            medicationsData.push(medicationItem);
         });
     }
 
@@ -1018,16 +1024,6 @@ function populateFormData() {
 }
 
 // ========== Grid-Based Medical Information (Steps 5-7) ==========
-
-// Arrays to store medical data
-let allergiesData = [];
-let diseasesData = [];
-let medicationsData = [];
-
-// Grid APIs
-let allergiesGridApi;
-let diseasesGridApi;
-let medicationsGridApi;
 
 // Load Allergies Dropdown
 function loadAllergiesDropdown() {

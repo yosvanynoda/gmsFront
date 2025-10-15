@@ -33,6 +33,19 @@ const gridOptions = {
     // Columns to be displayed (Should match rowData properties)
     columnDefs: [
         { field: "volunteerId", headerName: "ID", filter: 'agTextColumnFilter', hide: true },
+        {
+            field: "flagColor",
+            headerName: "",
+            width: 50,
+            cellRenderer: (params) => {
+                if (params.value && params.value !== '' && params.value !== '#FFFFFF' && params.value !== 'white') {
+                    return `<i class="bi bi-circle-fill" style="color: ${params.value};"></i>`;
+                }
+                return '';
+            },
+            sortable: false,
+            filter: false
+        },
         { field: "firstName", headerName: "First Name", filter: 'agTextColumnFilter' },
         { field: "lastName", headerName: "Last Name", filter: 'agTextColumnFilter' },
         {

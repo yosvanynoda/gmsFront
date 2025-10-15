@@ -1596,5 +1596,103 @@ namespace GMS_UI.Pages.CMN.ReferenceData
 
         #endregion
 
+        #region ====== VLTStatus ======
+
+        public async Task<JsonResult> OnPostVLTStatusList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse name = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetVLTStatusList(), "a VLTStatus List", "", requestData);
+
+                if (name == null || name.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Contract research List",
+                        success = false,
+                        data = new List<VLTStatusBaseResponse>()
+                    });
+                }
+
+                if (name.Success && name.Data != null)
+                {
+                    List<VLTStatusBaseResponse> result = JsonConvert.DeserializeObject<List<VLTStatusBaseResponse>>(name.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Volunteer status list was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = name.Message,
+                        success = false,
+                        data = new List<VLTStatusBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<VLTStatusBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudVLTStatus(string name, string? comment, int action, int id)
+        {
+            try
+            {
+                var createRequest = new CreateVLTStatusRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    Name = name,
+                    Comment = comment,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    Id = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVLTStatus(), "a VLTStatus", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        
+
+        #endregion
+
     }
 }

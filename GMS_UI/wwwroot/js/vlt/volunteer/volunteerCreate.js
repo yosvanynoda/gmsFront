@@ -543,6 +543,8 @@ function submitForm() {
     // Collect all form data
     const volunteerData = {
         VolunteerGeneralData: [{
+            Flag: parseInt(document.getElementById('flag').value) || 0,
+            FlagReason: document.getElementById('flagReason').value || '',
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
             MiddleName: document.getElementById('middleName').value,
@@ -558,6 +560,7 @@ function submitForm() {
             Race: parseInt(document.getElementById('race').value) || 0,
             Ethnicity: parseInt(document.getElementById('ethnicity').value) || 0,
             Language: parseInt(document.getElementById('language').value) || 0,
+            CurrentStatus: document.getElementById('currentStatus').selectedOptions[0]?.text || '',
             Address1: document.getElementById('address1').value,
             Address2: document.getElementById('address2').value,
             City: document.getElementById('city').value,

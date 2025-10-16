@@ -1,54 +1,157 @@
 ﻿@page
 @model GMS_UI.Pages.VLT.Volunteer.FilterModel
 @{
-    ViewData["Title"] = "Volunteer Filter";
+    ViewData["Title"] = "Volunteer Filter & Pre-Assignment";
 }
 
-<div class="main-content">
-    <h2>Volunteer Filter</h2>
-    <form>
-        <!-- Study -->
-        <label for="research">Study</label>
-        <select id="research" name="research">
-            <option value="">-- Select --</option>
-            <option value="study1">Study 1</option>
-            <option value="study2">Study 2</option>
-            <option value="study3">Study 3</option>
-        </select>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-grid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-theme-alpine.css" />
 
-        <!-- Age -->
-        <label for="min_age">Min Age:</label>
-        <input type="number" id="min_age" name="min_age" min="0" max="120">
+<div class="container-gms">
+    <div class="card">
+        <div class="card-header">
+            <h3>Volunteer Filter & Pre-Assignment</h3>
+            <p class="text-muted mb-0">Search for volunteers matching study criteria and pre-assign candidates to studies</p>
+        </div>
+        <div class="card-body">
+            <!-- Filter Form -->
+            <form id="filterForm">
+                <div class="row mb-3">
+                    <!-- Study -->
+                    <div class="col-md-6">
+                        <label for="studyId" class="form-label">Study <span class="text-danger">*</span></label>
+                        <select id="studyId" name="studyId" class="form-select" required>
+                            <option value="">-- Select Study --</option>
+                            @foreach (var study in Model.StudyList)
+                            {
+                                <option value="@study.Value">@study.Text</option>
+                            }
+                        </select>
+                        <small class="text-muted">Required for pre-assignment</small>
+                    </div>
 
-        <label for="max_age">Max Age:</label>
-        <input type="number" id="max_age" name="max_age" min="0" max="120">
+                    <!-- Exclude Already Assigned -->
+                    <div class="col-md-6">
+                        <label class="form-label">Options</label>
+                        <div class="form-check">
+                            <input type="checkbox" id="excludeAlreadyAssigned" name="excludeAlreadyAssigned" class="form-check-input" checked>
+                            <label for="excludeAlreadyAssigned" class="form-check-label">Exclude volunteers already assigned to this study</label>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Sex -->
-        <label for="sex">Sex:</label>
-        <select id="sex" name="sex">
-            <option value="">-- Select --</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="intersex">Intersex</option>
-        </select>
+                <div class="row mb-3">
+                    <!-- Age Range -->
+                    <div class="col-md-3">
+                        <label for="minAge" class="form-label">Min Age:</label>
+                        <input type="number" id="minAge" name="minAge" class="form-control" min="0" max="120" placeholder="e.g. 18">
+                    </div>
 
-        <!-- Race -->
-        <label for="race">Race:</label>
-        <select id="race" name="race">
-            <option value="">-- Select --</option>
-            <option value="white">White</option>
-            <option value="black">Black</option>
-            <option value="asian">Asian</option>
-            <option value="indian">Indian</option>
-            <option value="other">Other</option>
-        </select>
+                    <div class="col-md-3">
+                        <label for="maxAge" class="form-label">Max Age:</label>
+                        <input type="number" id="maxAge" name="maxAge" class="form-control" min="0" max="120" placeholder="e.g. 65">
+                    </div>
 
-        <!-- Illness or condition -->
-        <label for="condition">Illness or Condition:</label>
-        <input type="text" id="condition" name="condition" placeholder="E.g. Diabetes, Hypertension...">
+                    <!-- Gender -->
+                    <div class="col-md-3">
+                        <label for="genderId" class="form-label">Gender:</label>
+                        <select id="genderId" name="genderId" class="form-select">
+                            <option value="">-- All --</option>
+                            @foreach (var gender in Model.GenderList)
+                            {
+                                <option value="@gender.Value">@gender.Text</option>
+                            }
+                        </select>
+                    </div>
 
-    </form>
+                    <!-- Race -->
+                    <div class="col-md-3">
+                        <label for="raceId" class="form-label">Race:</label>
+                        <select id="raceId" name="raceId" class="form-select">
+                            <option value="">-- All --</option>
+                            @foreach (var race in Model.RaceList)
+                            {
+                                <option value="@race.Value">@race.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
-    <button onclick="location.href='VoluntariesPreFiltered.html'">Search Voluntiers</button>
+                <div class="row mb-3">
+                    <!-- Ethnicity -->
+                    <div class="col-md-4">
+                        <label for="ethnicityId" class="form-label">Ethnicity:</label>
+                        <select id="ethnicityId" name="ethnicityId" class="form-select">
+                            <option value="">-- All --</option>
+                            @foreach (var ethnicity in Model.EthnicityList)
+                            {
+                                <option value="@ethnicity.Value">@ethnicity.Text</option>
+                            }
+                        </select>
+                    </div>
 
+                    <!-- Language -->
+                    <div class="col-md-4">
+                        <label for="languageId" class="form-label">Language:</label>
+                        <select id="languageId" name="languageId" class="form-select">
+                            <option value="">-- All --</option>
+                            @foreach (var language in Model.LanguageList)
+                            {
+                                <option value="@language.Value">@language.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Current Status -->
+                    <div class="col-md-4">
+                        <label for="currentStatus" class="form-label">Current Status:</label>
+                        <select id="currentStatus" name="currentStatus" class="form-select">
+                            <option value="">-- All --</option>
+                            @foreach (var status in Model.VLTStatusList)
+                            {
+                                <option value="@status.Text">@status.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" id="searchBtn" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Search Volunteers
+                        </button>
+                        <button type="button" id="clearBtn" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card mt-4" id="resultsSection" style="display: none;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">Search Results</h5>
+                <small class="text-muted" id="resultsCount">0 volunteers found</small>
+            </div>
+            <div>
+                <button type="button" id="preAssignBtn" class="btn btn-success" disabled>
+                    <i class="bi bi-person-plus"></i> Pre-Assign Selected to Study
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="volunteersGrid" class="ag-theme-alpine" style="height: 500px; width: 100%;"></div>
+        </div>
+    </div>
 </div>
+
+<!-- Add CSRF token to form -->
+<form method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/dist/ag-grid-community.min.js"></script>
+<script src="~/js/vlt/volunteer/volunteerFilter.js"></script>

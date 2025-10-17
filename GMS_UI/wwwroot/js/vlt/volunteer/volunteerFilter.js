@@ -4,10 +4,65 @@ let selectedVolunteers = [];
 
 // Initialize on document ready
 $(document).ready(function() {
+    // Initialize Select2 on multi-select dropdowns
+    $('#genderId').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Select gender(s)',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    $('#raceId').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Select race(s)',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    $('#ethnicityId').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Select ethnicity(ies)',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    $('#languageId').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Select language(s)',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    $('#diseaseId').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Select disease(s)',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
     // Setup event listeners
     $('#searchBtn').click(performSearch);
     $('#clearBtn').click(clearFilters);
     $('#preAssignBtn').click(preAssignVolunteers);
+
+    // Healthy person checkbox - toggle disease dropdown
+    $('#healthyPerson').change(function() {
+        if ($(this).is(':checked')) {
+            $('#diseaseId').prop('disabled', true).val(null).trigger('change');
+        } else {
+            $('#diseaseId').prop('disabled', false);
+        }
+    });
+
+    // Disease dropdown - toggle healthy person checkbox
+    $('#diseaseId').on('change', function() {
+        const selectedValues = $(this).val();
+        if (selectedValues && selectedValues.length > 0) {
+            $('#healthyPerson').prop('disabled', true).prop('checked', false);
+        } else {
+            $('#healthyPerson').prop('disabled', false);
+        }
+    });
 });
 
 // Perform volunteer search
@@ -15,27 +70,32 @@ function performSearch() {
     // Validate study selection (required for pre-assignment, but optional for search)
     const studyId = parseInt($('#studyId').val()) || null;
 
-    // Build search request - ensure empty values are sent as null, not 0
+    // Build search request - handle multi-select arrays
     const minAge = $('#minAge').val();
     const maxAge = $('#maxAge').val();
-    const genderId = $('#genderId').val();
-    const raceId = $('#raceId').val();
-    const ethnicityId = $('#ethnicityId').val();
-    const languageId = $('#languageId').val();
+    const genderIds = $('#genderId').val(); // Array from Select2
+    const raceIds = $('#raceId').val();     // Array from Select2
+    const ethnicityIds = $('#ethnicityId').val(); // Array from Select2
+    const languageIds = $('#languageId').val();   // Array from Select2
+    const diseaseIds = $('#diseaseId').val();     // Array from Select2
     const currentStatus = $('#currentStatus').val();
+    const healthyPerson = $('#healthyPerson').is(':checked');
 
     const searchRequest = {
         CompanyId: 1,
         SiteId: 1,
         MinAge: minAge && minAge !== '' ? parseInt(minAge) : null,
         MaxAge: maxAge && maxAge !== '' ? parseInt(maxAge) : null,
-        GenderId: genderId && genderId !== '' ? parseInt(genderId) : null,
-        RaceId: raceId && raceId !== '' ? parseInt(raceId) : null,
-        EthnicityId: ethnicityId && ethnicityId !== '' ? parseInt(ethnicityId) : null,
-        LanguageId: languageId && languageId !== '' ? parseInt(languageId) : null,
+        // Convert arrays to integers, send null if empty
+        GenderIds: genderIds && genderIds.length > 0 ? genderIds.map(Number) : null,
+        RaceIds: raceIds && raceIds.length > 0 ? raceIds.map(Number) : null,
+        EthnicityIds: ethnicityIds && ethnicityIds.length > 0 ? ethnicityIds.map(Number) : null,
+        LanguageIds: languageIds && languageIds.length > 0 ? languageIds.map(Number) : null,
+        DiseaseIds: diseaseIds && diseaseIds.length > 0 ? diseaseIds.map(Number) : null,
         CurrentStatus: currentStatus && currentStatus !== '' ? currentStatus : null,
         ExcludeAlreadyAssigned: $('#excludeAlreadyAssigned').is(':checked'),
-        StudyId: studyId
+        StudyId: studyId,
+        Healthy: healthyPerson ? true : null
     };
 
     console.log('Search Request:', searchRequest);
@@ -336,6 +396,18 @@ function preAssignVolunteers() {
 // Clear all filters
 function clearFilters() {
     $('#filterForm')[0].reset();
+
+    // Clear Select2 dropdowns
+    $('#genderId').val(null).trigger('change');
+    $('#raceId').val(null).trigger('change');
+    $('#ethnicityId').val(null).trigger('change');
+    $('#languageId').val(null).trigger('change');
+    $('#diseaseId').val(null).trigger('change');
+
+    // Re-enable disease dropdown in case it was disabled
+    $('#diseaseId').prop('disabled', false);
+    $('#healthyPerson').prop('disabled', false);
+
     $('#resultsSection').hide();
     selectedVolunteers = [];
 }

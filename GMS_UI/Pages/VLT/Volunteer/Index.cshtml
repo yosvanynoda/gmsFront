@@ -22,6 +22,68 @@
     </div>
 </div>
 
+<!-- Volunteer History Modal -->
+<div class="modal fade" id="volunteerHistoryModal" tabindex="-1" aria-labelledby="volunteerHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="volunteerHistoryModalLabel">
+                    <i class="bi bi-clock-history"></i> Volunteer History: <span id="volunteerHistoryName"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Studies Section -->
+                <div class="mb-4">
+                    <h6 class="border-bottom pb-2"><i class="bi bi-journal-medical"></i> Studies</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Volunteer Name</th>
+                                    <th>Study Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Random Code</th>
+                                    <th>Random Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyStudiesBody">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Selections Section -->
+                <div>
+                    <h6 class="border-bottom pb-2"><i class="bi bi-check2-square"></i> Pre-Assigned Selections</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Volunteer Name</th>
+                                    <th>Study Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Pre-Assigned Date</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historySelectionsBody">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     window._csrfToken = $('@Html.AntiForgeryToken()').val();
     urlIndex = '/VLT/Volunteer';

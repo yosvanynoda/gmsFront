@@ -27,6 +27,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public List<SelectListItem> RaceList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EthnicityList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> LanguageList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> DiseaseList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> VLTStatusList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> StudyList { get; set; } = new List<SelectListItem>();
 
@@ -68,6 +69,14 @@ namespace GMS_UI.Pages.VLT.Volunteer
             {
                 var languageData = JsonConvert.DeserializeObject<List<LanguageBaseResponse>>(languageResponse.Data.ToString());
                 LanguageList = languageData?.Select(l => new SelectListItem { Value = l.Id.ToString(), Text = l.Language }).ToList() ?? new List<SelectListItem>();
+            }
+
+            // Load Disease List
+            var diseaseResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDiseaseList(), "Disease List", "", requestData);
+            if (diseaseResponse?.Success == true && diseaseResponse.Data != null)
+            {
+                var diseaseData = JsonConvert.DeserializeObject<List<DiseaseBaseResponse>>(diseaseResponse.Data.ToString());
+                DiseaseList = diseaseData?.Select(d => new SelectListItem { Value = d.DiseaseId.ToString(), Text = d.DiseaseName }).ToList() ?? new List<SelectListItem>();
             }
 
             // Load VLT Status List

@@ -74,5 +74,83 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
 
         }
+
+        public async Task<JsonResult> OnPostGetHistoryAsync([FromBody] VolunteerRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("OnPostGetHistoryAsync called for VolunteerId: {VolunteerId}", request.VolunteerId);
+
+                var requestData = new VolunteerRequest
+                {
+                    CompanyId = 1,
+                    SiteId = 1,
+                    VolunteerId = request.VolunteerId
+                };
+
+                BaseResponse historyResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/VLT/getvolunteerhistory", "Volunteer History", "", requestData);
+
+                if (historyResponse == null || historyResponse.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Error reading Volunteer History"
+                    });
+                }
+
+                if (historyResponse.Success && historyResponse.Data != null)
+                {
+                    // Deserialize to the correct type
+                    VLTVolunteerHistoryResponse historyData = null;
+
+                    if (historyResponse.Data != null)
+                    {
+                        var dataType = historyResponse.Data.GetType();
+                        _logger.LogInformation("History Data type: {Type}", dataType.FullName);
+
+                        // If Data is a string (JSON), deserialize it
+                        if (dataType == typeof(string))
+                        {
+                            historyData = JsonConvert.DeserializeObject<VLTVolunteerHistoryResponse>(historyResponse.Data.ToString());
+                        }
+                        // If Data is JArray or JToken, convert to typed object
+                        else if (dataType.FullName.StartsWith("Newtonsoft.Json.Linq"))
+                        {
+                            historyData = JsonConvert.DeserializeObject<VLTVolunteerHistoryResponse>(historyResponse.Data.ToString());
+                        }
+                        // If it's already the correct type
+                        else if (dataType == typeof(VLTVolunteerHistoryResponse))
+                        {
+                            historyData = (VLTVolunteerHistoryResponse)historyResponse.Data;
+                        }
+                    }
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = historyResponse.Message,
+                        data = historyData
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = historyResponse.Message ?? "Error reading Volunteer History"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostGetHistoryAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = $"Exception: {ex.Message}"
+                });
+            }
+        }
     }
 }

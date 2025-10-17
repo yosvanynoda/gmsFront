@@ -6,6 +6,8 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-grid.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-theme-alpine.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
 <div class="container-gms">
     <div class="card">
@@ -55,8 +57,7 @@
                     <!-- Gender -->
                     <div class="col-md-3">
                         <label for="genderId" class="form-label">Gender:</label>
-                        <select id="genderId" name="genderId" class="form-select">
-                            <option value="">-- All --</option>
+                        <select id="genderId" name="genderId" class="form-select" multiple>
                             @foreach (var gender in Model.GenderList)
                             {
                                 <option value="@gender.Value">@gender.Text</option>
@@ -67,8 +68,7 @@
                     <!-- Race -->
                     <div class="col-md-3">
                         <label for="raceId" class="form-label">Race:</label>
-                        <select id="raceId" name="raceId" class="form-select">
-                            <option value="">-- All --</option>
+                        <select id="raceId" name="raceId" class="form-select" multiple>
                             @foreach (var race in Model.RaceList)
                             {
                                 <option value="@race.Value">@race.Text</option>
@@ -79,10 +79,9 @@
 
                 <div class="row mb-3">
                     <!-- Ethnicity -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="ethnicityId" class="form-label">Ethnicity:</label>
-                        <select id="ethnicityId" name="ethnicityId" class="form-select">
-                            <option value="">-- All --</option>
+                        <select id="ethnicityId" name="ethnicityId" class="form-select" multiple>
                             @foreach (var ethnicity in Model.EthnicityList)
                             {
                                 <option value="@ethnicity.Value">@ethnicity.Text</option>
@@ -91,10 +90,9 @@
                     </div>
 
                     <!-- Language -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="languageId" class="form-label">Language:</label>
-                        <select id="languageId" name="languageId" class="form-select">
-                            <option value="">-- All --</option>
+                        <select id="languageId" name="languageId" class="form-select" multiple>
                             @foreach (var language in Model.LanguageList)
                             {
                                 <option value="@language.Value">@language.Text</option>
@@ -102,8 +100,23 @@
                         </select>
                     </div>
 
+                    <!-- Disease -->
+                    <div class="col-md-3">
+                        <label for="diseaseId" class="form-label">Disease:</label>
+                        <select id="diseaseId" name="diseaseId" class="form-select" multiple>
+                            @foreach (var disease in Model.DiseaseList)
+                            {
+                                <option value="@disease.Value">@disease.Text</option>
+                            }
+                        </select>
+                        <div class="form-check mt-2">
+                            <input type="checkbox" id="healthyPerson" name="healthyPerson" class="form-check-input">
+                            <label for="healthyPerson" class="form-check-label">Healthy Person (No Diseases)</label>
+                        </div>
+                    </div>
+
                     <!-- Current Status -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="currentStatus" class="form-label">Current Status:</label>
                         <select id="currentStatus" name="currentStatus" class="form-select">
                             <option value="">-- All --</option>
@@ -154,4 +167,5 @@
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/dist/ag-grid-community.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="~/js/vlt/volunteer/volunteerFilter.js"></script>

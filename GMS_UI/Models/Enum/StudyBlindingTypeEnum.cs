@@ -6,8 +6,8 @@
 
         OpenLabel = 1,
 
-        Single = 2,
+        SingleBlind = 2,
 
-        Double = 3
+        DoubleBlind = 3
     }
 }

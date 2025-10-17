@@ -1,5 +1,4 @@
 using GMS.BL.Generic;
-using GMS.Objects.API;
 using GMS.Objects.CMN;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
@@ -10,16 +9,10 @@ using Newtonsoft.Json;
 
 namespace GMS_UI.Pages.VLT.Volunteer
 {
-    public class CreateModel : PageModel
+    public class CreateModel(ILogger<CreateModel> logger, ISettings settings) : PageModel
     {
-        private readonly ILogger<CreateModel> _logger;
-        private readonly ISettings _settings;
-
-        public CreateModel(ILogger<CreateModel> logger, ISettings settings)
-        {
-            _logger = logger;
-            _settings = settings;
-        }
+        private readonly ILogger<CreateModel> _logger = logger;
+        private readonly ISettings _settings = settings;
 
         [BindProperty]
         public CreateVolunteerDataRequest VolunteerData { get; set; } = new CreateVolunteerDataRequest();

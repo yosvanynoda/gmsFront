@@ -1,6 +1,5 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
-using GMS.Objects.CMN;
 using GMS.Objects.General;
 using GMS.Objects.STD;
 using GMS_UI.Helper;
@@ -76,7 +75,7 @@ namespace GMS_UI.Pages.STD.StudioDoc
 
         }
 
-        public async Task<JsonResult> OnPostCrudStudioDoc(int id, int studioId,  string name, int typeId, DateTime docDate, string version, string notes, int siteId, int action)
+        public async Task<JsonResult> OnPostCrudStudioDoc(int id, int studioId, string name, int typeId, DateTime docDate, string version, string notes, int siteId, int action)
         {
             try
             {

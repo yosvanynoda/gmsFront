@@ -576,6 +576,77 @@ namespace GMS_UI.Pages.CMN.ReferenceData
             }
         }
 
+        public async Task<JsonResult> OnPostDocTypeDropList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse docTypes = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDocTypeDropList(), "a DocType ", "", requestData);
+
+                if (docTypes == null || docTypes.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading DocType",
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+
+                if (docTypes.Success && docTypes.Data != null)
+                {
+                    List<DropListBaseResponse>? result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(docTypes.Data.ToString());
+
+                    if (result == null)
+                    {
+                        return new JsonResult(new
+                        {
+                            errorCode = 500,
+                            errorMessage = "Error processing DocType data",
+                            success = false,
+                            data = new List<DropListBaseResponse>()
+                        });
+                    }
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "DocType was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = docTypes.Message,
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DropListBaseResponse>()
+                });
+            }
+
+        }
+
         #endregion
 
         #region ====== Ethnicity ======

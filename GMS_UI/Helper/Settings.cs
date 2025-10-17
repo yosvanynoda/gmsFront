@@ -39,6 +39,8 @@
 
         public string Endpoint_GetDocType()=> _config["Endpoint_GetDocType"] ?? "";
 
+        public string Endpoint_GetDocTypeDropList() => _config["Endpoint_GetDocTypeDropList"] ?? "";
+
         public string Endpoint_GetRoleTypeList()=> _config["Endpoint_GetRoleTypeList"] ?? "";
 
         public string Endpoint_GetSiteList()=> _config["Endpoint_GetSiteList"] ?? "";

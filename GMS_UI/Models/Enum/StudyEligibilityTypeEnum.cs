@@ -1,6 +1,6 @@
 ﻿namespace GMS_UI.Models.Enum
 {
-    public enum StudioEligibilityTypeEnum
+    public enum StudyEligibilityTypeEnum
     {
         Inclusion = 1,
 

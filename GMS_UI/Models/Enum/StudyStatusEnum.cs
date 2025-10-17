@@ -1,6 +1,6 @@
 ﻿namespace GMS_UI.Models.Enum
 {
-    public enum StudioStatusEnum
+    public enum StudyStatusEnum
     {
         //Planned|Active|Completed|Terminated old values
 

@@ -1,6 +1,6 @@
 ﻿namespace GMS_UI.Models.Enum
 {
-    public enum StudioPhaseEnum
+    public enum StudyPhaseEnum
     {
         I = 1, // Initial
 

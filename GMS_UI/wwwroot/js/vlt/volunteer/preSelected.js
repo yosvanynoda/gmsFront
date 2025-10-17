@@ -57,11 +57,11 @@ const gridOptions = {
         {
             field: "action",
             headerName: "Actions",
-            width: 150,
+            width: 100,
             cellRenderer: (params) => {
-                return `<button class="btn btn-sm btn-primary action-btn" data-volunteer-id="${params.data.volunteerId}" data-study-id="${params.data.studyId}">
-                    <i class="bi bi-check-circle"></i> Complete
-                </button>`;
+                return `<a href="#" class="action-link" data-volunteer-id="${params.data.volunteerId}" data-study-id="${params.data.studyId}" title="Complete">
+                    <i class="bi bi-check-circle text-success"></i>
+                </a>`;
             },
             sortable: false,
             filter: false
@@ -88,12 +88,18 @@ $(function () {
         loadPreSelectedVolunteers();
     });
 
-    // Handle action button clicks
-    $(document).on('click', '.action-btn', function(e) {
+    // Handle action link clicks
+    $(document).on('click', '.action-link', function(e) {
         e.preventDefault();
         const volunteerId = $(this).data('volunteer-id');
         const studyId = $(this).data('study-id');
         completePreAssignment(volunteerId, studyId);
+    });
+
+    // Handle complete selected button click
+    $('#btnCompleteSelected').click(function(e) {
+        e.preventDefault();
+        completeSelectedVolunteers();
     });
 });
 
@@ -147,10 +153,158 @@ function setupGrid(data) {
 function onSelectionChanged() {
     selectedVolunteers = gridApi.getSelectedRows();
     console.log('Selected volunteers:', selectedVolunteers);
+
+    // Update button visibility and count
+    const count = selectedVolunteers.length;
+    $('#selectedCount').text(count);
+
+    if (count > 0) {
+        $('#btnCompleteSelected').show();
+    } else {
+        $('#btnCompleteSelected').hide();
+    }
 }
 
 function completePreAssignment(volunteerId, studyId) {
-    // TODO: Implement complete functionality later
     console.log('Complete pre-assignment for volunteer:', volunteerId, 'study:', studyId);
-    alert(`Complete functionality for Volunteer ID ${volunteerId} and Study ID ${studyId} will be implemented later.`);
+
+    // Confirm with user
+    if (!confirm(`Are you sure you want to create a subject from Volunteer ID ${volunteerId} for this study?`)) {
+        return;
+    }
+
+    // Build request
+    const createSubjectRequest = {
+        VolunteerId: volunteerId,
+        StudyId: studyId
+    };
+
+    console.log('Create Subject Request:', createSubjectRequest);
+
+    // Call API
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=CreateSubject',
+        data: JSON.stringify(createSubjectRequest),
+        contentType: "application/json",
+        headers: {
+            'RequestVerificationToken': window._csrfToken
+        },
+        success: function(response) {
+            console.log('Create Subject Response:', response);
+
+            if (response.success) {
+                alert(`Success! Subject created from Volunteer ID ${volunteerId}.`);
+
+                // Reload the grid to update the list
+                loadPreSelectedVolunteers();
+            } else {
+                alert('Error creating subject: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Create Subject Error:', error);
+            console.error('XHR Status:', xhr.status);
+            console.error('XHR Response:', xhr.responseText);
+
+            let errorMessage = 'Unknown error';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText;
+            } else {
+                errorMessage = error;
+            }
+
+            alert('Error creating subject: ' + errorMessage);
+        }
+    });
+}
+
+function completeSelectedVolunteers() {
+    if (!selectedVolunteers || selectedVolunteers.length === 0) {
+        alert('Please select at least one volunteer.');
+        return;
+    }
+
+    const count = selectedVolunteers.length;
+    if (!confirm(`Are you sure you want to create ${count} subject${count !== 1 ? 's' : ''} from the selected volunteers?`)) {
+        return;
+    }
+
+    console.log('Creating subjects for selected volunteers:', selectedVolunteers);
+
+    // Build array of requests
+    const requests = selectedVolunteers.map(volunteer => ({
+        VolunteerId: volunteer.volunteerId,
+        StudyId: volunteer.studyId
+    }));
+
+    // Track progress
+    let completed = 0;
+    let failed = 0;
+    const errors = [];
+
+    // Process each volunteer
+    const processNext = (index) => {
+        if (index >= requests.length) {
+            // All done
+            const message = `Completed: ${completed} subject${completed !== 1 ? 's' : ''} created successfully.` +
+                (failed > 0 ? `\n${failed} failed.` : '');
+            alert(message);
+
+            if (errors.length > 0) {
+                console.error('Errors during batch creation:', errors);
+            }
+
+            // Reload grid
+            loadPreSelectedVolunteers();
+            return;
+        }
+
+        const request = requests[index];
+
+        $.ajax({
+            type: "POST",
+            url: window.location.pathname + '?handler=CreateSubject',
+            data: JSON.stringify(request),
+            contentType: "application/json",
+            headers: {
+                'RequestVerificationToken': window._csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    completed++;
+                } else {
+                    failed++;
+                    errors.push({
+                        volunteerId: request.VolunteerId,
+                        error: response.message || 'Unknown error'
+                    });
+                }
+                // Process next
+                processNext(index + 1);
+            },
+            error: function(xhr, status, error) {
+                failed++;
+                let errorMessage = 'Unknown error';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    errorMessage = xhr.responseText;
+                } else {
+                    errorMessage = error;
+                }
+                errors.push({
+                    volunteerId: request.VolunteerId,
+                    error: errorMessage
+                });
+                // Process next
+                processNext(index + 1);
+            }
+        });
+    };
+
+    // Start processing
+    processNext(0);
 }

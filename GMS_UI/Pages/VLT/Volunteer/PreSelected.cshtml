@@ -6,7 +6,7 @@
 
 <style>
     .preselected-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
         color: white;
         border-radius: 10px 10px 0 0 !important;
         padding: 1.5rem;
@@ -50,8 +50,8 @@
     }
 
     .filter-section select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #5f9ea0;
+        box-shadow: 0 0 0 3px rgba(95, 158, 160, 0.1);
         outline: none;
     }
 
@@ -80,7 +80,7 @@
     /* AG-Grid customizations */
     .ag-theme-balham .ag-header {
         background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #667eea;
+        border-bottom: 2px solid #5f9ea0;
         font-weight: 600;
     }
 
@@ -93,29 +93,29 @@
     }
 
     .ag-theme-balham .ag-row:hover {
-        background-color: #f0f4ff !important;
+        background-color: #e8f4f5 !important;
     }
 
     .ag-theme-balham .ag-row-selected {
-        background-color: #e0e7ff !important;
+        background-color: #d4e9ea !important;
     }
 
     /* Action button styling */
     .action-btn {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
         border: none;
         padding: 0.4rem 1rem;
         font-size: 0.875rem;
         font-weight: 500;
         border-radius: 6px;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
     }
 
     .action-btn:hover {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
     }
 
     .action-btn:active {
@@ -161,6 +161,9 @@
                                 <option value="@study.Value">@study.Text</option>
                             }
                         </select>
+                        <button id="btnCompleteSelected" class="btn btn-success mt-2 w-100" style="display: none;">
+                            <i class="bi bi-check-circle-fill me-2"></i>Complete Selected (<span id="selectedCount">0</span>)
+                        </button>
                     </div>
                 </div>
             </div>

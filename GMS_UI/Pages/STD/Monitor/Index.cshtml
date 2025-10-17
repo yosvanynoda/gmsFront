@@ -4,6 +4,110 @@
     ViewData["Title"] = "Monitor";
 }
 
+<style>
+    .monitor-header {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1.5rem;
+        border: none !important;
+    }
+
+    .monitor-header h4 {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+
+    .monitor-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: none;
+        overflow: hidden;
+        height: 90vh;
+    }
+
+    .monitor-grid-container {
+        height: calc(100% - 2rem);
+        padding: 1rem;
+        background: #f9fafb;
+    }
+
+    #monitorGrid {
+        height: 100%;
+        width: 100%;
+    }
+
+    .ag-theme-balham .ag-header {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        border-bottom: 2px solid #5f9ea0;
+        font-weight: 600;
+    }
+
+    .ag-theme-balham .ag-row:hover {
+        background-color: #e8f4f5 !important;
+    }
+
+    .ag-theme-balham .ag-row-selected {
+        background-color: #d4e9ea !important;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        border: none;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .btn-add:hover {
+        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        border: none;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-bottom: none;
+    }
+
+    .modal-header h2 {
+        color: white;
+        font-weight: 600;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .modal-header .close {
+        color: white;
+        opacity: 0.9;
+        font-size: 1.5rem;
+        cursor: pointer;
+        background: none;
+        border: none;
+    }
+
+    .modal-header .close:hover {
+        opacity: 1;
+    }
+</style>
+
 <div class="container-gms">
 
     <div class="alert alert-success collapse" role="alert" id="successAlert">
@@ -18,19 +122,19 @@
         <p id="failedMsg"></p>
     </div>
 
-    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
-        <div class="card-header">
-            <div class="row">
+    <div class="card monitor-card">
+        <div class="card-header monitor-header">
+            <div class="row align-items-center">
                 <div class="col">
-                    <h4>Monitor</h4>
+                    <h4><i class="bi bi-binoculars-fill me-2"></i>Monitor</h4>
                 </div>
-                <div class="col">
-                    <button data-bs-toggle="modal" data-bs-target="#monitorNewModal" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</button>
+                <div class="col text-end">
+                    <button data-bs-toggle="modal" data-bs-target="#monitorNewModal" class="btn btn-sm btn-add"><i class="bi bi-plus-circle me-1"></i> Add Monitor</button>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <div id="monitorGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        <div class="card-body monitor-grid-container">
+            <div id="monitorGrid" class="ag-theme-balham"></div>
         </div>
     </div>
 </div>

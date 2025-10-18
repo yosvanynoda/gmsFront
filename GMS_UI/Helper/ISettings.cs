@@ -37,6 +37,8 @@
 
         string Endpoint_GetDocType();
 
+        string Endpoint_GetDocTypeDropList();
+
         string Endpoint_GetRoleTypeList();
 
         string Endpoint_GetSiteList();

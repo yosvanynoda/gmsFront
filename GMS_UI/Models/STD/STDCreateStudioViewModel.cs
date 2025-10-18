@@ -6,7 +6,7 @@
 
         public List<STDDocumentationViewModel> STDDocumentation { get; set; } = [];
 
-        public List<STDMonitorViewModel> STDMonitor { get; set; } = [];
+        public List<STDMonitorRoleViewModel> STDMonitor { get; set; } = [];
 
         public List<STDProtocolViewModel> STDProtocol { get; set; } = [];
 

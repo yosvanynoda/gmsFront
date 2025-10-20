@@ -1,9 +1,13 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
+using GMS.Objects.CMN;
+using GMS.Objects.General;
+using GMS.Objects.STD;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace GMS_UI.Pages.VLT.Volunteer
@@ -13,6 +17,24 @@ namespace GMS_UI.Pages.VLT.Volunteer
         private readonly ILogger<IndexModel> _logger = logger;
 
         private readonly ISettings _settings = settings;
+
+        public List<SelectListItem> StudyList { get; set; } = new List<SelectListItem>();
+
+        public async Task OnGetAsync()
+        {
+            // Load Study List
+            var studyRequest = new StudioRequest
+            {
+                CompanyId = 1,
+                SiteId = 1
+            };
+            var studyResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/STD/getstudiodroplist", "Study List", "", studyRequest);
+            if (studyResponse?.Success == true && studyResponse.Data != null)
+            {
+                var studyData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(studyResponse.Data.ToString());
+                StudyList = studyData?.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList() ?? new List<SelectListItem>();
+            }
+        }
 
         public async Task<JsonResult> OnPostAsync()
         {
@@ -152,5 +174,100 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 });
             }
         }
+
+        public async Task<JsonResult> OnPostPreAssignAsync()
+        {
+            try
+            {
+                _logger.LogInformation("OnPostPreAssignAsync called");
+
+                using var reader = new StreamReader(Request.Body);
+                var body = await reader.ReadToEndAsync();
+
+                _logger.LogInformation("Request body: {Body}", body);
+
+                var requestInput = JsonConvert.DeserializeObject<PreAssignRequestInput>(body);
+
+                if (requestInput == null)
+                {
+                    _logger.LogWarning("Deserialized pre-assign request is null");
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid request data"
+                    });
+                }
+
+                if (requestInput.VolunteerId <= 0 || requestInput.StudyId <= 0)
+                {
+                    _logger.LogWarning("Invalid VolunteerId or StudyId - VolunteerId: {VolunteerId}, StudyId: {StudyId}",
+                        requestInput.VolunteerId, requestInput.StudyId);
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid VolunteerId or StudyId"
+                    });
+                }
+
+                // Build the request using the same structure as Filter view
+                var preAssignRequest = new PreAssignVolunteersToStudyRequest
+                {
+                    CompanyId = requestInput.CompanyId > 0 ? requestInput.CompanyId : 1,
+                    SiteId = requestInput.SiteId > 0 ? requestInput.SiteId : 1,
+                    StudyId = requestInput.StudyId,
+                    VolunteerIds = new List<int> { requestInput.VolunteerId },
+                    UserId = 1
+                };
+
+                _logger.LogInformation("Calling PreAssign API - StudyId: {StudyId}, VolunteerId: {VolunteerId}",
+                    preAssignRequest.StudyId, requestInput.VolunteerId);
+
+                // Call the PreAssign API
+                var result = await GenericAPI.CreateGeneric(
+                    _settings.ApiUrl(),
+                    "api/v1/STD/preassignvolunteerstostudy",
+                    "Pre-Assign Volunteers",
+                    "",
+                    preAssignRequest
+                );
+
+                _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
+                    result?.Success, result?.Message);
+
+                if (result?.Success == true)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Volunteer pre-assigned to study successfully."
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = result?.Message ?? "Failed to pre-assign volunteer."
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostPreAssignAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = $"Exception: {ex.Message}"
+                });
+            }
+        }
+    }
+
+    public class PreAssignRequestInput
+    {
+        public int VolunteerId { get; set; }
+        public int StudyId { get; set; }
+        public int CompanyId { get; set; }
+        public int SiteId { get; set; }
     }
 }

@@ -7,11 +7,23 @@ const gridOptions = {
 
     // Columns to be displayed (Should match rowData properties)
     columnDefs: [
-        { field: "subjectId", headerName: "Subject ID", filter: 'agTextColumnFilter', width: 120 },
         {
-            field: "dateCreated", headerName: "Date Created", filter: 'agTextColumnFilter', width: 130,
+            field: "subjectCode",
+            headerName: "Subject Code",
+            filter: 'agTextColumnFilter',
+            width: 140,
+            valueGetter: (params) => {
+                return params.data.subjectCode || params.data.SubjectCode || '';
+            }
+        },
+        {
+            field: "dateCreated", headerName: "Date Created", filter: 'agTextColumnFilter', width: 160,
             cellRenderer: (params) => {
-                return params.value ? (new Date(params.value)).toLocaleDateString() : '';
+                if (!params.value) return '';
+                const date = new Date(params.value);
+                const dateStr = date.toLocaleDateString();
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `${dateStr} ${timeStr}`;
             }
         },
         { field: "studyName", headerName: "Study Name", filter: 'agTextColumnFilter', width: 200 },
@@ -24,7 +36,15 @@ const gridOptions = {
             }
         },
         { field: "currentStatus", headerName: "Status", filter: 'agTextColumnFilter', width: 120 },
-        { field: "randomCode", headerName: "Random Code", filter: 'agTextColumnFilter', width: 140 },
+        {
+            field: "randomCode",
+            headerName: "Random Code",
+            filter: 'agTextColumnFilter',
+            width: 140,
+            valueGetter: (params) => {
+                return params.data.randomCode || params.data.RandomCode || '';
+            }
+        },
         {
             field: "ramdoDate", headerName: "Randomization Date", filter: 'agTextColumnFilter', width: 160,
             cellRenderer: (params) => {
@@ -37,7 +57,27 @@ const gridOptions = {
                 return '';
             }
         },
-        { field: "studyId", headerName: "Study ID", filter: 'agTextColumnFilter', hide: true }
+        { field: "subjectId", headerName: "Subject ID", filter: 'agTextColumnFilter', width: 120, hide: true },
+        { field: "studyId", headerName: "Study ID", filter: 'agTextColumnFilter', hide: true },
+        { field: "volunteerId", headerName: "Volunteer ID", filter: 'agTextColumnFilter', hide: true },
+        {
+            field: "action",
+            headerName: "Actions",
+            width: 180,
+            cellRenderer: (params) => {
+                return `<a href="/VLT/Volunteer/View?volunteerId=${params.data.volunteerId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="View Subject Data">
+                    <i class="bi bi-eye-fill text-primary"></i>
+                </a> |
+                <a href="/SUB/Subject/Edit?subjectId=${params.data.subjectId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="Edit Subject Data">
+                    <i class="bi bi-pencil-fill text-warning"></i>
+                </a> |
+                <a href="#" class="action-link randomize-link" data-subject-id="${params.data.subjectId}" data-study-id="${params.data.studyId}" title="Assign Random Code">
+                    <i class="bi bi-shuffle text-success"></i>
+                </a>`;
+            },
+            sortable: false,
+            filter: false
+        }
     ],
     defaultColDef: {
         flex: 1,
@@ -52,6 +92,30 @@ const gridOptions = {
 
 $(function () {
     loadSubjects();
+
+    // Handle randomize action link clicks
+    $(document).on('click', '.randomize-link', function(e) {
+        e.preventDefault();
+        const subjectId = $(this).data('subject-id');
+        const studyId = $(this).data('study-id');
+
+        // Get the row data from the grid
+        const rowData = gridApi.getDisplayedRowAtIndex(
+            gridApi.getDisplayedRowCount() - 1
+        );
+
+        // Find the subject data by searching through all rows
+        let subjectData = null;
+        gridApi.forEachNode(node => {
+            if (node.data.subjectId === subjectId) {
+                subjectData = node.data;
+            }
+        });
+
+        if (subjectData) {
+            showRandomCodeModal(subjectData);
+        }
+    });
 });
 
 function loadSubjects() {
@@ -92,4 +156,93 @@ function setupGrid(data) {
 
     // Create new grid
     gridApi = agGrid.createGrid(gridDiv, gridOptions);
+}
+
+function showRandomCodeModal(subjectData) {
+    console.log('Show random code modal for subject:', subjectData);
+
+    // Populate modal with subject information
+    $('#randomSubjectName').text(`${subjectData.firstName} ${subjectData.lastName}`);
+    $('#randomStudyName').text(subjectData.studyName);
+
+    // Clear the random code input
+    $('#randomCodeInput').val('');
+
+    // Store IDs in hidden fields
+    $('#randomCodeSubjectId').val(subjectData.subjectId);
+    $('#randomCodeStudyId').val(subjectData.studyId);
+
+    // Show the modal
+    $('#randomCodeModal').modal('show');
+}
+
+function assignRandomCode() {
+    const subjectId = $('#randomCodeSubjectId').val();
+    const studyId = $('#randomCodeStudyId').val();
+    const randomCode = $('#randomCodeInput').val().trim();
+
+    console.log('Assign random code - SubjectId:', subjectId, 'StudioId:', studyId, 'Code:', randomCode);
+
+    if (!subjectId || !studyId) {
+        alert('Missing subject or study information');
+        return;
+    }
+
+    if (!randomCode) {
+        alert('Please enter a random code');
+        $('#randomCodeInput').focus();
+        return;
+    }
+
+    // Build request - API expects StudioId and Code, not StudyId and RandomCode
+    const request = {
+        SubjectId: parseInt(subjectId),
+        StudioId: parseInt(studyId),
+        Code: randomCode,
+        CompanyId: 1
+    };
+
+    console.log('Random Code Request:', request);
+
+    // Call page handler
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=CreateRandomCode',
+        data: JSON.stringify(request),
+        contentType: "application/json",
+        headers: {
+            'RequestVerificationToken': window._csrfToken
+        },
+        success: function(response) {
+            console.log('Create Random Code Response:', response);
+
+            if (response.success) {
+                alert(`Success! Random code assigned to Subject ID ${subjectId}.`);
+
+                // Close the modal
+                $('#randomCodeModal').modal('hide');
+
+                // Reload the grid
+                loadSubjects();
+            } else {
+                alert('Error assigning random code: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Create Random Code Error:', error);
+            console.error('XHR Status:', xhr.status);
+            console.error('XHR Response:', xhr.responseText);
+
+            let errorMessage = 'Unknown error';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText;
+            } else {
+                errorMessage = error;
+            }
+
+            alert('Error assigning random code: ' + errorMessage);
+        }
+    });
 }

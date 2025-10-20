@@ -136,6 +136,26 @@
         background: rgba(255, 255, 255, 0.2);
         margin-left: 0.5rem;
     }
+
+    /* Action link styling */
+    .action-link {
+        font-size: 1.1rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        margin: 0 0.2rem;
+    }
+
+    .action-link:hover {
+        transform: scale(1.2);
+    }
+
+    .complete-link:hover {
+        color: #198754 !important;
+    }
+
+    .remove-link:hover {
+        color: #dc3545 !important;
+    }
 </style>
 
 <div class="container-gms">
@@ -170,6 +190,43 @@
         </div>
         <div class="card-body preselected-grid-container">
             <div id="preSelectedGrid" class="ag-theme-balham"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Subject Modal -->
+<div id="createSubjectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createSubjectModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" role="document">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h2>Create Subject</h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Volunteer Name:</label>
+                    <p id="createSubjectVolunteerName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Study:</label>
+                    <p id="createSubjectStudyName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="subjectCodeInput" class="form-label fw-bold">Subject Code: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="subjectCodeInput" placeholder="Enter subject code" required />
+                    <small class="form-text text-muted">Enter a unique code to identify this subject</small>
+                </div>
+                <input type="hidden" id="createSubjectVolunteerId" />
+                <input type="hidden" id="createSubjectStudyId" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <button class="btn btn-sm btn-success" onclick="confirmCreateSubject()">
+                    <i class="bi bi-check-circle me-1"></i> Create Subject
+                </button>
+            </div>
         </div>
     </div>
 </div>

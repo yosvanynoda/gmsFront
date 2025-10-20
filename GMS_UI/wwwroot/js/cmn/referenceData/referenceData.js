@@ -810,6 +810,197 @@ function crudDisease(action) {
 //#endregion
 //#endregion
 
+//#region ====== Deviation =======
+
+//#region Grid...
+class DeviationButtonRenderer {
+    init(params) {
+        this.eGui = document.createElement('div')
+        const editLink = createActionLink('Edit', '#editDeviation', 'link-success', 'bi bi-pencil-fill', params.data.deviationName, params.data.deviationCode, params.data.deviationId);
+        const deleteLink = createActionLink('Delete', '#deleteDeviation', 'link-danger', 'bi bi-x-octagon-fill', params.data.deviationName, params.data.deviationCode, params.data.deviationId);
+        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
+        this.eGui.appendChild(deleteLink);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    // Optional: Implement refresh or destroy methods if needed
+    refresh(params) {
+        return false; // Return true if the component can refresh, false otherwise
+    }
+
+    destroy() {
+        // Clean up resources if necessary
+    }
+}
+
+const gridDeviationOptions = {
+    // Data to be displayed
+    rowData: [],
+
+    // Columns to be displayed (Should match rowData properties)
+    columnDefs: [
+        { field: "deviationId", filter: 'agTextColumnFilter', hide: true },
+        { field: "deviationName", filter: 'agTextColumnFilter' },
+        { field: "deviationCode", filter: 'agTextColumnFilter' },
+        { field: "companyId", filter: true, hide: true },
+        { field: "userName", filter: true, hide: true },
+        { field: "actionDateTime", filter: true, hide: true },
+        { field: "active", filter: true, hide: true },
+        { field: "lastUpdateAt", filter: true, hide: true },
+        {
+            field: "button",
+            headerName: "Actions",
+            cellRenderer: DeviationButtonRenderer,
+        }
+    ],
+    defaultColDef: {
+        flex: 1,
+    },
+    enableFilter: true,
+    pagination: true,
+
+};
+// Create Grid: Create new grid within the #myGrid div, using the Grid Options object
+
+window.getDeviationList = function () {
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=DeviationList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            setupDeviationGrid(data.data);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Deviation');
+            $('#failedMsg').html('Deviation failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Deviation');
+            $('#failedMsg').html('Deviation failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function setupDeviationGrid(data) {
+    //console.log(data);
+    $('#deviationGrid').html('');
+    gridDeviationOptions.rowData = data;
+    gridDeviationApi = agGrid.createGrid(document.querySelector("#deviationGrid"), gridDeviationOptions);
+    //alert('done');
+}
+//#endregion
+
+//#region Add Deviation
+
+function crudDeviation(action) {
+    $('#validateDeviation').html('');
+    $('#validateDeviationEdit').html('');
+    let deviation = '';
+    let deviationCode = '';
+    let id = 0;
+    switch (action) {
+        case 1: // Add
+            deviation = $("#deviation").val();
+            if (deviation === "") {
+                $('#validateDeviation').html('Please enter a deviation');
+                $('#validateDeviation').show();
+                return;
+            }
+            deviationCode = $('#deviationCode').val();
+            if (deviationCode === "") {
+                $('#validateDeviationCode').html('Please enter a code');
+                $('#validateDeviationCode').show();
+                return;
+            }
+            id = 0; // New deviation, so id is 0
+            $('#deviation').val('');
+            $('#deviationNewModal').modal('hide');
+            break;
+        case 2: // Edit
+            deviation = $("#deviationEdit").val();
+            if (deviation === "") {
+                $('#validateDeviationEdit').html('Please enter a deviation');
+                $('#validateDeviationEdit').show();
+                return;
+            }
+            deviationCode = $('#deviationCodeEdit').val();
+            if (deviationCode === "") {
+                $('#validateDeviationCodeEdit').html('Please enter a code');
+                $('#validateDeviationCodeEdit').show();
+                return;
+            }
+            id = $("#deviationidEdit").val(); // Get the id from the hidden input
+            $('#deviationEdit').val('');
+            $('#deviationidEdit').val('');
+            $('#editDeviation').modal('hide');
+            break;
+        case 3: // Delete
+            deviation = 'N/A';
+            id = $("#deviationidDelete").val(); // Get the id from the hidden input
+            $('#deviationidDelete').val('');
+            $('#deleteDeviation').modal('hide');
+            break;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CrudDeviation',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "deviation": deviation, "action": action, "id": id, "deviationCode": deviationCode },
+        success: function (data) {
+            if (data.success === false) {
+                $('#failedTitle').html('Deviation');
+                $('#failedMsg').html('Deviation failed. Please try again');
+                $('#failedAlert').show();
+            }
+            else {
+                $('#successTitle').html('Deviation');
+                $('#successMsg').html('Deviation was saved successfully');
+                $('#successAlert').show();
+                // Refresh the grid with the new data
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=DeviationList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupDeviationGrid(data.data);
+                    },
+                    failure: function (response) {
+                        $('#failedTitle').html('Deviation');
+                        $('#failedMsg').html('Deviation failed. Please try again');
+                        $('#failedAlert').show();
+                    },
+                    error: function (response) {
+                        $('#failedTitle').html('Deviation');
+                        $('#failedMsg').html('Deviation failed. Please try again');
+                        $('#failedAlert').show();
+                    }
+                });
+
+            }
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Deviation');
+            $('#failedMsg').html('Deviation failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Deviation');
+            $('#failedMsg').html('Deviation failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+   }
+
+//#endregion
+//#endregion
+
 //#region ====== Medication =======
 
 //#region Grid...

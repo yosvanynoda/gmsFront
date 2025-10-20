@@ -57,10 +57,13 @@ const gridOptions = {
         {
             field: "action",
             headerName: "Actions",
-            width: 100,
+            width: 120,
             cellRenderer: (params) => {
-                return `<a href="#" class="action-link" data-volunteer-id="${params.data.volunteerId}" data-study-id="${params.data.studyId}" title="Complete">
+                return `<a href="#" class="action-link complete-link" data-volunteer-id="${params.data.volunteerId}" data-study-id="${params.data.studyId}" title="Complete">
                     <i class="bi bi-check-circle text-success"></i>
+                </a> |
+                <a href="#" class="action-link remove-link" data-volunteer-id="${params.data.volunteerId}" data-study-id="${params.data.studyId}" title="Remove Pre-Assignment">
+                    <i class="bi bi-x-circle text-danger"></i>
                 </a>`;
             },
             sortable: false,
@@ -88,12 +91,20 @@ $(function () {
         loadPreSelectedVolunteers();
     });
 
-    // Handle action link clicks
-    $(document).on('click', '.action-link', function(e) {
+    // Handle complete action link clicks
+    $(document).on('click', '.complete-link', function(e) {
         e.preventDefault();
         const volunteerId = $(this).data('volunteer-id');
         const studyId = $(this).data('study-id');
         completePreAssignment(volunteerId, studyId);
+    });
+
+    // Handle remove action link clicks
+    $(document).on('click', '.remove-link', function(e) {
+        e.preventDefault();
+        const volunteerId = $(this).data('volunteer-id');
+        const studyId = $(this).data('study-id');
+        removePreAssignment(volunteerId, studyId);
     });
 
     // Handle complete selected button click
@@ -168,15 +179,69 @@ function onSelectionChanged() {
 function completePreAssignment(volunteerId, studyId) {
     console.log('Complete pre-assignment for volunteer:', volunteerId, 'study:', studyId);
 
-    // Confirm with user
-    if (!confirm(`Are you sure you want to create a subject from Volunteer ID ${volunteerId} for this study?`)) {
+    // Find the volunteer data from the grid
+    let volunteerData = null;
+    gridApi.forEachNode(node => {
+        if (node.data.volunteerId === volunteerId && node.data.studyId === studyId) {
+            volunteerData = node.data;
+        }
+    });
+
+    if (!volunteerData) {
+        alert('Could not find volunteer data');
+        return;
+    }
+
+    // Show modal to collect subject code
+    showCreateSubjectModal(volunteerData);
+}
+
+function showCreateSubjectModal(volunteerData) {
+    console.log('Show create subject modal for volunteer:', volunteerData);
+
+    // Populate modal with volunteer information
+    $('#createSubjectVolunteerName').text(volunteerData.volunteerName);
+    $('#createSubjectStudyName').text(volunteerData.studyName);
+
+    // Clear the subject code input
+    $('#subjectCodeInput').val('');
+
+    // Store IDs in hidden fields
+    $('#createSubjectVolunteerId').val(volunteerData.volunteerId);
+    $('#createSubjectStudyId').val(volunteerData.studyId);
+
+    // Show the modal
+    $('#createSubjectModal').modal('show');
+
+    // Focus on the subject code input
+    setTimeout(() => {
+        $('#subjectCodeInput').focus();
+    }, 500);
+}
+
+function confirmCreateSubject() {
+    const volunteerId = $('#createSubjectVolunteerId').val();
+    const studyId = $('#createSubjectStudyId').val();
+    const subjectCode = $('#subjectCodeInput').val().trim();
+
+    console.log('Confirm create subject - VolunteerId:', volunteerId, 'StudyId:', studyId, 'SubjectCode:', subjectCode);
+
+    if (!volunteerId || !studyId) {
+        alert('Missing volunteer or study information');
+        return;
+    }
+
+    if (!subjectCode) {
+        alert('Please enter a subject code');
+        $('#subjectCodeInput').focus();
         return;
     }
 
     // Build request
     const createSubjectRequest = {
-        VolunteerId: volunteerId,
-        StudyId: studyId
+        VolunteerId: parseInt(volunteerId),
+        StudyId: parseInt(studyId),
+        SubjectCode: subjectCode
     };
 
     console.log('Create Subject Request:', createSubjectRequest);
@@ -194,7 +259,10 @@ function completePreAssignment(volunteerId, studyId) {
             console.log('Create Subject Response:', response);
 
             if (response.success) {
-                alert(`Success! Subject created from Volunteer ID ${volunteerId}.`);
+                alert(`Success! Subject created with code: ${subjectCode}`);
+
+                // Close the modal
+                $('#createSubjectModal').modal('hide');
 
                 // Reload the grid to update the list
                 loadPreSelectedVolunteers();
@@ -221,6 +289,79 @@ function completePreAssignment(volunteerId, studyId) {
     });
 }
 
+function removePreAssignment(volunteerId, studyId) {
+    console.log('Remove pre-assignment for volunteer:', volunteerId, 'study:', studyId);
+
+    // Confirm with user
+    if (!confirm(`Are you sure you want to remove the pre-assignment for Volunteer ID ${volunteerId} from this study?`)) {
+        return;
+    }
+
+    // Build request
+    const removePreAssignedRequest = {
+        VolunteerId: volunteerId,
+        StudyId: studyId,
+        CompanyId: 1,
+        SiteId: 1
+    };
+
+    console.log('Remove Pre-Assignment Request:', removePreAssignedRequest);
+
+    // Call page handler
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=RemovePreAssigned',
+        data: JSON.stringify(removePreAssignedRequest),
+        contentType: "application/json",
+        headers: {
+            'RequestVerificationToken': window._csrfToken
+        },
+        success: function(response) {
+            console.log('Remove Pre-Assignment Response:', response);
+
+            if (response.success) {
+                alert(`Success! Pre-assignment removed for Volunteer ID ${volunteerId}.`);
+
+                // Reload the grid to update the list
+                loadPreSelectedVolunteers();
+            } else {
+                alert('Error removing pre-assignment: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Remove Pre-Assignment Error Details:');
+            console.error('- Error:', error);
+            console.error('- Status:', status);
+            console.error('- XHR Status:', xhr.status);
+            console.error('- XHR Response:', xhr.responseText);
+            console.error('- XHR Response JSON:', xhr.responseJSON);
+
+            let errorMessage = 'Unknown error';
+
+            // Try to extract the most detailed error message
+            if (xhr.responseJSON) {
+                if (xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.responseJSON.errorMessage) {
+                    errorMessage = xhr.responseJSON.errorMessage;
+                } else if (xhr.responseJSON.title) {
+                    errorMessage = xhr.responseJSON.title;
+                } else {
+                    errorMessage = JSON.stringify(xhr.responseJSON);
+                }
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText;
+            } else if (error) {
+                errorMessage = error;
+            } else {
+                errorMessage = `HTTP ${xhr.status}: ${status}`;
+            }
+
+            alert('Error removing pre-assignment: ' + errorMessage);
+        }
+    });
+}
+
 function completeSelectedVolunteers() {
     if (!selectedVolunteers || selectedVolunteers.length === 0) {
         alert('Please select at least one volunteer.');
@@ -228,29 +369,26 @@ function completeSelectedVolunteers() {
     }
 
     const count = selectedVolunteers.length;
-    if (!confirm(`Are you sure you want to create ${count} subject${count !== 1 ? 's' : ''} from the selected volunteers?`)) {
+    if (!confirm(`Are you sure you want to create ${count} subject${count !== 1 ? 's' : ''} from the selected volunteers?\n\nYou will be prompted to enter a subject code for each volunteer.`)) {
         return;
     }
 
     console.log('Creating subjects for selected volunteers:', selectedVolunteers);
 
-    // Build array of requests
-    const requests = selectedVolunteers.map(volunteer => ({
-        VolunteerId: volunteer.volunteerId,
-        StudyId: volunteer.studyId
-    }));
-
     // Track progress
     let completed = 0;
     let failed = 0;
+    let cancelled = 0;
     const errors = [];
 
     // Process each volunteer
     const processNext = (index) => {
-        if (index >= requests.length) {
+        if (index >= selectedVolunteers.length) {
             // All done
-            const message = `Completed: ${completed} subject${completed !== 1 ? 's' : ''} created successfully.` +
-                (failed > 0 ? `\n${failed} failed.` : '');
+            const message = `Completed:\n` +
+                `- ${completed} subject${completed !== 1 ? 's' : ''} created successfully\n` +
+                (failed > 0 ? `- ${failed} failed\n` : '') +
+                (cancelled > 0 ? `- ${cancelled} cancelled` : '');
             alert(message);
 
             if (errors.length > 0) {
@@ -262,7 +400,30 @@ function completeSelectedVolunteers() {
             return;
         }
 
-        const request = requests[index];
+        const volunteer = selectedVolunteers[index];
+
+        // Prompt for subject code
+        const subjectCode = prompt(`Enter subject code for ${volunteer.volunteerName}:\n(${index + 1} of ${selectedVolunteers.length})`);
+
+        if (subjectCode === null) {
+            // User cancelled
+            cancelled++;
+            processNext(index + 1);
+            return;
+        }
+
+        if (!subjectCode.trim()) {
+            alert('Subject code cannot be empty. Skipping this volunteer.');
+            cancelled++;
+            processNext(index + 1);
+            return;
+        }
+
+        const request = {
+            VolunteerId: volunteer.volunteerId,
+            StudyId: volunteer.studyId,
+            SubjectCode: subjectCode.trim()
+        };
 
         $.ajax({
             type: "POST",
@@ -279,6 +440,7 @@ function completeSelectedVolunteers() {
                     failed++;
                     errors.push({
                         volunteerId: request.VolunteerId,
+                        volunteerName: volunteer.volunteerName,
                         error: response.message || 'Unknown error'
                     });
                 }
@@ -297,6 +459,7 @@ function completeSelectedVolunteers() {
                 }
                 errors.push({
                     volunteerId: request.VolunteerId,
+                    volunteerName: volunteer.volunteerName,
                     error: errorMessage
                 });
                 // Process next

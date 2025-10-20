@@ -1,0 +1,395 @@
+@page
+@model GMS_UI.Pages.VLT.Volunteer.ViewModel
+@{
+    ViewData["Title"] = "View Subject Data";
+}
+
+<div class="wizard-container">
+    <h2 class="text-center mb-4">
+        <i class="bi bi-eye-fill text-primary"></i>
+        Subject Data - Read Only
+    </h2>
+
+    <input type="hidden" id="volunteerId" value="@Model.VolunteerId" />
+    <input type="hidden" id="returnUrl" value="@Model.ReturnUrl" />
+
+    <!-- Progress Indicator -->
+    <div class="step-indicator">
+        <div class="step-circle active" id="step1-indicator" onclick="jumpToStep(1)" style="cursor: pointer;" title="General Information">1</div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-circle" id="step2-indicator" onclick="jumpToStep(2)" style="cursor: pointer;" title="Physical & Demographics">2</div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-circle" id="step3-indicator" onclick="jumpToStep(3)" style="cursor: pointer;" title="Address">3</div>
+        <div class="step-line" id="line3"></div>
+        <div class="step-circle" id="step4-indicator" onclick="jumpToStep(4)" style="cursor: pointer;" title="Emergency Contacts">4</div>
+        <div class="step-line" id="line4"></div>
+        <div class="step-circle" id="step5-indicator" onclick="jumpToStep(5)" style="cursor: pointer;" title="Allergies">5</div>
+        <div class="step-line" id="line5"></div>
+        <div class="step-circle" id="step6-indicator" onclick="jumpToStep(6)" style="cursor: pointer;" title="Diseases">6</div>
+        <div class="step-line" id="line6"></div>
+        <div class="step-circle" id="step7-indicator" onclick="jumpToStep(7)" style="cursor: pointer;" title="Medications">7</div>
+        <div class="step-line" id="line7"></div>
+        <div class="step-circle" id="step8-indicator" onclick="jumpToStep(8)" style="cursor: pointer;" title="Documentation">8</div>
+    </div>
+
+    <!-- Step 1: General Information -->
+    <div class="wizard-step active" id="step1">
+        <div class="form-section">
+            <h5><i class="bi bi-info-circle"></i> General Information</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Flag</label>
+                        <select class="form-select" id="flag" disabled>
+                            <option value="0">Select Flag</option>
+                            @foreach (var item in Model.FlagList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Flag Reason / Comment</label>
+                        <input type="text" class="form-control" id="flagReason" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Middle Name</label>
+                        <input type="text" class="form-control" id="middleName" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="text" class="form-control" id="subjectDOB" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Social Security Number</label>
+                        <input type="text" class="form-control" id="subjectSS" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="subjectEmail" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Subject ID</label>
+                        <input type="text" class="form-control" id="subjectId" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Current Status</label>
+                        <select class="form-select" id="currentStatus" disabled>
+                            <option value="">Select Status</option>
+                            @foreach (var item in Model.VLTStatusList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Physical & Demographics -->
+    <div class="wizard-step" id="step2">
+        <div class="form-section">
+            <h5><i class="bi bi-person-badge"></i> Physical & Demographics</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Weight</label>
+                        <input type="text" class="form-control" id="weight" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Height</label>
+                        <input type="text" class="form-control" id="height" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Sex</label>
+                        <select class="form-select" id="sex" disabled>
+                            <option value="">Select Sex</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                            <option value="3">Intersex</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" id="gender" disabled>
+                            <option value="">Select Gender</option>
+                            @foreach (var item in Model.GenderList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Race</label>
+                        <select class="form-select" id="race" disabled>
+                            <option value="">Select Race</option>
+                            @foreach (var item in Model.RaceList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Ethnicity</label>
+                        <select class="form-select" id="ethnicity" disabled>
+                            <option value="">Select Ethnicity</option>
+                            @foreach (var item in Model.EthnicityList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Language</label>
+                        <select class="form-select" id="language" disabled>
+                            <option value="">Select Language</option>
+                            @foreach (var item in Model.LanguageList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Address Information -->
+    <div class="wizard-step" id="step3">
+        <div class="form-section">
+            <h5><i class="bi bi-geo-alt-fill"></i> Address Information</h5>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label class="form-label">Address Line 1</label>
+                        <input type="text" class="form-control" id="address1" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label class="form-label">Address Line 2</label>
+                        <input type="text" class="form-control" id="address2" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control" id="state" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Zip Code</label>
+                        <input type="text" class="form-control" id="zipCode" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" class="form-control" id="country" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Legal Representative</label>
+                        <input type="text" class="form-control" id="legalRepresentative" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Emergency Contacts -->
+    <div class="wizard-step" id="step4">
+        <div class="form-section">
+            <h5><i class="bi bi-telephone-fill"></i> Emergency Contacts</h5>
+
+            <div id="emergencyContactsContainer">
+                <!-- Emergency contacts will be added here dynamically -->
+            </div>
+
+            <div class="alert alert-info mt-3" id="noContactsMsg" style="display: none;">
+                <i class="bi bi-info-circle"></i> No emergency contacts on record.
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5: Allergies -->
+    <div class="wizard-step" id="step5">
+        <div class="form-section">
+            <h5><i class="bi bi-exclamation-triangle-fill"></i> Allergies</h5>
+
+            <!-- Current Allergies Grid -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">Current Allergies</h6>
+                </div>
+                <div class="card-body">
+                    <div id="allergiesGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 6: Diseases -->
+    <div class="wizard-step" id="step6">
+        <div class="form-section">
+            <h5><i class="bi bi-heart-pulse-fill"></i> Diseases</h5>
+
+            <!-- Current Diseases Grid -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">Current Diseases</h6>
+                </div>
+                <div class="card-body">
+                    <div id="diseasesGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 7: Medications -->
+    <div class="wizard-step" id="step7">
+        <div class="form-section">
+            <h5><i class="bi bi-capsule-pill"></i> Medications</h5>
+
+            <!-- Current Medications Grid -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">Current Medications</h6>
+                </div>
+                <div class="card-body">
+                    <div id="medicationsGrid" style="height: 300px; width: 100%;" class="ag-theme-balham"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 8: Documentation -->
+    <div class="wizard-step" id="step8">
+        <div class="form-section">
+            <h5><i class="bi bi-file-earmark-text-fill"></i> Documentation</h5>
+
+            <h6 class="mt-3">Documents</h6>
+            <div id="documentsContainer">
+                <!-- Documents will be added here dynamically -->
+            </div>
+
+            <div class="alert alert-info mt-3" id="noDocsMsg" style="display: none;">
+                <i class="bi bi-info-circle"></i> No documents on record.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="wizard-navigation">
+        <div>
+            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                <i class="bi bi-arrow-left"></i> Previous
+            </button>
+        </div>
+        <div class="ms-auto">
+            <button type="button" class="btn btn-primary btn-wizard" id="closeBtn" onclick="closeWizard()">
+                <i class="bi bi-x-circle"></i> Close
+            </button>
+            <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                Next <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Pass volunteer data to JavaScript
+    @{
+        var volunteerDataJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.VolunteerData);
+    }
+    window.volunteerData = @Html.Raw(volunteerDataJson);
+
+    console.log('Volunteer Data:', window.volunteerData);
+</script>
+<script src="/js/vlt/volunteer/volunteerView.js?v=@DateTime.Now.Ticks"></script>

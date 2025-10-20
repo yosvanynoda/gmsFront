@@ -108,8 +108,18 @@ namespace GMS_UI.Pages.VLT.Volunteer
         {
             try
             {
-                _logger.LogInformation("OnPostCreateSubjectAsync called for VolunteerId: {VolunteerId}, StudyId: {StudyId}",
-                    request.VolunteerId, request.StudyId);
+                _logger.LogInformation("OnPostCreateSubjectAsync called for VolunteerId: {VolunteerId}, StudyId: {StudyId}, SubjectCode: {SubjectCode}",
+                    request.VolunteerId, request.StudyId, request.SubjectCode);
+
+                // Validate subject code
+                if (string.IsNullOrWhiteSpace(request.SubjectCode))
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Subject code is required."
+                    });
+                }
 
                 // Build the CreateSubject request
                 var createSubjectRequest = new CreateSubjectRequest
@@ -130,10 +140,12 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     }
                 };
 
-                // Call the CreateSubject API
+                // Call the CreateSubject API with subjectCode as query parameter
+                var endpoint = $"api/v1/SUB/createsubject?subjectCode={Uri.EscapeDataString(request.SubjectCode)}";
+
                 var result = await GenericAPI.CreateGeneric(
                     _settings.ApiUrl(),
-                    "api/v1/SUB/createsubject",
+                    endpoint,
                     "Create Subject",
                     "",
                     createSubjectRequest
@@ -144,7 +156,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     return new JsonResult(new
                     {
                         success = true,
-                        message = "Subject created successfully from pre-selected volunteer."
+                        message = $"Subject created successfully with code: {request.SubjectCode}"
                     });
                 }
                 else
@@ -166,6 +178,109 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 });
             }
         }
+
+        public async Task<JsonResult> OnPostRemovePreAssignedAsync()
+        {
+            try
+            {
+                _logger.LogInformation("OnPostRemovePreAssignedAsync called");
+
+                using var reader = new StreamReader(Request.Body);
+                var body = await reader.ReadToEndAsync();
+
+                _logger.LogInformation("Request body: {Body}", body);
+
+                var requestInput = JsonConvert.DeserializeObject<RemovePreAssignedRequestInput>(body);
+
+                if (requestInput == null)
+                {
+                    _logger.LogWarning("Deserialized remove request is null");
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid request data"
+                    });
+                }
+
+                _logger.LogInformation("Parsed request - VolunteerId: {VolunteerId}, StudyId: {StudyId}, CompanyId: {CompanyId}, SiteId: {SiteId}",
+                    requestInput.VolunteerId, requestInput.StudyId, requestInput.CompanyId, requestInput.SiteId);
+
+                if (requestInput.VolunteerId <= 0)
+                {
+                    _logger.LogWarning("VolunteerId is invalid: {VolunteerId}", requestInput.VolunteerId);
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid VolunteerId"
+                    });
+                }
+
+                if (requestInput.StudyId <= 0)
+                {
+                    _logger.LogWarning("StudyId is invalid: {StudyId}", requestInput.StudyId);
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid StudyId"
+                    });
+                }
+
+                // Build the request with single VolunteerId (API was modified to accept int instead of list)
+                var removeRequest = new RemovePreAssignedRequest
+                {
+                    CompanyId = requestInput.CompanyId > 0 ? requestInput.CompanyId : 1,
+                    SiteId = requestInput.SiteId > 0 ? requestInput.SiteId : 1,
+                    StudyId = requestInput.StudyId,
+                    VolunteerId = requestInput.VolunteerId,
+                    UserId = 1
+                };
+
+                _logger.LogInformation("Built RemovePreAssignedRequest - CompanyId: {CompanyId}, SiteId: {SiteId}, StudyId: {StudyId}, VolunteerId: {VolunteerId}, UserId: {UserId}",
+                    removeRequest.CompanyId, removeRequest.SiteId, removeRequest.StudyId, removeRequest.VolunteerId, removeRequest.UserId);
+
+                // Serialize to see what's being sent
+                var requestJson = JsonConvert.SerializeObject(removeRequest);
+                _logger.LogInformation("Request JSON: {RequestJson}", requestJson);
+
+                // Call the RemovePreAssigned API
+                var result = await GenericAPI.CreateGeneric(
+                    _settings.ApiUrl(),
+                    "api/v1/STD/removepreassigned",
+                    "Remove Pre-Assigned",
+                    "",
+                    removeRequest
+                );
+
+                _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
+                    result?.Success, result?.Message);
+
+                if (result?.Success == true)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Pre-assignment removed successfully."
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = result?.Message ?? "Failed to remove pre-assignment."
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostRemovePreAssignedAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = $"Exception: {ex.Message}"
+                });
+            }
+        }
     }
 
     public class PreSelectedRequest
@@ -179,5 +294,23 @@ namespace GMS_UI.Pages.VLT.Volunteer
     {
         public int VolunteerId { get; set; }
         public int StudyId { get; set; }
+        public string SubjectCode { get; set; } = string.Empty;
+    }
+
+    public class RemovePreAssignedRequestInput
+    {
+        public int VolunteerId { get; set; }
+        public int StudyId { get; set; }
+        public int CompanyId { get; set; }
+        public int SiteId { get; set; }
+    }
+
+    public class RemovePreAssignedRequest
+    {
+        public int CompanyId { get; set; }
+        public int SiteId { get; set; }
+        public int StudyId { get; set; }
+        public int VolunteerId { get; set; }
+        public int UserId { get; set; }
     }
 }

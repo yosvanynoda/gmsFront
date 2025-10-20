@@ -4,14 +4,14 @@ class VolunteerButtonRenderer {
         this.eGui = document.createElement('div');
         const historyLink = createActionLink('History', '#volunteerHistoryModal', 'link-info', 'bi bi-clock-history', params.data.volunteerId,
             params.data.firstName, params.data.lastName);
-        const editLink = createActionLink('Edit', `/VLT/Volunteer/Edit?volunteerId=${params.data.volunteerId}`, 'link-success', 'bi bi-pencil-fill', params.data.volunteerId);
-        const deleteLink = createActionLink('Delete', '#deleteVolunteer', 'link-danger', 'bi bi-x-octagon-fill', params.data.volunteerId,
+        const preAssignLink = createActionLink('Pre-Assign', '#preAssignModal', 'link-primary', 'bi bi-person-plus', params.data.volunteerId,
             params.data.firstName, params.data.lastName);
+        const editLink = createActionLink('Edit', `/VLT/Volunteer/Edit?volunteerId=${params.data.volunteerId}`, 'link-success', 'bi bi-pencil-fill', params.data.volunteerId);
         this.eGui.appendChild(historyLink);
         this.eGui.appendChild(document.createTextNode(' | '));
-        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(preAssignLink);
         this.eGui.appendChild(document.createTextNode(' | '));
-        this.eGui.appendChild(deleteLink);
+        this.eGui.appendChild(editLink);
     }
 
     getGui() {
@@ -126,14 +126,13 @@ function createActionLink(title, href, linkClass, iconClass, volunteerId, firstN
     icon.className = iconClass;
 
     if (href.startsWith('#')) {
-        // For modal links (delete, history)
+        // For modal links (history, pre-assign)
         a.addEventListener('click', (e) => {
             e.preventDefault();
-            if (href === "#deleteVolunteer") {
-                $('#volunteerIdDelete').val(volunteerId);
-                $('#volunteerNameDelete').html(`${firstName} ${lastName}`);
-            } else if (href === "#volunteerHistoryModal") {
+            if (href === "#volunteerHistoryModal") {
                 loadVolunteerHistory(volunteerId, firstName, lastName);
+            } else if (href === "#preAssignModal") {
+                showPreAssignModal(volunteerId, firstName, lastName);
             }
             $(href).modal('show');
         });
@@ -233,6 +232,88 @@ function loadVolunteerHistory(volunteerId, firstName, lastName) {
             console.error('History Error:', error);
             $('#historyStudiesBody').html('<tr><td colspan="6" class="text-center text-danger">Error: ' + error + '</td></tr>');
             $('#historySelectionsBody').html('<tr><td colspan="6" class="text-center text-danger">Error: ' + error + '</td></tr>');
+        }
+    });
+}
+//#endregion
+
+//#region Pre-Assign to Study...
+function showPreAssignModal(volunteerId, firstName, lastName) {
+    console.log('Show pre-assign modal for volunteer:', volunteerId, firstName, lastName);
+
+    // Set volunteer name in modal
+    $('#preAssignVolunteerName').text(`${firstName} ${lastName}`);
+
+    // Clear the study dropdown
+    $('#preAssignStudyId').val('');
+
+    // Store volunteer ID in hidden field
+    $('#preAssignVolunteerId').val(volunteerId);
+}
+
+function assignVolunteerToStudy() {
+    const volunteerId = $('#preAssignVolunteerId').val();
+    const studyId = $('#preAssignStudyId').val();
+
+    console.log('Assign volunteer to study - VolunteerId:', volunteerId, 'StudyId:', studyId);
+
+    if (!volunteerId) {
+        alert('Missing volunteer information');
+        return;
+    }
+
+    if (!studyId) {
+        alert('Please select a study');
+        $('#preAssignStudyId').focus();
+        return;
+    }
+
+    // Build request
+    const request = {
+        VolunteerId: parseInt(volunteerId),
+        StudyId: parseInt(studyId),
+        CompanyId: 1,
+        SiteId: 1
+    };
+
+    console.log('Pre-Assign Request:', request);
+
+    // Call page handler
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=PreAssign',
+        data: JSON.stringify(request),
+        contentType: "application/json",
+        headers: {
+            'RequestVerificationToken': window._csrfToken
+        },
+        success: function(response) {
+            console.log('Pre-Assign Response:', response);
+
+            if (response.success) {
+                alert(`Success! Volunteer pre-assigned to study.`);
+
+                // Close the modal
+                $('#preAssignModal').modal('hide');
+            } else {
+                alert('Error pre-assigning volunteer: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Pre-Assign Error:', error);
+            console.error('XHR Status:', xhr.status);
+            console.error('XHR Response:', xhr.responseText);
+
+            let errorMessage = 'Unknown error';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText;
+            } else {
+                errorMessage = error;
+            }
+
+            alert('Error pre-assigning volunteer: ' + errorMessage);
         }
     });
 }

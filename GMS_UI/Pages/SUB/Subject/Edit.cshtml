@@ -1,0 +1,351 @@
+@page
+@model GMS_UI.Pages.SUB.Subject.EditModel
+@{
+    ViewData["Title"] = "Edit Subject Data";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
+<style>
+    .wizard-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .wizard-header {
+        margin-bottom: 30px;
+    }
+
+    .steps-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .step-circle.active {
+        background: linear-gradient(135deg, #7fb3b5, #5f9ea0);
+        color: white;
+    }
+
+    .step-line {
+        width: 60px;
+        height: 2px;
+        background: #e0e0e0;
+    }
+
+    .wizard-step {
+        display: none;
+        animation: fadeIn 0.3s;
+    }
+
+    .wizard-step.active {
+        display: block;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .step-title {
+        color: #5f9ea0;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #5f9ea0;
+    }
+
+    .wizard-footer {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .btn-wizard {
+        min-width: 120px;
+    }
+</style>
+
+<div class="wizard-container">
+    <h2 class="text-center mb-4">
+        <i class="bi bi-person-badge-fill text-primary"></i>
+        Subject Data - Edit
+    </h2>
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" id="subjectId" value="@Model.SubjectId" />
+    <input type="hidden" id="returnUrl" value="@Model.ReturnUrl" />
+
+    <!-- Progress Steps -->
+    <div class="wizard-header">
+        <div class="steps-container">
+            <div class="step-circle active" id="step1-indicator" onclick="jumpToStep(1)" style="cursor: pointer;" title="General Information">1</div>
+            <div class="step-line"></div>
+            <div class="step-circle" id="step2-indicator" onclick="jumpToStep(2)" style="cursor: pointer;" title="Consent Records">2</div>
+            <div class="step-line"></div>
+            <div class="step-circle" id="step3-indicator" onclick="jumpToStep(3)" style="cursor: pointer;" title="Protocol Deviations">3</div>
+            <div class="step-line"></div>
+            <div class="step-circle" id="step4-indicator" onclick="jumpToStep(4)" style="cursor: pointer;" title="Adverse Events">4</div>
+        </div>
+    </div>
+
+    <!-- Step 1: General Information -->
+    <div class="wizard-step active" id="step1">
+        <h3 class="step-title">
+            <i class="bi bi-info-circle-fill"></i> General Information
+        </h3>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="subjectIdDisplay" class="form-label fw-bold">Subject ID:</label>
+                <input type="text" class="form-control" id="subjectIdDisplay" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="dateCreated" class="form-label fw-bold">Date Created:</label>
+                <input type="date" class="form-control" id="dateCreated" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label fw-bold">First Name:</label>
+                <input type="text" class="form-control" id="firstName" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label fw-bold">Last Name:</label>
+                <input type="text" class="form-control" id="lastName" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="dob" class="form-label fw-bold">Date of Birth:</label>
+                <input type="date" class="form-control" id="dob" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="currentStatus" class="form-label fw-bold">Current Status:</label>
+                <input type="text" class="form-control" id="currentStatus" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="studyName" class="form-label fw-bold">Study Name:</label>
+                <input type="text" class="form-control" id="studyName" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="randomCode" class="form-label fw-bold">Random Code:</label>
+                <input type="text" class="form-control" id="randomCode" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="randomDate" class="form-label fw-bold">Randomization Date:</label>
+                <input type="date" class="form-control" id="randomDate" readonly />
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Consent Records -->
+    <div class="wizard-step" id="step2">
+        <h3 class="step-title">
+            <i class="bi bi-file-text-fill"></i> Consent Records
+        </h3>
+        <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-success" onclick="addConsent()">
+                <i class="bi bi-plus-circle"></i> Add Consent
+            </button>
+        </div>
+        <div id="consentGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+    </div>
+
+    <!-- Step 3: Protocol Deviations -->
+    <div class="wizard-step" id="step3">
+        <h3 class="step-title">
+            <i class="bi bi-exclamation-triangle-fill"></i> Protocol Deviations
+        </h3>
+        <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-success" onclick="addDeviation()">
+                <i class="bi bi-plus-circle"></i> Add Deviation
+            </button>
+        </div>
+        <div id="deviationGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+    </div>
+
+    <!-- Step 4: Adverse Events -->
+    <div class="wizard-step" id="step4">
+        <h3 class="step-title">
+            <i class="bi bi-shield-exclamation"></i> Adverse Events
+        </h3>
+        <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-success" onclick="addAdverse()">
+                <i class="bi bi-plus-circle"></i> Add Adverse Event
+            </button>
+        </div>
+        <div id="adverseGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="wizard-footer">
+        <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="previousStep()" style="display: none;">
+            <i class="bi bi-arrow-left"></i> Previous
+        </button>
+        <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="nextStep()">
+            Next <i class="bi bi-arrow-right"></i>
+        </button>
+        <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
+            <i class="bi bi-check-circle"></i> Save Changes
+        </button>
+        <button type="button" class="btn btn-secondary btn-wizard" id="cancelBtn" onclick="cancelEdit()">
+            <i class="bi bi-x-circle"></i> Cancel
+        </button>
+    </div>
+</div>
+
+<!-- Consent Modal -->
+<div class="modal fade" id="consentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-file-text-fill"></i> <span id="consentModalTitle">Add Consent</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="consentId" value="0" />
+                <div class="mb-3">
+                    <label for="consentProtocolVersion" class="form-label fw-bold">Protocol Version: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="consentProtocolVersion" required>
+                        <option value="">-- Select Protocol Version --</option>
+                        @foreach (var pv in Model.ProtocolVersionList)
+                        {
+                            <option value="@pv.Value">@pv.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="consentDate" class="form-label fw-bold">Consent Date: <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" id="consentDate" required />
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="reconsentFlag" />
+                    <label class="form-check-label" for="reconsentFlag">Re-consent</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveConsent()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Deviation Modal -->
+<div class="modal fade" id="deviationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <span id="deviationModalTitle">Add Protocol Deviation</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="pDevId" value="0" />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="deviationType" class="form-label fw-bold">Deviation Type: <span class="text-danger">*</span></label>
+                        <select class="form-select" id="deviationType" required>
+                            <option value="">-- Select Deviation --</option>
+                            @foreach (var dev in Model.DeviationList)
+                            {
+                                <option value="@dev.Value">@dev.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="visitId" class="form-label fw-bold">Visit:</label>
+                        <input type="number" class="form-control" id="visitId" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="scheduledDate" class="form-label fw-bold">Scheduled Date:</label>
+                        <input type="date" class="form-control" id="scheduledDate" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="reportedDate" class="form-label fw-bold">Reported Date: <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="reportedDate" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="severity" class="form-label fw-bold">Severity:</label>
+                        <select class="form-select" id="severity">
+                            <option value="1">Minor</option>
+                            <option value="2">Moderate</option>
+                            <option value="3">Major</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="outcome" class="form-label fw-bold">Outcome:</label>
+                        <input type="text" class="form-control" id="outcome" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="deviationDescription" class="form-label fw-bold">Description: <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="deviationDescription" rows="3" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveDeviation()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adverse Event Modal -->
+<div class="modal fade" id="adverseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-shield-exclamation"></i> <span id="adverseModalTitle">Add Adverse Event</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="adverseId" value="0" />
+                <p class="text-muted">Adverse event fields will be populated based on API response structure.</p>
+                <!-- Additional fields will be added based on the actual adverse event structure -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveAdverse()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set CSRF token for AJAX requests
+    window._csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+</script>
+<script src="~/js/std/subject/subjectEdit.js?v=@DateTime.Now.Ticks"></script>

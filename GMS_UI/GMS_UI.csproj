@@ -122,6 +122,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Helper\EnumExtension.cs" />
+    <Compile Remove="Models\Enum\StudyBlindingTypeEnum.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

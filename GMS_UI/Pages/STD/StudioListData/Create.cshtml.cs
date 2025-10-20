@@ -82,15 +82,14 @@ namespace GMS_UI.Pages.STD.StudioListData
             // Load blindingType from Enum
             #region blindingType...
             var comboValue = new List<ComboValues>();
-            foreach (var item in Enum.GetValues(typeof(StudioBlindingTypeEnum)))
-            {
-                var value = (int)item;
-                var text = Enum.GetName(typeof(StudioBlindingTypeEnum), value) ?? "";
+            
 
+            foreach (var kvp in StaticDictionary.StudioBlindingTypeDictionary)
+            {
                 comboValue.Add(new ComboValues
                 {
-                    Id = value,
-                    Name = text,
+                    Id = kvp.Key,
+                    Name = kvp.Value,
                 });
             }
 

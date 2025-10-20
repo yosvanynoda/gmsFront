@@ -11,6 +11,8 @@
 
         string Endpoint_CreateDisease();
 
+        string Endpoint_CreateDeviation();
+
         string Endpoint_CreateMedication();
 
         string Endpoint_CreateDocType();
@@ -32,6 +34,10 @@
         string Endpoint_GetDiseaseList();
 
         string Endpoint_GetDiseaseDropList();
+
+        string Endpoint_GetDeviationList();
+
+        string Endpoint_GetDeviationDropList();
 
         string Endpoint_GetMedicationList();
 
@@ -112,6 +118,14 @@
         string Endpoint_CreateStudioStaff();
 
         string Endpoint_GetStaffStudio();
+
+        string Endpoint_GetProtocolVersionList();
+
+        #endregion
+
+        #region SUB....
+
+        string Endpoint_GetSubjectData();
 
         #endregion
 

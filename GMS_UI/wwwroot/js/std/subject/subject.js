@@ -63,13 +63,13 @@ const gridOptions = {
         {
             field: "action",
             headerName: "Actions",
-            width: 180,
+            width: 220,
             cellRenderer: (params) => {
-                return `<a href="/VLT/Volunteer/View?volunteerId=${params.data.volunteerId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="View Subject Data">
-                    <i class="bi bi-eye-fill text-primary"></i>
+                return `<a href="/VLT/Volunteer/Edit?volunteerId=${params.data.volunteerId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="Edit Volunteer Data">
+                    <i class="bi bi-person-fill text-info"></i>
                 </a> |
                 <a href="/SUB/Subject/Edit?subjectId=${params.data.subjectId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="Edit Subject Data">
-                    <i class="bi bi-pencil-fill text-warning"></i>
+                    <i class="bi bi-clipboard-data text-primary"></i>
                 </a> |
                 <a href="#" class="action-link randomize-link" data-subject-id="${params.data.subjectId}" data-study-id="${params.data.studyId}" title="Assign Random Code">
                     <i class="bi bi-shuffle text-success"></i>

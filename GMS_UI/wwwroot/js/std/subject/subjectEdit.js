@@ -32,6 +32,16 @@ const consentGridOptions = {
             }
         },
         {
+            field: "signedFlag", headerName: "Signed", width: 120,
+            cellRenderer: (params) => {
+                if (params.value) {
+                    return '<i class="bi bi-check-circle-fill text-success"></i>';
+                } else {
+                    return '<i class="bi bi-exclamation-triangle-fill text-danger"></i> <span class="text-danger fw-bold">Not Signed</span>';
+                }
+            }
+        },
+        {
             field: "actions",
             headerName: "Actions",
             width: 120,
@@ -403,6 +413,7 @@ function addConsent() {
     $('#consentProtocolVersion').val('');
     $('#consentDate').val('');
     $('#reconsentFlag').prop('checked', false);
+    $('#signedFlag').prop('checked', false);
     $('#consentModal').modal('show');
 }
 
@@ -415,6 +426,7 @@ function editConsent(consentId) {
         $('#consentProtocolVersion').val(consent.protocolVersionId);
         $('#consentDate').val(consent.consentDate ? consent.consentDate.split('T')[0] : '');
         $('#reconsentFlag').prop('checked', consent.reconsentFlag);
+        $('#signedFlag').prop('checked', consent.signedFlag);
         $('#consentModal').modal('show');
     }
 }
@@ -432,6 +444,7 @@ function saveConsent() {
     const protocolVersionId = parseInt($('#consentProtocolVersion').val());
     const consentDate = $('#consentDate').val();
     const reconsentFlag = $('#reconsentFlag').is(':checked');
+    const signedFlag = $('#signedFlag').is(':checked');
 
     if (!protocolVersionId || !consentDate) {
         alert('Please fill in all required fields');
@@ -451,6 +464,7 @@ function saveConsent() {
             protocolVersionId: protocolVersionId,
             consentDate: consentDate,
             reconsentFlag: reconsentFlag,
+            signedFlag: signedFlag,
             protocolVersion: protocolVersionText
         });
     } else {
@@ -460,6 +474,7 @@ function saveConsent() {
             consentData[index].protocolVersionId = protocolVersionId;
             consentData[index].consentDate = consentDate;
             consentData[index].reconsentFlag = reconsentFlag;
+            consentData[index].signedFlag = signedFlag;
             consentData[index].protocolVersion = protocolVersionText;
         }
     }

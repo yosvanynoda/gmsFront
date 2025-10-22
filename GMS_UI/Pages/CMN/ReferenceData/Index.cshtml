@@ -5,10 +5,27 @@
 }
 
 <style>
-    /* Page Title */
-    h2.mb-4 {
-        color: #5f9ea0;
+    /* Page Title Banner */
+    .reference-header {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-radius: 10px 10px 0 0;
+        padding: 1.5rem;
+        border: none;
+        margin-bottom: 0;
+    }
+
+    .reference-header h4 {
         font-weight: 600;
+        margin-bottom: 0;
+        color: white;
+    }
+
+    .reference-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: none;
+        overflow: hidden;
     }
 
     /* Tabs */
@@ -137,10 +154,13 @@
         <p id="failedMsg"></p>
     </div>
 
-    <h2 class="mb-4">Reference Tables</h2>
-
-    <!-- Tabs for Subjects -->
-    <ul class="nav nav-tabs" id="subjectTabs" role="tablist">
+    <div class="card reference-card">
+        <div class="card-header reference-header">
+            <h4><i class="bi bi-bookmark-fill me-2"></i>Reference Tables</h4>
+        </div>
+        <div class="card-body p-0">
+            <!-- Tabs for Subjects -->
+            <ul class="nav nav-tabs" id="subjectTabs" role="tablist" style="margin: 1rem 1rem 0 1rem; border-bottom: none;">
         <li class="nav-item">
             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#demographic" type="button">Demographic</button>
         </li>
@@ -156,7 +176,7 @@
     </ul>
 
     <!-- Tab Content -->
-    <div class="tab-content mt-3">
+    <div class="tab-content" style="padding: 1rem;">
 
         <!-- Demographic Tab -->
         <div class="tab-pane fade show active" id="demographic">
@@ -544,7 +564,9 @@
         </div>
 
     </div> <!-- /.tab-content -->
-</div>
+        </div> <!-- /.card-body -->
+    </div> <!-- /.reference-card -->
+</div> <!-- /.container-gms -->
 
 
 <!-- Gender Modals -->

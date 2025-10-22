@@ -155,6 +155,18 @@ function changeStep(direction) {
     // Update navigation buttons
     updateNavigationButtons();
 
+    // Load dropdowns and grids for medical steps
+    if (currentStep === 5) {
+        loadAllergiesDropdown();
+        setupAllergiesGrid();
+    } else if (currentStep === 6) {
+        loadDiseasesDropdown();
+        setupDiseasesGrid();
+    } else if (currentStep === 7) {
+        loadMedicationsDropdown();
+        setupMedicationsGrid();
+    }
+
     // Update review summary on last step
     if (currentStep === totalSteps) {
         updateReviewSummary();
@@ -634,96 +646,59 @@ function submitForm() {
         }
     }
 
-    // Collect allergies
-    for (let i = 1; i <= allergyCounter; i++) {
-        const allergyId = document.getElementById(`allergyId${i}`);
-        if (allergyId && allergyId.value) {
-            const allergyRecordId = document.getElementById(`allergyRecordId${i}`);
-            const recordIdStr = allergyRecordId ? allergyRecordId.value : '0';
+    // Collect allergies from grid data
+    const vId = parseInt(document.getElementById('volunteerId').value) || 0;
+    allergiesData.forEach(allergy => {
+        const startDate = allergy.startDate && allergy.startDate !== '0001-01-01' ? allergy.startDate : '0001-01-01';
+        const endDate = allergy.endDate && allergy.endDate !== '0001-01-01' ? allergy.endDate : '0001-01-01';
 
-            // Parse composite key (VId_AllergyId) if exists
-            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
-            if (recordIdStr && recordIdStr.includes('_')) {
-                const parts = recordIdStr.split('_');
-                vId = parseInt(parts[0]) || vId;
-            }
+        volunteerData.VolunteerAllergyData.push({
+            VId: vId,
+            AllergyId: parseInt(allergy.id),
+            StartDate: startDate,
+            EndDate: endDate,
+            CompanyId: 1,
+            SiteId: 1,
+            Active: true,
+            UserName: 1
+        });
+    });
 
-            const startDate = document.getElementById(`allergyStartDate${i}`).value || '0001-01-01';
-            const endDate = document.getElementById(`allergyEndDate${i}`).value || '0001-01-01';
-            volunteerData.VolunteerAllergyData.push({
-                VId: vId,
-                AllergyId: parseInt(allergyId.value),
-                StartDate: startDate,
-                EndDate: endDate,
-                CompanyId: 1,
-                SiteId: 1,
-                Active: true,
-                UserName: 1
-            });
-        }
-    }
+    // Collect diseases from grid data
+    diseasesData.forEach(disease => {
+        const startDate = disease.startDate && disease.startDate !== '0001-01-01' ? disease.startDate : '0001-01-01';
+        const endDate = disease.endDate && disease.endDate !== '0001-01-01' ? disease.endDate : '0001-01-01';
 
-    // Collect diseases
-    for (let i = 1; i <= diseaseCounter; i++) {
-        const diseaseId = document.getElementById(`diseaseId${i}`);
-        if (diseaseId && diseaseId.value) {
-            const diseaseRecordId = document.getElementById(`diseaseRecordId${i}`);
-            const recordIdStr = diseaseRecordId ? diseaseRecordId.value : '0';
+        volunteerData.VolunteerDiseaseData.push({
+            VId: vId,
+            DeseaseId: parseInt(disease.id),  // Note: Using "DeseaseId" to match UDT typo
+            StartDate: startDate,
+            EndDate: endDate,
+            CompanyId: 1,
+            SiteId: 1,
+            Active: true,
+            UserName: 1
+        });
+    });
 
-            // Parse composite key (VId_DiseaseId) if exists
-            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
-            if (recordIdStr && recordIdStr.includes('_')) {
-                const parts = recordIdStr.split('_');
-                vId = parseInt(parts[0]) || vId;
-            }
+    // Collect medications from grid data
+    medicationsData.forEach(medication => {
+        const startDate = medication.startDate && medication.startDate !== '0001-01-01' ? medication.startDate : '0001-01-01';
+        const endDate = medication.endDate && medication.endDate !== '0001-01-01' ? medication.endDate : '0001-01-01';
 
-            const startDate = document.getElementById(`diseaseStartDate${i}`).value || '0001-01-01';
-            const endDate = document.getElementById(`diseaseEndDate${i}`).value || '0001-01-01';
-            volunteerData.VolunteerDiseaseData.push({
-                VId: vId,
-                DeseaseId: parseInt(diseaseId.value),  // Note: Using "DeseaseId" to match UDT typo
-                StartDate: startDate,
-                EndDate: endDate,
-                CompanyId: 1,
-                SiteId: 1,
-                Active: true,
-                UserName: 1
-            });
-        }
-    }
-
-    // Collect medications
-    for (let i = 1; i <= medicationCounter; i++) {
-        const medicationName = document.getElementById(`medicationName${i}`);
-        if (medicationName && medicationName.value) {
-            const medicationRecordId = document.getElementById(`medicationRecordId${i}`);
-            const recordIdStr = medicationRecordId ? medicationRecordId.value : '0';
-
-            // Parse composite key (VId_MedicationId) if exists
-            let vId = parseInt(document.getElementById('volunteerId').value) || 0;
-            let medId = 0;
-            if (recordIdStr && recordIdStr.includes('_')) {
-                const parts = recordIdStr.split('_');
-                vId = parseInt(parts[0]) || vId;
-                medId = parseInt(parts[1]) || 0;
-            }
-
-            const startDate = document.getElementById(`medicationStartDate${i}`).value || '0001-01-01';
-            const endDate = document.getElementById(`medicationEndDate${i}`).value || '0001-01-01';
-            volunteerData.VolunteerMedicationData.push({
-                VId: vId,
-                MedicationId: medId,
-                DrogName: medicationName.value,
-                DrogDose: document.getElementById(`medicationDose${i}`).value,
-                StartDate: startDate,
-                EndDate: endDate,
-                CompanyId: 1,
-                SiteId: 1,
-                Active: true,
-                UserName: 1
-            });
-        }
-    }
+        volunteerData.VolunteerMedicationData.push({
+            VId: vId,
+            MedicationId: parseInt(medication.id),
+            DrogName: medication.name,
+            DrogDose: medication.dose || '',
+            StartDate: startDate,
+            EndDate: endDate,
+            CompanyId: 1,
+            SiteId: 1,
+            Active: true,
+            UserName: 1
+        });
+    });
 
     // Collect documents
     for (let i = 1; i <= documentCounter; i++) {
@@ -993,6 +968,7 @@ function populateFormData() {
             const medicationItem = {
                 id: med.medicationId,
                 name: medName,
+                dose: med.drogDose || '',
                 startDate: med.startDate || '0001-01-01',
                 endDate: med.endDate || '0001-01-01'
             };
@@ -1251,6 +1227,7 @@ function setupMedicationsGrid() {
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Medication", flex: 2 },
+            { field: "dose", headerName: "Dose", flex: 1 },
             {
                 field: "startDate",
                 headerName: "Start Date",
@@ -1288,6 +1265,7 @@ function setupMedicationsGrid() {
 // Save Medication
 function saveMedication() {
     const medicationId = $('#medicationSelect').val();
+    const dose = $('#medicationDose').val();
     const startDate = $('#medicationStartDate').val();
     const endDate = $('#medicationEndDate').val();
 
@@ -1302,6 +1280,7 @@ function saveMedication() {
     const medicationItem = {
         id: parseInt(medicationId),
         name: medicationName,
+        dose: dose || '',
         startDate: startDate || '0001-01-01',
         endDate: endDate || '0001-01-01'
     };
@@ -1318,6 +1297,7 @@ function saveMedication() {
 
     // Reset form
     $('#medicationSelect').val('');
+    $('#medicationDose').val('');
     $('#medicationStartDate').val('');
     $('#medicationEndDate').val('');
 }

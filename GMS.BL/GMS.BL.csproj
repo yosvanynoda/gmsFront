@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GMS.BackEnd\GMS.Objects\GMS.Objects.csproj" />
+    <ProjectReference Include="C:\GMS\Repo\BK\GMS.Objects\GMS.Objects.csproj" />
   </ItemGroup>
 
 </Project>

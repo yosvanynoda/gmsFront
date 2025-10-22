@@ -10,6 +10,9 @@ let documentCounter = 0;
 
 // Date formatting for DOB field
 $(document).ready(function() {
+    // Set default values for Flag and Status
+    setDefaultFlagAndStatus();
+
     // Auto-format DOB as user types
     $('#subjectDOB').on('input', function(e) {
         let value = $(this).val().replace(/\D/g, ''); // Remove non-digits
@@ -33,6 +36,32 @@ $(document).ready(function() {
         }
     });
 });
+
+// Set default values for Flag and Status dropdowns
+function setDefaultFlagAndStatus() {
+    // Set Flag to "OK" by default
+    if (window.flagList && window.flagList.length > 0) {
+        const okFlag = window.flagList.find(f =>
+            (f.text || f.Text || '').toUpperCase() === 'OK' ||
+            (f.text || f.Text || '').toUpperCase() === 'GREEN'
+        );
+        if (okFlag) {
+            $('#flag').val(okFlag.value || okFlag.Value);
+            console.log('Flag set to OK:', okFlag);
+        }
+    }
+
+    // Set Status to "NEW" by default
+    if (window.vltStatusList && window.vltStatusList.length > 0) {
+        const newStatus = window.vltStatusList.find(s =>
+            (s.text || s.Text || '').toUpperCase() === 'NEW'
+        );
+        if (newStatus) {
+            $('#currentStatus').val(newStatus.value || newStatus.Value);
+            console.log('Status set to NEW:', newStatus);
+        }
+    }
+}
 
 // Validate date format
 function isValidDate(dateStr) {

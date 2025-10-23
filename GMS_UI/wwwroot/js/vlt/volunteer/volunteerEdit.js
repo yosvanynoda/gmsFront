@@ -671,7 +671,7 @@ function submitForm() {
 
         volunteerData.VolunteerDiseaseData.push({
             VId: vId,
-            DeseaseId: parseInt(disease.id),  // Note: Using "DeseaseId" to match UDT typo
+            DiseaseId: parseInt(disease.id),  // Note: Using "DeseaseId" to match UDT typo
             StartDate: startDate,
             EndDate: endDate,
             CompanyId: 1,

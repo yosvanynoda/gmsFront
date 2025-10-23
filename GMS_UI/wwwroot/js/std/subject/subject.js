@@ -63,13 +63,16 @@ const gridOptions = {
         {
             field: "action",
             headerName: "Actions",
-            width: 180,
+            width: 240,
             cellRenderer: (params) => {
                 return `<a href="/VLT/Volunteer/View?volunteerId=${params.data.volunteerId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="View Subject Data">
                     <i class="bi bi-eye-fill text-primary"></i>
                 </a> |
                 <a href="/SUB/Subject/Edit?subjectId=${params.data.subjectId}&returnUrl=${encodeURIComponent('/SUB/Subject/Index')}" class="action-link" title="Edit Subject Data">
                     <i class="bi bi-pencil-fill text-warning"></i>
+                </a> |
+                <a href="#" class="action-link visit-plan-link" data-subject-id="${params.data.subjectId}" data-study-id="${params.data.studyId}" title="Visit Plan">
+                    <i class="bi bi-calendar-check text-info"></i>
                 </a> |
                 <a href="#" class="action-link randomize-link" data-subject-id="${params.data.subjectId}" data-study-id="${params.data.studyId}" title="Assign Random Code">
                     <i class="bi bi-shuffle text-success"></i>
@@ -115,6 +118,16 @@ $(function () {
         if (subjectData) {
             showRandomCodeModal(subjectData);
         }
+    });
+
+    // Handle visit plan action link clicks
+    $(document).on('click', '.visit-plan-link', function(e) {
+        e.preventDefault();
+        const subjectId = $(this).data('subject-id');
+        const studyId = $(this).data('study-id');
+
+        console.log('Opening visit plan for SubjectId:', subjectId, 'StudyId:', studyId);
+        showVisitPlanModal(subjectId, studyId);
     });
 });
 
@@ -245,4 +258,123 @@ function assignRandomCode() {
             alert('Error assigning random code: ' + errorMessage);
         }
     });
+}
+
+// Visit Plan Modal Functions
+let visitPlanGridApi = null;
+
+function showVisitPlanModal(subjectId, studyId) {
+    console.log('Show visit plan modal for SubjectId:', subjectId, 'StudyId:', studyId);
+
+    // Store data for use in modal
+    $('#visitPlanSubjectId').val(subjectId);
+    $('#visitPlanStudyId').val(studyId);
+
+    // Show the modal
+    $('#visitPlanModal').modal('show');
+
+    // Load visit plan data
+    loadVisitPlanData(subjectId, studyId);
+}
+
+function loadVisitPlanData(subjectId, studyId) {
+    const requestData = {
+        CompanyId: 1,
+        SiteId: 1,
+        SubjectId: subjectId,
+        StudyId: studyId
+    };
+
+    console.log('Loading visit plan data with:', requestData);
+
+    $.ajax({
+        type: "POST",
+        url: "/api/v1/SUB/getvisitplanlist",
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function(response) {
+            console.log('Visit Plan Response:', response);
+
+            if (response.success && response.data) {
+                displayVisitPlanData(response.data);
+            } else {
+                console.error('Visit plan response not successful:', response);
+                $('#visitPlanGrid').html('<div class="alert alert-warning">No visit plan data available.</div>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Visit Plan Error:', error);
+            console.error('XHR Status:', xhr.status);
+            console.error('XHR Response:', xhr.responseText);
+
+            $('#visitPlanGrid').html('<div class="alert alert-danger">Error loading visit plan data.</div>');
+        }
+    });
+}
+
+function displayVisitPlanData(data) {
+    console.log('Displaying visit plan data:', data);
+
+    // Ensure data is an array
+    const visitData = Array.isArray(data) ? data : [];
+
+    // Setup AG-Grid options
+    const gridOptions = {
+        rowData: visitData,
+        columnDefs: [
+            { field: "visitName", headerName: "Visit Name", filter: 'agTextColumnFilter', flex: 2 },
+            { field: "visitNumber", headerName: "Visit #", filter: 'agNumberColumnFilter', width: 100 },
+            {
+                field: "scheduledDate",
+                headerName: "Scheduled Date",
+                filter: 'agDateColumnFilter',
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : 'Not Scheduled'
+            },
+            {
+                field: "actualDate",
+                headerName: "Actual Date",
+                filter: 'agDateColumnFilter',
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : '-'
+            },
+            {
+                field: "status",
+                headerName: "Status",
+                filter: 'agTextColumnFilter',
+                flex: 1,
+                cellRenderer: params => {
+                    const status = params.value || 'Pending';
+                    let badgeClass = 'bg-secondary';
+
+                    if (status === 'Completed') badgeClass = 'bg-success';
+                    else if (status === 'Scheduled') badgeClass = 'bg-primary';
+                    else if (status === 'Missed') badgeClass = 'bg-danger';
+                    else if (status === 'Pending') badgeClass = 'bg-warning';
+
+                    return `<span class="badge ${badgeClass}">${status}</span>`;
+                }
+            },
+            {
+                field: "window",
+                headerName: "Visit Window",
+                filter: 'agTextColumnFilter',
+                flex: 1
+            }
+        ],
+        defaultColDef: {
+            sortable: true,
+            resizable: true,
+            filter: true
+        },
+        domLayout: 'autoHeight',
+        pagination: false
+    };
+
+    const gridDiv = document.querySelector('#visitPlanGrid');
+    if (gridDiv) {
+        gridDiv.innerHTML = '';
+        visitPlanGridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
 }

@@ -87,7 +87,6 @@ const gridOptions = {
         sortable: true,
         resizable: true
     },
-    enableAdvancedFilter: true,
     pagination: true,
 };
 // Create Grid: Create new grid within the #myGrid div, using the Grid Options object

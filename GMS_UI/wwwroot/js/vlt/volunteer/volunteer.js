@@ -267,12 +267,12 @@ function assignVolunteerToStudy() {
         return;
     }
 
-    // Build request
+    // Build request - Backend expects PascalCase property names
     const request = {
-        VolunteerId: parseInt(volunteerId),
-        StudyId: parseInt(studyId),
         CompanyId: 1,
-        SiteId: 1
+        SiteId: 1,
+        StudyId: parseInt(studyId),
+        VolunteerId: parseInt(volunteerId)
     };
 
     console.log('Pre-Assign Request:', request);

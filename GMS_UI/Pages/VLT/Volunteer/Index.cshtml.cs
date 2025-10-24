@@ -198,7 +198,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     });
                 }
 
-                if (requestInput.VolunteerId <= 0 || requestInput.StudyId <= 0)
+                if ( requestInput.StudyId <= 0)
                 {
                     _logger.LogWarning("Invalid VolunteerId or StudyId - VolunteerId: {VolunteerId}, StudyId: {StudyId}",
                         requestInput.VolunteerId, requestInput.StudyId);
@@ -216,10 +216,10 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     SiteId = requestInput.SiteId > 0 ? requestInput.SiteId : 1,
                     StudyId = requestInput.StudyId,
                     VolunteerIds = new List<int> { requestInput.VolunteerId },
-                    UserId = 1
+                    Username = 1
                 };
 
-                _logger.LogInformation("Calling PreAssign API - StudyId: {StudyId}, VolunteerId: {VolunteerId}",
+                _logger.LogInformation("Calling PreAssign API - StudyId: {StudyId}, VolunteerIds: {VolunteerId}",
                     preAssignRequest.StudyId, requestInput.VolunteerId);
 
                 // Call the PreAssign API
@@ -269,5 +269,6 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public int StudyId { get; set; }
         public int CompanyId { get; set; }
         public int SiteId { get; set; }
+
     }
 }

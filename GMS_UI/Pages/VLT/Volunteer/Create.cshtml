@@ -40,9 +40,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Flag</label>
-                            <select class="form-select" id="flag">
-                                <option value="0">Select Flag</option>
+                            <label class="form-label">Flag *</label>
+                            <select class="form-select" id="flag" required>
+                                <option value="">Select Flag</option>
                                 @foreach (var item in Model.FlagList)
                                 {
                                     <option value="@item.Value">@item.Text</option>
@@ -118,8 +118,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Current Status</label>
-                            <select class="form-select" id="currentStatus">
+                            <label class="form-label">Current Status *</label>
+                            <select class="form-select" id="currentStatus" required>
                                 <option value="">Select Status</option>
                                 @foreach (var item in Model.VLTStatusList)
                                 {
@@ -410,12 +410,16 @@
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Select Medication *</label>
                                 <select class="form-select" id="medicationSelect">
                                     <option value="">Select Medication</option>
                                 </select>
                                 <span id="validateMedication" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Dose</label>
+                                <input type="text" class="form-control" id="medicationDose" placeholder="e.g., 500mg" />
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Start Date</label>
@@ -516,10 +520,14 @@
     window.allergyList = @Html.Raw(Json.Serialize(Model.AllergyList));
     window.diseaseList = @Html.Raw(Json.Serialize(Model.DiseaseList));
     window.medicationList = @Html.Raw(Json.Serialize(Model.MedicationList));
+    window.flagList = @Html.Raw(Json.Serialize(Model.FlagList));
+    window.vltStatusList = @Html.Raw(Json.Serialize(Model.VLTStatusList));
 
     console.log('CSRF Token:', window._csrfToken);
     console.log('Allergy List loaded:', window.allergyList);
     console.log('Disease List loaded:', window.diseaseList);
     console.log('Medication List loaded:', window.medicationList);
+    console.log('Flag List loaded:', window.flagList);
+    console.log('VLT Status List loaded:', window.vltStatusList);
 </script>
 <script src="/js/vlt/volunteer/volunteerCreate.js"></script>

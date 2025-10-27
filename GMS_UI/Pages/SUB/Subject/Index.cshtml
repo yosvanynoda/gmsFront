@@ -198,6 +198,37 @@
     </div>
 </div>
 
+<!-- Visit Plan Modal -->
+<div id="visitPlanModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="visitPlanModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" role="document">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h2 style="color: white; margin: 0;">
+                    <i class="bi bi-calendar-check-fill me-2"></i>Visit Plan
+                </h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    This shows the scheduled and completed visits for the selected subject based on the study protocol.
+                </div>
+
+                <!-- Visit Plan Grid -->
+                <div id="visitPlanGrid" class="ag-theme-balham" style="width: 100%; min-height: 400px;"></div>
+
+                <input type="hidden" id="visitPlanSubjectId" />
+                <input type="hidden" id="visitPlanStudyId" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Add CSRF token to form -->
 <form method="post">
     @Html.AntiForgeryToken()

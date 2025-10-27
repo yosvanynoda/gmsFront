@@ -2,16 +2,16 @@
 class VolunteerButtonRenderer {
     init(params) {
         this.eGui = document.createElement('div');
+        const editLink = createActionLink('Edit', `/VLT/Volunteer/Edit?volunteerId=${params.data.volunteerId}`, 'link-success', 'bi bi-pencil-fill', params.data.volunteerId);
         const historyLink = createActionLink('History', '#volunteerHistoryModal', 'link-info', 'bi bi-clock-history', params.data.volunteerId,
             params.data.firstName, params.data.lastName);
         const preAssignLink = createActionLink('Pre-Assign', '#preAssignModal', 'link-primary', 'bi bi-person-plus', params.data.volunteerId,
             params.data.firstName, params.data.lastName);
-        const editLink = createActionLink('Edit', `/VLT/Volunteer/Edit?volunteerId=${params.data.volunteerId}`, 'link-success', 'bi bi-pencil-fill', params.data.volunteerId);
+        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(historyLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(preAssignLink);
-        this.eGui.appendChild(document.createTextNode(' | '));
-        this.eGui.appendChild(editLink);
     }
 
     getGui() {
@@ -74,7 +74,6 @@ const gridOptions = {
     defaultColDef: {
         flex: 1,
     },
-    enableAdvancedFilter: true,
     pagination: true,
 };
 //#endregion
@@ -268,12 +267,12 @@ function assignVolunteerToStudy() {
         return;
     }
 
-    // Build request
+    // Build request - Backend expects PascalCase property names
     const request = {
-        VolunteerId: parseInt(volunteerId),
-        StudyId: parseInt(studyId),
         CompanyId: 1,
-        SiteId: 1
+        SiteId: 1,
+        StudyId: parseInt(studyId),
+        VolunteerId: parseInt(volunteerId)
     };
 
     console.log('Pre-Assign Request:', request);

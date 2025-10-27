@@ -137,7 +137,7 @@ function crudStudioDoc(action) {
     let docType = '';
     let docVersion = '';
     let docDate = '';   
-    let siteId = 0;
+
     switch (action) {
         case 1: // Add
             docName = $("#docName").val();
@@ -150,14 +150,14 @@ function crudStudioDoc(action) {
             docVersion = $("#docVersion").val();
             docDate = $("#docDate").val();
             studioName = $("#studioName").val();
-            siteId = $("#siteId").val();
+
             id = 0; // New studioDoc, so id is 0
             $('#studioName').val('');
             $('#docType').val('');
             $('#docVersion').val('');
             $('#docDate').val('');
             $('#studioName').val('');
-            $('#siteId').val('');
+
             $('#studioDocNewModal').modal('hide');
             break;
         case 2: // Edit
@@ -172,7 +172,7 @@ function crudStudioDoc(action) {
             docVersion = $("#docVersionEdit").val();
             docDate = $("#docDateEdit").val();
             studioName = $("#studioNameEdit").val();
-            siteId = $("#siteIdEdit").val();
+
             $('#studioNameEdit').val('');
             $('#lastNamEdite').val('');
             $('#docVersionEdit').val('');
@@ -195,7 +195,7 @@ $.ajax({
     type: "POST",
     url: urlIndex + '?handler=CrudStudioDoc',
     headers: { 'RequestVerificationToken': window._csrfToken },
-    data: { "studioName": studioName, "docType": docType, "docVersion": docVersion, "docDate": docDate, "studioName": studioName, "siteId": siteId },
+    data: { "studioName": studioName, "docType": docType, "docVersion": docVersion, "docDate": docDate, "studioName": studioName },
     success: function (data) {
         if (data.success === false) {
             $('#failedTitle').html('StudioDoc');

@@ -10,6 +10,9 @@ let documentCounter = 0;
 
 // Date formatting for DOB field
 $(document).ready(function() {
+    // Set default values for Flag and Status
+    setDefaultFlagAndStatus();
+
     // Auto-format DOB as user types
     $('#subjectDOB').on('input', function(e) {
         let value = $(this).val().replace(/\D/g, ''); // Remove non-digits
@@ -33,6 +36,32 @@ $(document).ready(function() {
         }
     });
 });
+
+// Set default values for Flag and Status dropdowns
+function setDefaultFlagAndStatus() {
+    // Set Flag to "OK" by default
+    if (window.flagList && window.flagList.length > 0) {
+        const okFlag = window.flagList.find(f =>
+            (f.text || f.Text || '').toUpperCase() === 'OK' ||
+            (f.text || f.Text || '').toUpperCase() === 'GREEN'
+        );
+        if (okFlag) {
+            $('#flag').val(okFlag.value || okFlag.Value);
+            console.log('Flag set to OK:', okFlag);
+        }
+    }
+
+    // Set Status to "NEW" by default
+    if (window.vltStatusList && window.vltStatusList.length > 0) {
+        const newStatus = window.vltStatusList.find(s =>
+            (s.text || s.Text || '').toUpperCase() === 'NEW'
+        );
+        if (newStatus) {
+            $('#currentStatus').val(newStatus.value || newStatus.Value);
+            console.log('Status set to NEW:', newStatus);
+        }
+    }
+}
 
 // Validate date format
 function isValidDate(dateStr) {
@@ -628,7 +657,7 @@ function submitForm() {
             volunteerData.VolunteerMedicationData.push({
                 MedicationId: medication.id,
                 DrogName: medication.name,
-                DrogDose: '',
+                DrogDose: medication.dose || '',
                 StartDate: medication.startDate || '0001-01-01',
                 EndDate: medication.endDate || '0001-01-01',
                 CompanyId: 1,
@@ -907,6 +936,8 @@ function saveDisease() {
     const startDate = $('#diseaseStartDate').val();
     const endDate = $('#diseaseEndDate').val();
 
+    console.log('saveDisease called - diseaseId:', diseaseId, 'startDate:', startDate, 'endDate:', endDate);
+
     if (!diseaseId) {
         $('#validateDisease').text('Please select a disease');
         return;
@@ -922,20 +953,26 @@ function saveDisease() {
         endDate: endDate || '0001-01-01'
     };
 
+    console.log('Disease item to add:', diseaseItem);
+    console.log('Current diseasesData:', diseasesData);
+
     // Check if already exists
     if (diseasesData.some(d => d.id === diseaseItem.id)) {
+        console.log('Disease already exists in list');
         $('#validateDisease').text('This disease is already added');
         return;
     }
 
     // Add new
     diseasesData.push(diseaseItem);
+    console.log('Disease added. New diseasesData:', diseasesData);
     setupDiseasesGrid();
 
     // Reset form
     $('#diseaseSelect').val('');
     $('#diseaseStartDate').val('');
     $('#diseaseEndDate').val('');
+    console.log('Disease form reset');
 }
 
 // Delete Disease
@@ -975,6 +1012,7 @@ function setupMedicationsGrid() {
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Medication", flex: 2 },
+            { field: "dose", headerName: "Dose", flex: 1 },
             {
                 field: "startDate",
                 headerName: "Start Date",
@@ -1010,6 +1048,7 @@ function setupMedicationsGrid() {
 // Save Medication
 function saveMedication() {
     const medicationId = $('#medicationSelect').val();
+    const dose = $('#medicationDose').val();
     const startDate = $('#medicationStartDate').val();
     const endDate = $('#medicationEndDate').val();
 
@@ -1024,6 +1063,7 @@ function saveMedication() {
     const medicationItem = {
         id: parseInt(medicationId),
         name: medicationName,
+        dose: dose || '',
         startDate: startDate || '0001-01-01',
         endDate: endDate || '0001-01-01'
     };
@@ -1040,6 +1080,7 @@ function saveMedication() {
 
     // Reset form
     $('#medicationSelect').val('');
+    $('#medicationDose').val('');
     $('#medicationStartDate').val('');
     $('#medicationEndDate').val('');
 }

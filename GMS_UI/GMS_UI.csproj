@@ -122,6 +122,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Helper\EnumExtension.cs" />
+    <Compile Remove="Models\Enum\StudyBlindingTypeEnum.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
@@ -130,7 +135,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GMS.BackEnd\GMS.Objects\GMS.Objects.csproj" />
+    <ProjectReference Include="C:\GMS\Repo\BK\GMS.Objects\GMS.Objects.csproj" />
     <ProjectReference Include="..\GMS.BL\GMS.BL.csproj" />
   </ItemGroup>
 

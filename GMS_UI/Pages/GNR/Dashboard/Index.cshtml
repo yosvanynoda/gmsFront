@@ -1,4 +1,519 @@
-﻿@page
-@model GMS_UI.Pages.Dashboard.IndexModel
+@page
+@model GMS_UI.Pages.GNR.Dashboard.IndexModel
 @{
+    ViewData["Title"] = "Dashboard";
 }
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-icon {
+        font-size: 3rem;
+        opacity: 0.2;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .chart-card {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .chart-card .card-header {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-bottom: 2px solid #667eea;
+        border-radius: 10px 10px 0 0 !important;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+    }
+
+    .table-card {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-card .card-header {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-bottom: 2px solid #667eea;
+        border-radius: 10px 10px 0 0 !important;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-recruiting {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+
+    .status-completed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+        border-left: 2px solid #e9ecef;
+        padding-left: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+        border-left-color: transparent;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -0.5rem;
+        top: 0;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #667eea;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px #667eea;
+    }
+
+    .timeline-time {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+
+    .quick-action-btn {
+        border-radius: 10px;
+        padding: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 2px solid;
+    }
+
+    .quick-action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<div style="margin-left: 240px; padding: 1rem; transition: margin-left 0.3s ease;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h2 class="mb-1"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+        <p class="mb-0 opacity-75">Welcome back! Here's what's happening with your clinical trials today.</p>
+    </div>
+
+    <!-- Key Metrics Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card border-start border-primary border-4">
+                <div class="card-body position-relative">
+                    <p class="stat-label">Total Studies</p>
+                    <h3 class="stat-number text-primary">24</h3>
+                    <small class="text-success"><i class="bi bi-arrow-up"></i> 3 new this month</small>
+                    <i class="bi bi-journal-medical stat-icon text-primary"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card border-start border-success border-4">
+                <div class="card-body position-relative">
+                    <p class="stat-label">Active Patients</p>
+                    <h3 class="stat-number text-success">187</h3>
+                    <small class="text-success"><i class="bi bi-arrow-up"></i> 12 enrolled today</small>
+                    <i class="bi bi-people-fill stat-icon text-success"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card border-start border-warning border-4">
+                <div class="card-body position-relative">
+                    <p class="stat-label">Today's Visits</p>
+                    <h3 class="stat-number text-warning">15</h3>
+                    <small class="text-muted">8 completed, 7 pending</small>
+                    <i class="bi bi-calendar-check stat-icon text-warning"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card border-start border-info border-4">
+                <div class="card-body position-relative">
+                    <p class="stat-label">Pending Tasks</p>
+                    <h3 class="stat-number text-info">8</h3>
+                    <small class="text-danger"><i class="bi bi-exclamation-circle"></i> 2 overdue</small>
+                    <i class="bi bi-list-check stat-icon text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-3 mb-4">
+        <!-- Studies by Status -->
+        <div class="col-lg-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <i class="bi bi-pie-chart-fill"></i> Studies by Status
+                </div>
+                <div class="card-body">
+                    <canvas id="studiesStatusChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Enrolled by Studies -->
+        <div class="col-lg-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <i class="bi bi-bar-chart-fill"></i> Patients Enrolled by Study
+                </div>
+                <div class="card-body">
+                    <canvas id="patientsEnrolledChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables and Activity Row -->
+    <div class="row g-3">
+        <!-- Visits Scheduled for Today -->
+        <div class="col-lg-8">
+            <div class="card table-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-calendar3"></i> Today's Scheduled Visits</span>
+                    <span class="badge bg-primary">15 visits</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Study</th>
+                                    <th>Visit Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">09:00 AM</td>
+                                    <td>John Smith</td>
+                                    <td><small>CARDIO-2024-01</small></td>
+                                    <td>Baseline Assessment</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">10:30 AM</td>
+                                    <td>Maria Garcia</td>
+                                    <td><small>NEURO-2024-03</small></td>
+                                    <td>Follow-up Week 4</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">11:00 AM</td>
+                                    <td>Robert Johnson</td>
+                                    <td><small>ONCO-2024-02</small></td>
+                                    <td>Screening Visit</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">01:30 PM</td>
+                                    <td>Lisa Chen</td>
+                                    <td><small>CARDIO-2024-01</small></td>
+                                    <td>Week 8 Assessment</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">02:00 PM</td>
+                                    <td>Michael Brown</td>
+                                    <td><small>RESP-2024-04</small></td>
+                                    <td>Baseline Visit</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">03:30 PM</td>
+                                    <td>Jennifer Davis</td>
+                                    <td><small>NEURO-2024-03</small></td>
+                                    <td>Final Assessment</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <a href="#" class="text-primary" title="View"><i class="bi bi-eye-fill"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <a href="#" class="text-decoration-none">View All Scheduled Visits <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Quick Actions -->
+        <div class="col-lg-4">
+            <!-- Recent Activity -->
+            <div class="card table-card mb-3">
+                <div class="card-header">
+                    <i class="bi bi-clock-history"></i> Recent Activity
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-time">2 minutes ago</div>
+                            <div class="fw-bold">New patient enrolled</div>
+                            <small class="text-muted">CARDIO-2024-01</small>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-time">15 minutes ago</div>
+                            <div class="fw-bold">Visit completed</div>
+                            <small class="text-muted">John Smith - Baseline</small>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-time">1 hour ago</div>
+                            <div class="fw-bold">Study status updated</div>
+                            <small class="text-muted">NEURO-2024-03 → Recruiting</small>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-time">2 hours ago</div>
+                            <div class="fw-bold">Protocol deviation reported</div>
+                            <small class="text-muted">ONCO-2024-02</small>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-time">3 hours ago</div>
+                            <div class="fw-bold">Consent form signed</div>
+                            <small class="text-muted">Maria Garcia</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card table-card">
+                <div class="card-header">
+                    <i class="bi bi-lightning-fill"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/VLT/Volunteer/Create" class="btn btn-outline-primary quick-action-btn">
+                            <i class="bi bi-person-plus"></i> Add New Volunteer
+                        </a>
+                        <a href="/STD/Study/Create" class="btn btn-outline-success quick-action-btn">
+                            <i class="bi bi-journal-plus"></i> Create New Study
+                        </a>
+                        <a href="/SUB/Subject/Index" class="btn btn-outline-info quick-action-btn">
+                            <i class="bi bi-people"></i> View All Subjects
+                        </a>
+                        <a href="#" class="btn btn-outline-warning quick-action-btn">
+                            <i class="bi bi-file-earmark-text"></i> Generate Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // Studies by Status - Pie Chart
+    const studiesStatusCtx = document.getElementById('studiesStatusChart').getContext('2d');
+    new Chart(studiesStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Active', 'Recruiting', 'Completed', 'On Hold', 'Planning'],
+            datasets: [{
+                label: 'Studies',
+                data: [8, 6, 5, 3, 2],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(0, 123, 255, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(255, 193, 7, 0.8)',
+                    'rgba(108, 117, 125, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(108, 117, 125, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed + ' studies';
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Patients Enrolled by Studies - Bar Chart
+    const patientsEnrolledCtx = document.getElementById('patientsEnrolledChart').getContext('2d');
+    new Chart(patientsEnrolledCtx, {
+        type: 'bar',
+        data: {
+            labels: ['CARDIO-2024-01', 'NEURO-2024-03', 'ONCO-2024-02', 'RESP-2024-04', 'ENDO-2024-05'],
+            datasets: [{
+                label: 'Enrolled Patients',
+                data: [45, 38, 32, 28, 24],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(237, 100, 166, 0.8)',
+                    'rgba(255, 154, 0, 0.8)',
+                    'rgba(46, 213, 115, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(102, 126, 234, 1)',
+                    'rgba(118, 75, 162, 1)',
+                    'rgba(237, 100, 166, 1)',
+                    'rgba(255, 154, 0, 1)',
+                    'rgba(46, 213, 115, 1)'
+                ],
+                borderWidth: 2,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + ' patients enrolled';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>

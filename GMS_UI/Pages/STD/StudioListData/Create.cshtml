@@ -13,7 +13,7 @@
             </h2>
         </div>
         <div class="col-3">
-            <button type="submit" class="btn btn-outline-primary float-end" id="saveLaterBtn" style="margin-top: 0;">
+            <button type="button" class="btn btn-outline-primary float-end" id="saveLaterBtn" onclick="submitForm()">
                 <i class="bi bi-bookmark-check-fill"></i> Save
             </button>
         </div>
@@ -252,12 +252,12 @@
             <div class="form-section">
                 <h5><i class="fas fa-shield-alt"></i> Monitors</h5>
 
-                <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
                         <a data-bs-toggle="modal" data-bs-target="#monitorModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
-                        <div id="monitorGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <div id="monitorGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
 
@@ -269,12 +269,12 @@
             <div class="form-section">
                 <h5><i class="fas fa-shield-alt"></i> Regulatory & Ethics Information</h5>
 
-                <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
                         <a data-bs-toggle="modal" data-bs-target="#documentModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
-                        <div id="documentGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <div id="documentGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
                 
@@ -286,12 +286,12 @@
             <div class="form-section">
                 <h5><i class="fas fa-check-circle"></i>Protocol</h5>
 
-                <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
                         <a data-bs-toggle="modal" data-bs-target="#protocolModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
-                        <div id="protocolGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <div id="protocolGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
                 
@@ -303,12 +303,12 @@
             <div class="form-section">
                 <h5><i class="fas fa-check-circle"></i> Arms</h5>
 
-                <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
                         <a data-bs-toggle="modal" data-bs-target="#armsModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
-                        <div id="armsGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <div id="armsGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
 
@@ -320,12 +320,12 @@
             <div class="form-section">
                 <h5><i class="fas fa-check-circle"></i> Visits</h5>
 
-                <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
+                <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
                         <a data-bs-toggle="modal" data-bs-target="#visitModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
                     </div>
                     <div class="card-body">
-                        <div id="visitsGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <div id="visitsGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
 
@@ -365,14 +365,14 @@
 
         <!-- Navigation Buttons -->
         <div class="wizard-navigation" >
-            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)">
                 <i class="fas fa-arrow-left"></i> Previous
             </button>
             <div class="ms-auto">
                 <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
                     Next <i class="fas fa-arrow-right"></i>
                 </button>
-                <button type="button" class="btn btn-success btn-wizard" onclick="submitForm()" id="submitBtn" style="display: none;">
+                <button type="button" class="btn btn-success btn-wizard" onclick="submitForm()" id="submitBtn" >
                     <i class="fas fa-check"></i> Submit Study
                 </button>
             </div>
@@ -387,10 +387,10 @@
 @*Start Modals.....*@
 
 @*Start Monitor*@
-<div id="monitorModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="monitorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="monitorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="monitorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Monitor</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
@@ -430,10 +430,10 @@
 @*End Monitor*@
 
 @*Start Documents*@
-<div id="documentModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="documentModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="documentModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="documentModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Document</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
@@ -510,10 +510,10 @@
 @*End Documents*@
 
 @*Start Protocol*@
-<div id="protocolModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="protocolModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="protocolModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="protocolModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Protocol</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
@@ -607,10 +607,10 @@
 @*End Protocol*@
 
 @*Start Arms*@
-<div id="armsModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="armsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="armsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="armsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Arms</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
@@ -664,10 +664,10 @@
 @*End Arms*@
 
 @*Start Visits*@
-<div id="visitModal" class="modal modal-lg fade" tabindex="-1" role="dialog" aria-labelledby="visitModal" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+<div id="visitModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="visitModal" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Visit</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
@@ -741,7 +741,7 @@
                         <div class="col-md-6">
                             <div class="mb-3 ">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input chkmodal" style="margin-left:2px !important;" type="checkbox" id="requiredFlag">
+                                    <input class="form-check-input chkmodal"  type="checkbox" id="requiredFlag">
                                     <label class="form-check-label" for="requiredFlag">&nbsp;Required Flag</label>
                                 </div>
                             </div>

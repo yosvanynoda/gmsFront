@@ -4,109 +4,6 @@
     ViewData["Title"] = "Monitor";
 }
 
-<style>
-    .monitor-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 1.5rem;
-        border: none !important;
-    }
-
-    .monitor-header h4 {
-        font-weight: 600;
-        margin-bottom: 0;
-    }
-
-    .monitor-card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: none;
-        overflow: hidden;
-        height: 90vh;
-    }
-
-    .monitor-grid-container {
-        height: calc(100% - 2rem);
-        padding: 1rem;
-        background: #f9fafb;
-    }
-
-    #monitorGrid {
-        height: 100%;
-        width: 100%;
-    }
-
-    .ag-theme-balham .ag-header {
-        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #5f9ea0;
-        font-weight: 600;
-    }
-
-    .ag-theme-balham .ag-row:hover {
-        background-color: #e8f4f5 !important;
-    }
-
-    .ag-theme-balham .ag-row-selected {
-        background-color: #d4e9ea !important;
-    }
-
-    .btn-add {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        color: white;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-add:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    .btn-success {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    .modal-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-bottom: none;
-    }
-
-    .modal-header h2 {
-        color: white;
-        font-weight: 600;
-        font-size: 1.5rem;
-        margin: 0;
-    }
-
-    .modal-header .close {
-        color: white;
-        opacity: 0.9;
-        font-size: 1.5rem;
-        cursor: pointer;
-        background: none;
-        border: none;
-    }
-
-    .modal-header .close:hover {
-        opacity: 1;
-    }
-</style>
 
 <div class="container-gms">
 
@@ -122,127 +19,188 @@
         <p id="failedMsg"></p>
     </div>
 
-    <div class="card monitor-card">
-        <div class="card-header monitor-header">
+    <div class="card">
+        <div class="card-header page-card-header">
             <div class="row align-items-center">
                 <div class="col">
                     <h4><i class="bi bi-binoculars-fill me-2"></i>Monitor</h4>
                 </div>
                 <div class="col text-end">
-                    <button data-bs-toggle="modal" data-bs-target="#monitorNewModal" class="btn btn-sm btn-add"><i class="bi bi-plus-circle me-1"></i> Add Monitor</button>
+                    <a data-bs-toggle="modal" data-bs-target="#monitorNewModal" class="btn btn-sm btn-add btn-header"><i class="bi bi-plus-circle me-1"></i> Add Monitor</a>
                 </div>
             </div>
         </div>
-        <div class="card-body monitor-grid-container">
-            <div id="monitorGrid" class="ag-theme-balham"></div>
+        <div class="card-body">
+            <div id="monitorGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
 </div>
+
+@*start modal...*@
+@*new modal...*@
  <div id="monitorNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="monitorNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Monitor</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="firstName">First Name</label>
-                    <input type="text" class="form-control pt-4" id="firstName" placeholder="First Name">
-                    <span id="validateFirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="lastName">Last Name</label>
-                    <input type="text" class="form-control pt-4" id="lastName" placeholder="Last Name">
-                    <span id="validateLastName" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="email">Email</label>
-                    <input type="text" class="form-control pt-4" id="email" placeholder="Email">
-                    <span id="validateEmail" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="phone">Phone</label>
-                    <input type="text" class="form-control pt-4" id="phone" placeholder="Phone">
-                    <span id="validatePhone" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="role">Role</label>
-                    <input type="text" class="form-control pt-4" id="role" placeholder="Role">
-                    <span id="validateRole" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="sponsor">Sponsor</label>
-                    <select class="form-select" aria-label="Default select example" id="sponsor">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validatesponsor" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="firstName">First Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="firstName" placeholder="First Name">
+                                <span id="validateFirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="lastName">Last Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="lastName" placeholder="Last Name">
+                                <span id="validateLastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="email">Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="email" placeholder="Email">
+                                <span id="validateEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="phone">Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="phone" placeholder="Phone">
+                                <span id="validatePhone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="role">Role</label>
+                                <input type="text" class="form-control inputsmmodal" id="role" placeholder="Role">
+                                <span id="validateRole" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="sponsor">Sponsor</label>
+                                <select class="form-select" aria-label="Default select example" id="sponsor">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validatesponsor" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudMonitor(1)"> Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="editMonitor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editMonitorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content" role="document">
-            <div class="modal-header">
-                <h2>Edit Monitor</h2>
-                <span class="close" data-bs-dismiss="modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="firstNameEdit">First Name</label>
-                    <input type="text" class="form-control pt-4" id="firstNameEdit" placeholder="First Name">
-                    <span id="validateFirstNameEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="lastNameEdit">Last Name</label>
-                    <input type="text" class="form-control pt-4" id="lastNameEdit" placeholder="Last Name">
-                    <span id="validateLastNameEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="emailEdit">Email</label>
-                    <input type="text" class="form-control pt-4" id="emailEdit" placeholder="Email">
-                    <span id="validateEmailEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="phoneEdit">Phone</label>
-                    <input type="text" class="form-control pt-4" id="phoneEdit" placeholder="Phone">
-                    <span id="validatePhone" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="roleEdit">Role</label>
-                    <input type="text" class="form-control pt-4" id="roleEdit" placeholder="Role">
-                    <span id="validateRoleEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="sponsorEdit">Sponsor</label>
-                    <input type="text" class="form-control pt-4" id="sponsorEdit" placeholder="Sponsor" readonly>
-                </div>
-               
-                <input type="hidden" id="monitoridEdit" />
-                <input type="hidden" id="sponsoridEdit" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudMonitor(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudMonitor(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="deleteMonitor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteMonitorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+@*edit modal...*@
+<div id="editMonitor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editMonitorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
+                <h2>Edit Monitor</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="firstNameEdit">First Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="firstNameEdit" placeholder="First Name">
+                                <span id="validateFirstNameEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="lastNameEdit">Last Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="lastNameEdit" placeholder="Last Name">
+                                <span id="validateLastNameEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="emailEdit">Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="emailEdit" placeholder="Email">
+                                <span id="validateEmailEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="phoneEdit">Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="phoneEdit" placeholder="Phone">
+                                <span id="validatePhone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="roleEdit">Role</label>
+                                <input type="text" class="form-control inputsmmodal" id="roleEdit" placeholder="Role">
+                                <span id="validateRoleEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="sponsorEdit">Sponsor</label>
+                                <input type="text" class="form-control inputsmmodal" id="sponsorEdit" placeholder="Sponsor" readonly>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <input type="hidden" id="monitoridEdit" />
+                <input type="hidden" id="sponsoridEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudMonitor(2)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*delete modal...*@
+<div id="deleteMonitor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteMonitorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this monitor?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="monitoridDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">Firt Name: </dt>
                         <dd class="col-sm-6" id="firstNameD"> </dd>
@@ -270,11 +228,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudMonitor(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudMonitor(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>   
 </div>
+@*end modal...*@
 
 <script>
     window._csrfToken = $('@Html.AntiForgeryToken()').val();

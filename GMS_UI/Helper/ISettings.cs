@@ -121,6 +121,8 @@
 
         string Endpoint_GetProtocolVersionList();
 
+        string Endpoint_CreateStudyData();
+
         #endregion
 
         #region SUB....

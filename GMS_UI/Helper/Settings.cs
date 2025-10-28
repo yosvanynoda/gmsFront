@@ -122,6 +122,8 @@
 
         public string Endpoint_GetProtocolVersionList() => _config["Endpoint_GetProtocolVersionList"] ?? "";
 
+        public string Endpoint_CreateStudyData() => _config["Endpoint_CreateStudyData"] ?? "";
+
         #endregion
 
         #region SUB....

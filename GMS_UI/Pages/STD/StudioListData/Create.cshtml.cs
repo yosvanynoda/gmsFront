@@ -41,7 +41,12 @@ namespace GMS_UI.Pages.STD.StudioListData
         {
             try
             {
-                var result = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVolunteer(), "Create Study", "", studioData);
+
+                studioData.CompanyId = 1; // Assuming CompanyId is always 1
+                studioData.Username = 1; // Assuming a default user name for the system
+                studioData.SiteId = 1; // Assuming a default site Id for the system
+
+                var result = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateStudyData(), "Create Study", "", studioData);
 
                 _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
                     result?.Success, result?.Message);

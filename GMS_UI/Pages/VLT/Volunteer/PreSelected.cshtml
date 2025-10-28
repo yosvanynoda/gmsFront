@@ -4,159 +4,7 @@
     ViewData["Title"] = "Pre-Selected Volunteers";
 }
 
-<style>
-    .preselected-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 1.5rem;
-        border: none !important;
-    }
 
-    .preselected-header h4 {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        font-size: 1.5rem;
-    }
-
-    .preselected-header .subtitle {
-        opacity: 0.9;
-        font-size: 0.9rem;
-        margin-bottom: 0;
-    }
-
-    .filter-section {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-section label {
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 0.5rem;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .filter-section select {
-        border: 2px solid #e5e7eb;
-        border-radius: 6px;
-        padding: 0.6rem 1rem;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-    }
-
-    .filter-section select:focus {
-        border-color: #5f9ea0;
-        box-shadow: 0 0 0 3px rgba(95, 158, 160, 0.1);
-        outline: none;
-    }
-
-    .preselected-card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: none;
-        overflow: hidden;
-        height: 90vh;
-    }
-
-    .preselected-grid-container {
-        height: calc(100% - 2rem);
-        padding: 1rem;
-        background: #f9fafb;
-    }
-
-    #preSelectedGrid {
-        height: 100%;
-        width: 100%;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    /* AG-Grid customizations */
-    .ag-theme-balham .ag-header {
-        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #5f9ea0;
-        font-weight: 600;
-    }
-
-    .ag-theme-balham .ag-header-cell {
-        padding: 12px 8px;
-    }
-
-    .ag-theme-balham .ag-row {
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .ag-theme-balham .ag-row:hover {
-        background-color: #e8f4f5 !important;
-    }
-
-    .ag-theme-balham .ag-row-selected {
-        background-color: #d4e9ea !important;
-    }
-
-    /* Action button styling */
-    .action-btn {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        padding: 0.4rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-    }
-
-    .action-btn:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    .action-btn:active {
-        transform: translateY(0);
-    }
-
-    .action-btn i {
-        margin-right: 0.3rem;
-    }
-
-    /* Stats badges */
-    .stats-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        background: rgba(255, 255, 255, 0.2);
-        margin-left: 0.5rem;
-    }
-
-    /* Action link styling */
-    .action-link {
-        font-size: 1.1rem;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        margin: 0 0.2rem;
-    }
-
-    .action-link:hover {
-        transform: scale(1.2);
-    }
-
-    .complete-link:hover {
-        color: #198754 !important;
-    }
-
-    .remove-link:hover {
-        color: #dc3545 !important;
-    }
-</style>
 
 <div class="container-gms">
     <div class="card preselected-card">
@@ -189,14 +37,14 @@
             </div>
         </div>
         <div class="card-body preselected-grid-container">
-            <div id="preSelectedGrid" class="ag-theme-balham"></div>
+            <div id="preSelectedGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
 </div>
 
 <!-- Create Subject Modal -->
 <div id="createSubjectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createSubjectModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
             <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
                 <h2>Create Subject</h2>

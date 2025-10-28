@@ -4,96 +4,7 @@
     ViewData["Title"] = "Volunteer";
 }
 
-<style>
-    .volunteer-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 1.5rem;
-        border: none !important;
-    }
 
-    .volunteer-header h4 {
-        font-weight: 600;
-        margin-bottom: 0;
-    }
-
-    .volunteer-card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: none;
-        overflow: hidden;
-        height: 90vh;
-    }
-
-    .volunteer-grid-container {
-        height: calc(100% - 2rem);
-        padding: 1rem;
-        background: #f9fafb;
-    }
-
-    #volunteerGrid {
-        height: 100%;
-        width: 100%;
-    }
-
-    /* AG-Grid customizations */
-    .ag-theme-balham .ag-header {
-        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #5f9ea0;
-        font-weight: 600;
-    }
-
-    .ag-theme-balham .ag-row:hover {
-        background-color: #e8f4f5 !important;
-    }
-
-    .ag-theme-balham .ag-row-selected {
-        background-color: #d4e9ea !important;
-    }
-
-    .btn-add {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        color: white;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-add:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    /* Modal styling */
-    .modal-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-bottom: none;
-    }
-
-    .modal-header h5 {
-        color: white;
-        font-weight: 600;
-    }
-
-    .btn-success {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-</style>
 
 <div class="container-gms">
     <div class="card volunteer-card">
@@ -108,7 +19,7 @@
             </div>
         </div>
         <div class="card-body volunteer-grid-container">
-            <div id="volunteerGrid" class="ag-theme-balham"></div>
+            <div id="volunteerGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
 </div>
@@ -117,7 +28,7 @@
 <div class="modal fade" id="volunteerHistoryModal" tabindex="-1" aria-labelledby="volunteerHistoryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h5 class="modal-title" id="volunteerHistoryModalLabel">
                     <i class="bi bi-clock-history"></i> Volunteer History: <span id="volunteerHistoryName"></span>
                 </h5>
@@ -177,9 +88,9 @@
 
 <!-- Pre-Assign to Study Modal -->
 <div id="preAssignModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="preAssignModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h5 class="modal-title" id="preAssignModalLabel">
                     <i class="bi bi-person-plus me-2"></i>Pre-Assign Volunteer to Study
                 </h5>

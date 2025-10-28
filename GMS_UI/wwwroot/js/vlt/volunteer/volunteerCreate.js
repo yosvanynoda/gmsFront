@@ -264,7 +264,7 @@ function addEmergencyContact() {
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Emergency Contact ${emergencyContactCounter}</h6>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeEmergencyContact(${emergencyContactCounter})">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeEmergencyContact(${emergencyContactCounter})">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -318,7 +318,7 @@ function addAllergy() {
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Allergy ${allergyCounter}</h6>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeAllergy(${allergyCounter})">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAllergy(${allergyCounter})">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -367,7 +367,7 @@ function addDisease() {
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Disease ${diseaseCounter}</h6>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeDisease(${diseaseCounter})">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDisease(${diseaseCounter})">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -416,7 +416,7 @@ function addMedication() {
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Medication ${medicationCounter}</h6>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeMedication(${medicationCounter})">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMedication(${medicationCounter})">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -462,7 +462,7 @@ function addDocument() {
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">Document ${documentCounter}</h6>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeDocument(${documentCounter})">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDocument(${documentCounter})">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -780,7 +780,7 @@ function setupAllergiesGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-danger" onclick="deleteAllergy(${params.node.rowIndex})">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAllergy(${params.node.rowIndex})">
                             <i class="bi bi-trash"></i> Delete
                         </button>
                     `;
@@ -886,7 +886,7 @@ function setupDiseasesGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-danger" onclick="deleteDisease(${params.node.rowIndex})">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDisease(${params.node.rowIndex})">
                             <i class="bi bi-trash"></i> Delete
                         </button>
                     `;
@@ -992,7 +992,7 @@ function setupMedicationsGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-danger" onclick="deleteMedication(${params.node.rowIndex})">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteMedication(${params.node.rowIndex})">
                             <i class="bi bi-trash"></i> Delete
                         </button>
                     `;

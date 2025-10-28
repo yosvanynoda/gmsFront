@@ -142,20 +142,34 @@ function validateStep(step) {
     //    alert('Please fill in all required fields before proceeding.');
     //}
 
-    if (step == 3)
-        return false;
+    //if (step == 3)
+    //    return false;
 
     return isValid;
 }
 
 function updateNavigationButtons() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
+    //const prevBtn = document.getElementById('prevBtn');
+    //const nextBtn = document.getElementById('nextBtn');
+    //const submitBtn = document.getElementById('submitBtn');
 
-    prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
-    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+    if (currentStep === 1) {
+        $('#prevBtn').hide();
+    } else {
+        $('#prevBtn').show();
+    }
+
+    if (currentStep === totalSteps) {
+        $('#nextBtn').hide();
+        $('#submitBtn').show();
+    } else {
+        $('#nextBtn').show();
+        $('#submitBtn').hide();
+    }
+
+    //prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+    //nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+    //submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
 }
 
 function updateReviewSummary() {
@@ -366,29 +380,34 @@ function setCombos(comboName, values, firstElement) {
 //#region Form Submission
 
 function submitForm() {
+    const generalData = {
+        STDId: 0,
+        Code: $('#studyCode').val(),
+        SponsorId: parseInt($('#sponsorList').val()),
+        Name: $('#studyName').val(),
+        Description: $('textarea#studyDescription').val(),
+        Notes: $('textarea#studyNotes').val(),
+        DateCreated: $('#studyDateCreated').val(),
+        Active: true,
+        Goal: parseInt($('#studyGoal').val()),
+        Phase: parseInt($('#phaseList').val()),
+        Indication: $('#studyIndication').val(),
+        TherapeuticArea: $('#studyTherapeuticArea').val(),
+        BlindingType: parseInt($('#blidingList').val()),
+        RandomizationType: parseInt($('#studyDesignList').val()),
+        StartDate: $('#studyStartDate').val(),
+        EndDate: $('#studyEndDate').val(),
+        StudioStatus: parseInt($('#studystatusList').val()),
+        DiseaseId: parseInt($('#diseaseList').val()),
+        CROId: parseInt($('#croList').val())
+    };
+
+    let studioGData = [];
+
+    studioGData.push(generalData);
 
     const studioData = {
-        STDGeneralData: {
-            STDId: 0,
-            Code: $('#studyCode').val(),
-            SponsorId: parseInt($('#sponsorList').val()),
-            Name: $('#studyName').val(), 
-            Description: $('textarea#studyDescription').val(),
-            Notes: $('textarea#studyNotes').val(),
-            DateCreated: $('#studyDateCreated').val(),
-            Active: true,
-            Goal: parseInt($('#studyGoal').val()),
-            Phase: parseInt($('#phaseList').val()),
-            Indication: $('#studyIndication').val(), 
-            TherapeuticArea: $('#studyTherapeuticArea').val(),
-            BlindingType: parseInt($('#blidingList').val()),
-            RandomizationType: parseInt($('#studyDesignList').val()),
-            StartDate: $('#studyStartDate').val(),
-            EndDate: $('#studyEndDate').val(),
-            StudioStatus: parseInt($('#studystatusList').val()),
-            DiseaseId: parseInt($('#diseaseList').val()),
-            CROId: parseInt($('#croList').val())
-        },
+        STDGeneralData: studioGData,
         STDDocumentation: documentsData,
         STDMonitor: monitorsData,
         STDProtocol: protocolsData,

@@ -88,12 +88,12 @@ html, body {
 .wizard-container {
     /*max-width: 77vw;*/
 /*    margin: 0;*/
-    padding: 0;
+    /*padding: 0;*/
     /*max-height: 75vh;*/
     /*overflow-y: auto;*/
     width: 73vw;
-    height: 75vh;
-    margin-left:20vw !important;
+    height: 95vh;
+    padding-left:20vw !important;
 }
 
 .wizard-progress {
@@ -102,7 +102,7 @@ html, body {
 
 .wizard-step {
     display: none;
-    max-height: 55vh;
+    /*max-height: 55vh;*/
     overflow-y: auto;
     padding-right: 10px;
 }
@@ -173,6 +173,7 @@ step-line.fail {
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
+    height:stretch !important;
 }
 
 .form-section h5 {
@@ -195,9 +196,12 @@ step-line.fail {
 }
 
 .wizard-body {
-  /*max-height: 550px;*/
-  /*overflow-y: auto;*/
-  height: 550px !important;
+    /*max-height: 550px;*/
+    /*overflow-y: auto;*/
+    /*height: 550px !important;*/
+    /* height: 85vh !important*/
+    /*height: stretch !important;*/
+    height: 70% !important;
 }
 
 .inputsmmodal {
@@ -212,7 +216,18 @@ step-line.fail {
     height: 16px !important;
 }
 
-
+#wizardForm {
+    width: 100% !important;
+    height: 96vh !important
+}
 
 
 /*End Wizard styles....*/
+
+.gms-body {
+    margin-top: 5px !important;
+}
+
+.gms-main {
+    height: 93vh;
+}

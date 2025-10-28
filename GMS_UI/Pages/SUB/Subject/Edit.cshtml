@@ -4,85 +4,7 @@
     ViewData["Title"] = "Edit Subject Data";
 }
 
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
-<style>
-    .wizard-container {
-        max-width: 1200px;
-        margin: 20px auto;
-        padding: 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .wizard-header {
-        margin-bottom: 30px;
-    }
-
-    .steps-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 20px 0;
-    }
-
-    .step-circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #e0e0e0;
-        color: #666;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        transition: all 0.3s;
-    }
-
-    .step-circle.active {
-        background: linear-gradient(135deg, #7fb3b5, #5f9ea0);
-        color: white;
-    }
-
-    .step-line {
-        width: 60px;
-        height: 2px;
-        background: #e0e0e0;
-    }
-
-    .wizard-step {
-        display: none;
-        animation: fadeIn 0.3s;
-    }
-
-    .wizard-step.active {
-        display: block;
-    }
-
-    @@keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    .step-title {
-        color: #5f9ea0;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #5f9ea0;
-    }
-
-    .wizard-footer {
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .btn-wizard {
-        min-width: 120px;
-    }
-</style>
 
 <div class="wizard-container">
     <h2 class="text-center mb-4">
@@ -90,7 +12,7 @@
         Subject Data - Edit
     </h2>
 
-    @Html.AntiForgeryToken()
+   @*  @Html.AntiForgeryToken() *@
 
     <input type="hidden" id="subjectId" value="@Model.SubjectId" />
     <input type="hidden" id="returnUrl" value="@Model.ReturnUrl" />
@@ -171,7 +93,7 @@
                 <i class="bi bi-plus-circle"></i> Add Consent
             </button>
         </div>
-        <div id="consentGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+        <div id="consentGrid" class="ag-theme-balham"></div>
     </div>
 
     <!-- Step 3: Protocol Deviations -->
@@ -184,7 +106,7 @@
                 <i class="bi bi-plus-circle"></i> Add Deviation
             </button>
         </div>
-        <div id="deviationGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+        <div id="deviationGrid" class="ag-theme-balham"></div>
     </div>
 
     <!-- Step 4: Adverse Events -->
@@ -197,7 +119,7 @@
                 <i class="bi bi-plus-circle"></i> Add Adverse Event
             </button>
         </div>
-        <div id="adverseGrid" style="height: 400px; width: 100%;" class="ag-theme-balham"></div>
+        <div id="adverseGrid" class="ag-theme-balham"></div>
     </div>
 
     <!-- Navigation Buttons -->
@@ -219,7 +141,7 @@
 
 <!-- Consent Modal -->
 <div class="modal fade" id="consentModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
                 <h5 class="modal-title">

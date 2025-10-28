@@ -15,6 +15,6 @@
 
         public int SortOrder { get; set; } = 0;
 
-        public string Comment { get; set; } = string.Empty;
+        public string? Comment { get; set; } = string.Empty;
     }
 }

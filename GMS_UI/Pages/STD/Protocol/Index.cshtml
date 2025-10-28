@@ -4,110 +4,6 @@
     ViewData["Title"] = "Protocol";
 }
 
-<style>
-    .protocol-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 1.5rem;
-        border: none !important;
-    }
-
-    .protocol-header h4 {
-        font-weight: 600;
-        margin-bottom: 0;
-    }
-
-    .protocol-card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: none;
-        overflow: hidden;
-        height: 90vh;
-    }
-
-    .protocol-grid-container {
-        height: calc(100% - 2rem);
-        padding: 1rem;
-        background: #f9fafb;
-    }
-
-    #protocolGrid {
-        height: 100%;
-        width: 100%;
-    }
-
-    .ag-theme-balham .ag-header {
-        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #5f9ea0;
-        font-weight: 600;
-    }
-
-    .ag-theme-balham .ag-row:hover {
-        background-color: #e8f4f5 !important;
-    }
-
-    .ag-theme-balham .ag-row-selected {
-        background-color: #d4e9ea !important;
-    }
-
-    .btn-add {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        color: white;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-add:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    .btn-success {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        border: none;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
-    }
-
-    .modal-header {
-        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
-        color: white;
-        border-bottom: none;
-    }
-
-    .modal-header h2 {
-        color: white;
-        font-weight: 600;
-        font-size: 1.5rem;
-        margin: 0;
-    }
-
-    .modal-header .close {
-        color: white;
-        opacity: 0.9;
-        font-size: 1.5rem;
-        cursor: pointer;
-        background: none;
-        border: none;
-    }
-
-    .modal-header .close:hover {
-        opacity: 1;
-    }
-</style>
-
 <div class="container-gms">
 
     <div class="alert alert-success collapse" studio="alert" id="successAlert">
@@ -129,127 +25,189 @@
                     <h4><i class="bi bi-file-earmark-text-fill me-2"></i>Protocol</h4>
                 </div>
                 <div class="col text-end">
-                    <button data-bs-toggle="modal" data-bs-target="#protocolNewModal" class="btn btn-sm btn-add"><i class="bi bi-plus-circle me-1"></i> Add Protocol</button>
+                    <button data-bs-toggle="modal" data-bs-target="#protocolNewModal" class="btn btn-sm btn-add btn-header"><i class="bi bi-plus-circle me-1"></i> Add Protocol</button>
                 </div>
             </div>
         </div>
         <div class="card-body protocol-grid-container">
-            <div id="protocolGrid" class="ag-theme-balham"></div>
+            <div id="protocolGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
 </div>
 
  <div id="protocolNewModal" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="protocolNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" studio="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Protocol</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="protocol">Protocol</label>
-                    <input type="text" class="form-control pt-4" id="protocol" placeholder="Protocol">
-                    <span id="validateProtocol" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="protocol">Protocol</label>
+                                <input type="text" class="form-control inputsmmodal" id="protocol" placeholder="Protocol">
+                                <span id="validateProtocol" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="version">Version</label>
+                                <input type="text" class="form-control inputsmmodal" id="version" placeholder="Version">
+                                <span id="validateVersion" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="study">Study</label>
+                                <select class="form-select" aria-label="Default select example" id="study">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validatestudy" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="approvedDate">Approved Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="approvedDate" placeholder="Approved Date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="startDate">Start Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="startDate" placeholder="Start Date">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="endDate">End Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="endDate" placeholder="End Date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label class="floating-label" for="notes">Notes</label>
+                                <textarea rows="4" class="form-control inputsmmodal" id="notes" placeholder="Notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="version">Version</label>
-                    <input type="text" class="form-control pt-4" id="version" placeholder="Version">
-                    <span id="validateVersion" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="study">Study</label>
-                    <select class="form-select" aria-label="Default select example" id="study">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validatestudy" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="approvedDate">Approved Date</label>
-                    <input type="date" class="form-control pt-4" id="approvedDate" placeholder="Approved Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="startDate">Start Date</label>
-                    <input type="date" class="form-control pt-4" id="startDate" placeholder="Start Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="endDate">End Date</label>
-                    <input type="date" class="form-control pt-4" id="endDate" placeholder="End Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="notes">Notes</label>
-                    <textarea class="form-control pt-4" id="notes" placeholder="Notes"></textarea>
-                </div>
+
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudProtocol(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudProtocol(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="editProtocol" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="editProtocolLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" studio="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Protocol</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="protocolEdit">Protocol</label>
-                    <input type="text" class="form-control pt-4" id="protocolEdit" placeholder="Protocol">
-                    <span id="validateProtocolEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="protocolEdit">Protocol</label>
+                                <input type="text" class="form-control inputsmmodal" id="protocolEdit" placeholder="Protocol">
+                                <span id="validateProtocolEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="versionEdit">Version</label>
+                                <input type="text" class="form-control inputsmmodal" id="versionEdit" placeholder="Version">
+                                <span id="validateVersionEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="studyEdit">Study</label>
+                                <select class="form-select" aria-label="Default select example" id="studyEdit">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validatestudyEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="approvedDateEdit">Approved Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="approvedDateEdit" placeholder="Approved Date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="startDateEdit">Start Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="startDateEdit" placeholder="Start Date">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="floating-label" for="endDateEdit">End Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="endDateEdit" placeholder="End Date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label class="floating-label" for="notesEdit">Notes</label>
+                                <textarea rows="4" class="form-control inputsmmodal" id="notesEdit" placeholder="Notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="versionEdit">Version</label>
-                    <input type="text" class="form-control pt-4" id="versionEdit" placeholder="Version">
-                    <span id="validateVersionEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="studyEdit">Study</label>
-                    <select class="form-select" aria-label="Default select example" id="studyEdit">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validatestudyEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="approvedDateEdit">Approved Date</label>
-                    <input type="date" class="form-control pt-4" id="approvedDateEdit" placeholder="Approved Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="startDateEdit">Start Date</label>
-                    <input type="date" class="form-control pt-4" id="startDateEdit" placeholder="Start Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="endDateEdit">End Date</label>
-                    <input type="date" class="form-control pt-4" id="endDateEdit" placeholder="End Date">
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="notesEdit">Notes</label>
-                    <textarea class="form-control pt-4" id="notesEdit" placeholder="Notes"></textarea>
-                </div>
-                             
+      
                 <input type="hidden" id="protocolidEdit" />
                 <input type="hidden" id="studyidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudProtocol(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudProtocol(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="deleteProtocol" class="modal fade" tabindex="-1" studio="dialog" aria-labelledby="deleteProtocolLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" studio="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this protocol?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="protocolidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">Protocol:</dt>
                         <dd class="col-sm-6" id="protocolD"> </dd>
@@ -281,7 +239,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudProtocol(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudProtocol(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>   

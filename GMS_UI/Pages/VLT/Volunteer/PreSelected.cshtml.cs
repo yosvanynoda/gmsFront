@@ -42,7 +42,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
         }
 
-        public async Task<JsonResult> OnPostAsync([FromBody] PreSelectedRequest request)
+        public async Task<JsonResult> OnPostAsync(PreSelectedRequest request)
         {
             try
             {

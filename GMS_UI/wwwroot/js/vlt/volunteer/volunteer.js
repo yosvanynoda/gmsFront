@@ -267,12 +267,14 @@ function assignVolunteerToStudy() {
         return;
     }
 
+    let vid = [];
+
+    vid.push(parseInt(volunteerId));
+
     // Build request - Backend expects PascalCase property names
     const request = {
-        CompanyId: 1,
-        SiteId: 1,
         StudyId: parseInt(studyId),
-        VolunteerId: parseInt(volunteerId)
+        VolunteerId: vid,
     };
 
     console.log('Pre-Assign Request:', request);
@@ -281,7 +283,7 @@ function assignVolunteerToStudy() {
     $.ajax({
         type: "POST",
         url: window.location.pathname + '?handler=PreAssign',
-        data: JSON.stringify(request),
+        data: { "requestInput": request},
         contentType: "application/json",
         headers: {
             'RequestVerificationToken': window._csrfToken

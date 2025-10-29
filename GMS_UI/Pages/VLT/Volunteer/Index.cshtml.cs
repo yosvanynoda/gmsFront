@@ -175,18 +175,18 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
         }
 
-        public async Task<JsonResult> OnPostPreAssignAsync()
+        public async Task<JsonResult> OnPostPreAssignAsync(PreAssignRequestInput requestInput)
         {
             try
             {
                 _logger.LogInformation("OnPostPreAssignAsync called");
 
-                using var reader = new StreamReader(Request.Body);
-                var body = await reader.ReadToEndAsync();
+                //using var reader = new StreamReader(Request.Body);
+                //var body = await reader.ReadToEndAsync();
 
-                _logger.LogInformation("Request body: {Body}", body);
+                //_logger.LogInformation("Request body: {Body}", body);
 
-                var requestInput = JsonConvert.DeserializeObject<PreAssignRequestInput>(body);
+                //var requestInput = JsonConvert.DeserializeObject<PreAssignRequestInput>(body);
 
                 if (requestInput == null)
                 {
@@ -212,15 +212,15 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 // Build the request using the same structure as Filter view
                 var preAssignRequest = new PreAssignVolunteersToStudyRequest
                 {
-                    CompanyId = requestInput.CompanyId > 0 ? requestInput.CompanyId : 1,
-                    SiteId = requestInput.SiteId > 0 ? requestInput.SiteId : 1,
+                    CompanyId = 1, 
+                    SiteId = 1,
                     StudyId = requestInput.StudyId,
-                    VolunteerIds = new List<int> { requestInput.VolunteerId },
+                    VolunteerIds = requestInput.VolunteerId,
                     Username = 1
                 };
 
-                _logger.LogInformation("Calling PreAssign API - StudyId: {StudyId}, VolunteerIds: {VolunteerId}",
-                    preAssignRequest.StudyId, requestInput.VolunteerId);
+                //_logger.LogInformation("Calling PreAssign API - StudyId: {StudyId}, VolunteerIds: {VolunteerId}",
+                //    preAssignRequest.StudyId, requestInput.VolunteerId);
 
                 // Call the PreAssign API
                 var result = await GenericAPI.CreateGeneric(
@@ -265,10 +265,10 @@ namespace GMS_UI.Pages.VLT.Volunteer
 
     public class PreAssignRequestInput
     {
-        public int VolunteerId { get; set; }
-        public int StudyId { get; set; }
-        public int CompanyId { get; set; }
-        public int SiteId { get; set; }
+        public List<int> VolunteerId { get; set; } = [];
+        public  int StudyId { get; set; } 
+        //public int CompanyId { get; set; }
+        //public int SiteId { get; set; }
 
     }
 }

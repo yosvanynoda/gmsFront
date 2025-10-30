@@ -175,7 +175,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
         }
 
-        public async Task<JsonResult> OnPostPreAssignAsync(PreAssignRequestInput requestInput)
+        public async Task<JsonResult> OnPostPreAssignAsync(PreAssignRequestInput request)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
 
                 //var requestInput = JsonConvert.DeserializeObject<PreAssignRequestInput>(body);
 
-                if (requestInput == null)
+                if (request == null)
                 {
                     _logger.LogWarning("Deserialized pre-assign request is null");
                     return new JsonResult(new
@@ -198,10 +198,10 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     });
                 }
 
-                if ( requestInput.StudyId <= 0)
+                if (request.StudyId <= 0)
                 {
                     _logger.LogWarning("Invalid VolunteerId or StudyId - VolunteerId: {VolunteerId}, StudyId: {StudyId}",
-                        requestInput.VolunteerId, requestInput.StudyId);
+                        request.VolunteerId, request.StudyId);
                     return new JsonResult(new
                     {
                         success = false,
@@ -214,8 +214,8 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 {
                     CompanyId = 1, 
                     SiteId = 1,
-                    StudyId = requestInput.StudyId,
-                    VolunteerIds = requestInput.VolunteerId,
+                    StudyId = request.StudyId,
+                    VolunteerIds = request.VolunteerId,
                     Username = 1
                 };
 
@@ -265,7 +265,10 @@ namespace GMS_UI.Pages.VLT.Volunteer
 
     public class PreAssignRequestInput
     {
+        [JsonProperty("volunteerId")]
         public List<int> VolunteerId { get; set; } = [];
+
+        [JsonProperty("studyId")]
         public  int StudyId { get; set; } 
         //public int CompanyId { get; set; }
         //public int SiteId { get; set; }

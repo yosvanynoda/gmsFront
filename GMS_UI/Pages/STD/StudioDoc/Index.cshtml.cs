@@ -15,7 +15,7 @@ namespace GMS_UI.Pages.STD.StudioDoc
 
         private readonly ISettings _settings = settings;
 
-        public async Task<JsonResult> OnPostAsync()
+        public async Task<JsonResult> OnPostOpenStudy()
         {
             try
             {

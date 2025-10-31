@@ -55,7 +55,7 @@ const gridOptions = {
     defaultColDef: {
         flex: 1,
     },
-    enableAdvancedFilter: true,
+    /*enableFilter: true,*/
     pagination: true,
 };
 // Create Grid: Create new grid within the #myGrid div, using the Grid Options object
@@ -67,7 +67,7 @@ $(function () {
 
     $.ajax({
         type: "POST",
-        url: urlIndex,
+        url: `${urlIndex}?handler=OpenStudy`,
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
             setupGrid(data.data);
@@ -136,7 +136,7 @@ function crudStudioDoc(action) {
     let studioName = '';
     let docType = '';
     let docVersion = '';
-    let docDate = '';   
+    let docDate = '';
 
     switch (action) {
         case 1: // Add
@@ -188,58 +188,52 @@ function crudStudioDoc(action) {
             $('#deleteStudioDoc').modal('hide');
             break;
     }
-}
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CrudStudioDoc',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studioName": studioName, "docType": docType, "docVersion": docVersion, "docDate": docDate },
+        success: function (data) {
+            if (data.success === false) {
+                $('#failedTitle').html('StudioDoc');
+                $('#failedMsg').html('StudioDoc failed. Please try again');
+                $('#failedAlert').show();
+            }
+            else {
+                $('#successTitle').html('StudioDoc');
+                $('#successMsg').html('StudioDoc was saved successfully');
+                $('#successAlert').show();
+                // Refresh the grid with the new data
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex,
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        $('#monitorGrid').html('');
+                        setupGrid(data.data);
+                    },
+                    failure: function (response) {
 
+                    },
+                    error: function (response) {
 
-$.ajax({
-    type: "POST",
-    url: urlIndex + '?handler=CrudStudioDoc',
-    headers: { 'RequestVerificationToken': window._csrfToken },
-    data: { "studioName": studioName, "docType": docType, "docVersion": docVersion, "docDate": docDate, "studioName": studioName },
-    success: function (data) {
-        if (data.success === false) {
+                    }
+                });
+            }
+        },
+        failure: function (response) {
+            $('#failedTitle').html('StudioDoc');
+            $('#failedMsg').html('StudioDoc failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
             $('#failedTitle').html('StudioDoc');
             $('#failedMsg').html('StudioDoc failed. Please try again');
             $('#failedAlert').show();
         }
-        else {
-            $('#successTitle').html('StudioDoc');
-            $('#successMsg').html('StudioDoc was saved successfully');
-            $('#successAlert').show();
-            // Refresh the grid with the new data
-            $.ajax({
-                type: "POST",
-                url: urlIndex,
-                headers: { 'RequestVerificationToken': window._csrfToken },
-                success: function (data) {
-                    $('#monitorGrid').html('');
-                    setupGrid(data.data);
-                },
-                failure: function (response) {
+    });
 
-                },
-                error: function (response) {
-
-                }
-            });
-        }
-    },
-    failure: function (response) {
-        $('#failedTitle').html('StudioDoc');
-        $('#failedMsg').html('StudioDoc failed. Please try again');
-        $('#failedAlert').show();
-    },
-    error: function (response) {
-        $('#failedTitle').html('StudioDoc');
-        $('#failedMsg').html('StudioDoc failed. Please try again');
-        $('#failedAlert').show();
-    }
-});
-
-function hideAlerts(alertName) {
-    $('#' + alertName).hide();
 }
-
 //#endregion
 
 //#region General...

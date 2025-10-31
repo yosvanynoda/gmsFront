@@ -42,17 +42,28 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
         }
 
-        public async Task<JsonResult> OnPostAsync(PreSelectedRequest request)
+        public async Task<JsonResult> OnPostGetPreSelectedVolunteers(int? studyId) //PreSelectedRequest request
         {
             try
             {
                 _logger.LogInformation("OnPostAsync called for PreSelected volunteers");
 
+                if (studyId == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "No study selected",
+                        success = false,
+                        data = new List<VLTVolunteerPreSelectedList>()
+                    });
+                }
+
                 var requestData = new PreSelectedRequest
                 {
                     CompanyId = 1,
                     SiteId = 1,
-                    StudyId = request.StudyId
+                    StudyId = (int)studyId
                 };
 
                 BaseResponse preSelectedVolunteers = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/VLT/getvolunteerpreselectedlist", "Pre-Selected Volunteers List", "", requestData);

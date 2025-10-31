@@ -117,15 +117,14 @@ $(function () {
 function loadPreSelectedVolunteers() {
     const studyId = $('#studyFilter').val();
 
+
+
     $.ajax({
         type: "POST",
-        url: urlIndex,
-        data: JSON.stringify({
-            companyId: 1,
-            siteId: 1,
-            studyId: studyId ? parseInt(studyId) : null
-        }),
-        contentType: "application/json",
+        url: `${urlIndex}?handler=GetPreSelectedVolunteers`,
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studyId": parseInt(studyId) },
+        
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
             console.log('Pre-Selected Volunteers data:', data);

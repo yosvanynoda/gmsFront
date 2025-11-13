@@ -60,27 +60,28 @@ function displayVisitPlanData(data) {
     const gridOptions = {
         rowData: visitData,
         columnDefs: [
-            { field: "visitName", headerName: "Visit Name", filter: 'agTextColumnFilter', flex: 2 },
-            { field: "visitNumber", headerName: "Visit #", filter: 'agNumberColumnFilter', width: 100 },
+            { field: "visitName", headerName: "Visit Name", filter: 'agTextColumnFilter', width: 150 },
+            { field: "dayOffset", headerName: "Day Offset", filter: 'agNumberColumnFilter', width: 120 },
             {
                 field: "scheduledDate",
                 headerName: "Scheduled Date",
                 filter: 'agDateColumnFilter',
-                flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : 'Not Scheduled'
-            },
-            {
-                field: "actualDate",
-                headerName: "Actual Date",
-                filter: 'agDateColumnFilter',
-                flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : '-'
+                width: 150,
+                valueFormatter: params => {
+                    if (!params.value) return 'Not Scheduled';
+                    const date = new Date(params.value);
+                    // Check if it's a valid date and not the default "0001-01-01"
+                    if (date.getFullYear() > 1900) {
+                        return date.toLocaleDateString();
+                    }
+                    return 'Not Scheduled';
+                }
             },
             {
                 field: "status",
                 headerName: "Status",
                 filter: 'agTextColumnFilter',
-                flex: 1,
+                width: 120,
                 cellRenderer: params => {
                     const status = params.value || 'Pending';
                     let badgeClass = 'bg-secondary';
@@ -94,17 +95,39 @@ function displayVisitPlanData(data) {
                 }
             },
             {
-                field: "window",
-                headerName: "Visit Window",
+                field: "windowMinus",
+                headerName: "Window -",
+                filter: 'agNumberColumnFilter',
+                width: 100,
+                valueFormatter: params => params.value ? `${params.value} days` : '-'
+            },
+            {
+                field: "windowPlus",
+                headerName: "Window +",
+                filter: 'agNumberColumnFilter',
+                width: 100,
+                valueFormatter: params => params.value ? `${params.value} days` : '-'
+            },
+            {
+                field: "requiredFlag",
+                headerName: "Required",
+                width: 100,
+                cellRenderer: params => {
+                    return params.value ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-dash-circle text-secondary"></i>';
+                }
+            },
+            {
+                field: "notes",
+                headerName: "Notes",
                 filter: 'agTextColumnFilter',
-                flex: 1
+                flex: 1,
+                valueFormatter: params => params.value || '-'
             }
         ],
         defaultColDef: {
             sortable: true,
             resizable: true,
-            filter: true,
-            flex: 1
+            filter: true
         },
         pagination: true,
         paginationPageSize: 20,

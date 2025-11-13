@@ -1,6 +1,5 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
-using GMS.Objects.CMN;
 using GMS.Objects.General;
 using GMS.Objects.STD;
 using GMS.Objects.SUB;

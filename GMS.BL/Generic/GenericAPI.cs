@@ -73,6 +73,7 @@ namespace GMS.BL.Generic
                     result.Success = true;
                     result.Message = response.Content ?? $"{catalog} was created successfully.";
                     result.StatusCode = 200;
+                    result.Data = response.Content;
                 }
                 else
                 {

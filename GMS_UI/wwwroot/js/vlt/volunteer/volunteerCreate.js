@@ -831,9 +831,9 @@ function setupAllergiesGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAllergy(${params.node.rowIndex})">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
+                        <a href="javascript:void(0)" onclick="deleteAllergy(${params.node.rowIndex})" class="text-danger" title="Delete allergy">
+                            <i class="bi bi-trash fs-5"></i>
+                        </a>
                     `;
                 }
             }
@@ -937,9 +937,9 @@ function setupDiseasesGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDisease(${params.node.rowIndex})">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
+                        <a href="javascript:void(0)" onclick="deleteDisease(${params.node.rowIndex})" class="text-danger" title="Delete disease">
+                            <i class="bi bi-trash fs-5"></i>
+                        </a>
                     `;
                 }
             }
@@ -1052,9 +1052,9 @@ function setupMedicationsGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteMedication(${params.node.rowIndex})">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
+                        <a href="javascript:void(0)" onclick="deleteMedication(${params.node.rowIndex})" class="text-danger" title="Delete medication">
+                            <i class="bi bi-trash fs-5"></i>
+                        </a>
                     `;
                 }
             }

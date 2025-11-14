@@ -645,7 +645,7 @@ function submitForm() {
         }
     }
 
-    // Collect allergies from step data - only if there are any
+    // Collect allergies from step data (send ALL items including inactive ones)
     if (allergiesData.length > 0) {
         allergiesData.forEach(allergy => {
             volunteerData.VolunteerAllergyData.push({
@@ -654,12 +654,12 @@ function submitForm() {
                 EndDate: formatDateForBackend(allergy.endDate),
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: allergy.active !== false
             });
         });
     }
 
-    // Collect diseases from step data - only if there are any
+    // Collect diseases from step data (send ALL items including inactive ones)
     if (diseasesData.length > 0) {
         diseasesData.forEach(disease => {
             volunteerData.VolunteerDeseaseData.push({
@@ -668,12 +668,12 @@ function submitForm() {
                 EndDate: formatDateForBackend(disease.endDate),
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: disease.active !== false
             });
         });
     }
 
-    // Collect medications from step data - only if there are any
+    // Collect medications from step data (send ALL items including inactive ones)
     if (medicationsData.length > 0) {
         medicationsData.forEach(medication => {
             volunteerData.VolunteerMedicationData.push({
@@ -684,7 +684,7 @@ function submitForm() {
                 EndDate: formatDateForBackend(medication.endDate),
                 CompanyId: 1,
                 SiteId: 1,
-                Active: true
+                Active: medication.active !== false
             });
         });
     }
@@ -810,7 +810,7 @@ function loadAllergiesDropdown() {
 // Setup Allergies Grid (in Step 5)
 function setupAllergiesGrid() {
     const gridOptions = {
-        rowData: allergiesData,
+        rowData: allergiesData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Allergy", flex: 2 },
@@ -864,11 +864,13 @@ function saveAllergy() {
         id: parseInt(allergyId),
         name: allergyName,
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
-    // Check if already exists
-    if (allergiesData.some(a => a.id === allergyItem.id)) {
+    // Check if already exists (only check active items)
+    if (allergiesData.some(a => a.id === allergyItem.id && a.active !== false)) {
         $('#validateAllergy').text('This allergy is already added');
         return;
     }
@@ -888,7 +890,11 @@ function deleteAllergy(index) {
     if (!confirm('Are you sure you want to remove this allergy?')) {
         return;
     }
-    allergiesData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeAllergies = allergiesData.filter(item => item.active !== false);
+    if (activeAllergies[index]) {
+        activeAllergies[index].active = false;
+    }
     setupAllergiesGrid();
 }
 
@@ -916,7 +922,7 @@ function loadDiseasesDropdown() {
 // Setup Diseases Grid (in Step 6)
 function setupDiseasesGrid() {
     const gridOptions = {
-        rowData: diseasesData,
+        rowData: diseasesData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Disease", flex: 2 },
@@ -972,14 +978,16 @@ function saveDisease() {
         id: parseInt(diseaseId),
         name: diseaseName,
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
     console.log('Disease item to add:', diseaseItem);
     console.log('Current diseasesData:', diseasesData);
 
-    // Check if already exists
-    if (diseasesData.some(d => d.id === diseaseItem.id)) {
+    // Check if already exists (only check active items)
+    if (diseasesData.some(d => d.id === diseaseItem.id && d.active !== false)) {
         console.log('Disease already exists in list');
         $('#validateDisease').text('This disease is already added');
         return;
@@ -1002,7 +1010,11 @@ function deleteDisease(index) {
     if (!confirm('Are you sure you want to remove this disease?')) {
         return;
     }
-    diseasesData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeDiseases = diseasesData.filter(item => item.active !== false);
+    if (activeDiseases[index]) {
+        activeDiseases[index].active = false;
+    }
     setupDiseasesGrid();
 }
 
@@ -1030,7 +1042,7 @@ function loadMedicationsDropdown() {
 // Setup Medications Grid (in Step 7)
 function setupMedicationsGrid() {
     const gridOptions = {
-        rowData: medicationsData,
+        rowData: medicationsData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Medication", flex: 2 },
@@ -1087,11 +1099,13 @@ function saveMedication() {
         name: medicationName,
         dose: dose || '',
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
-    // Check if already exists
-    if (medicationsData.some(m => m.id === medicationItem.id)) {
+    // Check if already exists (only check active items)
+    if (medicationsData.some(m => m.id === medicationItem.id && m.active !== false)) {
         $('#validateMedication').text('This medication is already added');
         return;
     }
@@ -1112,7 +1126,11 @@ function deleteMedication(index) {
     if (!confirm('Are you sure you want to remove this medication?')) {
         return;
     }
-    medicationsData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeMedications = medicationsData.filter(item => item.active !== false);
+    if (activeMedications[index]) {
+        activeMedications[index].active = false;
+    }
     setupMedicationsGrid();
 }
 

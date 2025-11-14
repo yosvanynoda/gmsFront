@@ -668,39 +668,42 @@ function submitForm() {
         }
     }
 
-    // Collect allergies from grid data
+    // Collect allergies from grid data (send ALL items including inactive ones)
     const vId = parseInt(document.getElementById('volunteerId').value) || 0;
     allergiesData.forEach(allergy => {
         volunteerData.VolunteerAllergyData.push({
             VId: vId,
+            VolunteerAllergyId: allergy.recordId || 0,
             AllergyId: parseInt(allergy.id),
             StartDate: formatDateForBackend(allergy.startDate),
             EndDate: formatDateForBackend(allergy.endDate),
             CompanyId: 1,
             SiteId: 1,
-            Active: true,
+            Active: allergy.active !== false,
             UserName: 1
         });
     });
 
-    // Collect diseases from grid data
+    // Collect diseases from grid data (send ALL items including inactive ones)
     diseasesData.forEach(disease => {
         volunteerData.VolunteerDiseaseData.push({
             VId: vId,
+            VolunteerDiseaseId: disease.recordId || 0,
             DiseaseId: parseInt(disease.id),
             StartDate: formatDateForBackend(disease.startDate),
             EndDate: formatDateForBackend(disease.endDate),
             CompanyId: 1,
             SiteId: 1,
-            Active: true,
+            Active: disease.active !== false,
             UserName: 1
         });
     });
 
-    // Collect medications from grid data
+    // Collect medications from grid data (send ALL items including inactive ones)
     medicationsData.forEach(medication => {
         volunteerData.VolunteerMedicationData.push({
             VId: vId,
+            VolunteerMedicationId: medication.recordId || 0,
             MedicationId: parseInt(medication.id),
             DrogName: medication.name,
             DrogDose: medication.dose || '',
@@ -708,7 +711,7 @@ function submitForm() {
             EndDate: formatDateForBackend(medication.endDate),
             CompanyId: 1,
             SiteId: 1,
-            Active: true,
+            Active: medication.active !== false,
             UserName: 1
         });
     });
@@ -945,7 +948,9 @@ function populateFormData() {
                 id: allergy.allergyId,
                 name: allergy.allergy || '',
                 startDate: allergy.startDate || '0001-01-01',
-                endDate: allergy.endDate || '0001-01-01'
+                endDate: allergy.endDate || '0001-01-01',
+                active: true,
+                recordId: allergy.volunteerAllergyId || 0
             };
             allergiesData.push(allergyItem);
         });
@@ -960,7 +965,9 @@ function populateFormData() {
                 id: disease.diseaseId,
                 name: disease.diseaseName || '',
                 startDate: disease.startDate || '0001-01-01',
-                endDate: disease.endDate || '0001-01-01'
+                endDate: disease.endDate || '0001-01-01',
+                active: true,
+                recordId: disease.volunteerDiseaseId || 0
             };
             diseasesData.push(diseaseItem);
         });
@@ -983,7 +990,9 @@ function populateFormData() {
                 name: medName,
                 dose: med.drogDose || '',
                 startDate: med.startDate || '0001-01-01',
-                endDate: med.endDate || '0001-01-01'
+                endDate: med.endDate || '0001-01-01',
+                active: true,
+                recordId: med.volunteerMedicationId || 0
             };
             medicationsData.push(medicationItem);
         });
@@ -1032,7 +1041,7 @@ function loadAllergiesDropdown() {
 // Setup Allergies Grid
 function setupAllergiesGrid() {
     const gridOptions = {
-        rowData: allergiesData,
+        rowData: allergiesData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Allergy", flex: 2 },
@@ -1088,11 +1097,13 @@ function saveAllergy() {
         id: parseInt(allergyId),
         name: allergyName,
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
-    // Check if already exists
-    if (allergiesData.some(a => a.id === allergyItem.id)) {
+    // Check if already exists (only check active items)
+    if (allergiesData.some(a => a.id === allergyItem.id && a.active !== false)) {
         $('#validateAllergy').text('This allergy is already added');
         return;
     }
@@ -1112,7 +1123,11 @@ function deleteAllergy(index) {
     if (!confirm('Are you sure you want to remove this allergy?')) {
         return;
     }
-    allergiesData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeAllergies = allergiesData.filter(item => item.active !== false);
+    if (activeAllergies[index]) {
+        activeAllergies[index].active = false;
+    }
     setupAllergiesGrid();
 }
 
@@ -1134,7 +1149,7 @@ function loadDiseasesDropdown() {
 // Setup Diseases Grid
 function setupDiseasesGrid() {
     const gridOptions = {
-        rowData: diseasesData,
+        rowData: diseasesData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Disease", flex: 2 },
@@ -1190,11 +1205,13 @@ function saveDisease() {
         id: parseInt(diseaseId),
         name: diseaseName,
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
-    // Check if already exists
-    if (diseasesData.some(d => d.id === diseaseItem.id)) {
+    // Check if already exists (only check active items)
+    if (diseasesData.some(d => d.id === diseaseItem.id && d.active !== false)) {
         $('#validateDisease').text('This disease is already added');
         return;
     }
@@ -1214,7 +1231,11 @@ function deleteDisease(index) {
     if (!confirm('Are you sure you want to remove this disease?')) {
         return;
     }
-    diseasesData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeDiseases = diseasesData.filter(item => item.active !== false);
+    if (activeDiseases[index]) {
+        activeDiseases[index].active = false;
+    }
     setupDiseasesGrid();
 }
 
@@ -1236,7 +1257,7 @@ function loadMedicationsDropdown() {
 // Setup Medications Grid
 function setupMedicationsGrid() {
     const gridOptions = {
-        rowData: medicationsData,
+        rowData: medicationsData.filter(item => item.active !== false),
         columnDefs: [
             { field: "id", hide: true },
             { field: "name", headerName: "Medication", flex: 2 },
@@ -1295,11 +1316,13 @@ function saveMedication() {
         name: medicationName,
         dose: dose || '',
         startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01'
+        endDate: endDate || '0001-01-01',
+        active: true,
+        recordId: 0
     };
 
-    // Check if already exists
-    if (medicationsData.some(m => m.id === medicationItem.id)) {
+    // Check if already exists (only check active items)
+    if (medicationsData.some(m => m.id === medicationItem.id && m.active !== false)) {
         $('#validateMedication').text('This medication is already added');
         return;
     }
@@ -1320,6 +1343,10 @@ function deleteMedication(index) {
     if (!confirm('Are you sure you want to remove this medication?')) {
         return;
     }
-    medicationsData.splice(index, 1);
+    // Mark as inactive instead of removing from array
+    const activeMedications = medicationsData.filter(item => item.active !== false);
+    if (activeMedications[index]) {
+        activeMedications[index].active = false;
+    }
     setupMedicationsGrid();
 }

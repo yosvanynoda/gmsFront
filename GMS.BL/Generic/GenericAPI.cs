@@ -68,12 +68,13 @@ namespace GMS.BL.Generic
                 RestResponse response = await client.ExecutePostAsync(request);
 
                 if (response.IsSuccessStatusCode)
-
                 {
+                    BaseResponse? data = JsonConvert.DeserializeObject<BaseResponse>(response.Content ?? string.Empty);
+
                     result.Success = true;
                     result.Message = response.Content ?? $"{catalog} was created successfully.";
                     result.StatusCode = 200;
-                    result.Data = response.Content;
+                    result.Data = data?.Data;
                 }
                 else
                 {

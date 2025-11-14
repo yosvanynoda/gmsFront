@@ -4,6 +4,7 @@
     ViewData["Title"] = "Reference Data";
 }
 
+
 <div class="container-gms">
 
     <div class="alert alert-success collapse" role="alert" id="successAlert">
@@ -18,397 +19,463 @@
         <p id="failedMsg"></p>
     </div>
 
-    <h2 class="mb-4">Reference Tables</h2>
+    @* <h2 class="mb-4">Reference Tables</h2> *@
 
-    <!-- Tabs for Subjects -->
-    <ul class="nav nav-tabs" id="subjectTabs" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#demographic" type="button">Demographic</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#workflow" type="button">Workflow</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#diseases" type="button">Diseases</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#others" type="button">Others</button>
-        </li>
-    </ul>
-
-    <!-- Tab Content -->
-    <div class="tab-content mt-3">
-
-        <!-- Demographic Tab -->
-        <div class="tab-pane fade show active" id="demographic">
-            <div class="accordion accordion-flush" id="demographicAccordion">
-
-                <!-- Gender -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingGender">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getGenderList()" data-bs-toggle="collapse" data-bs-target="#collapseGender">
-                            Gender
-                        </button>
-                    </h2>
-                    <div id="collapseGender" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#genderNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="genderGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="card">
+        <div class="card-header page-card-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h4><i class="bi bi-people-fill me-2"></i>Reference Tables</h4>
                 </div>
-
-                <!-- Relation Type-->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingRelationType">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRelationTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseRelationType">
-                            Relation Type
-                        </button>
-                    </h2>
-                    <div id="collapseRelationType" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#relationTypeNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="relationTypeGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Language -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingLanguage">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getLanguageList()" data-bs-toggle="collapse" data-bs-target="#collapseLanguage">
-                            Language
-                        </button>
-                    </h2>
-                    <div id="collapseLanguage" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#languageNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="languageGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Race -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingRace">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRaceList()" data-bs-toggle="collapse" data-bs-target="#collapseRace">
-                            Race
-                        </button>
-                    </h2>
-                    <div id="collapseRace" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#raceNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="raceGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ethnicity -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingEthnicity">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getEthnicityList()" data-bs-toggle="collapse" data-bs-target="#collapseEthnicity">
-                            Ethnicity
-                        </button>
-                    </h2>
-                    <div id="collapseEthnicity" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#ethnicityNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="ethnicityGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
+        <div class="card-body page-card-body">
+            <!-- Tabs for Subjects -->
+            <ul class="nav nav-tabs" id="subjectTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link tab-header active" data-bs-toggle="tab" data-bs-target="#demographic" type="button">Demographic</button>
+                </li>
+                <li class="nav-item tab-header">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#workflow" type="button">Workflow</button>
+                </li>
+                <li class="nav-item tab-header">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#diseases" type="button">Diseases</button>
+                </li>
+                <li class="nav-item tab-header">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#others" type="button">Others</button>
+                </li>
+            </ul>
 
-        <!-- Workflow Tab -->
-        <div class="tab-pane fade" id="workflow">
-            <div class="accordion accordion-flush" id="workflowAccordion">
+            <!-- Tab Content -->
+            <div class="tab-content mt-3">
 
-                <!-- Task -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTask">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getTaskList()" data-bs-toggle="collapse" data-bs-target="#collapseTask">
-                            Tasks
-                        </button>
-                    </h2>
-                    <div id="collapseTask" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#taskNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="taskGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                <!-- Demographic Tab -->
+                <div class="tab-pane fade show active" id="demographic">
+                    <div class="accordion accordion-flush" id="demographicAccordion">
+
+                        <!-- Gender -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingGender">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getGenderList()" data-bs-toggle="collapse" data-bs-target="#collapseGender">
+                                    Gender
+                                </button>
+                            </h2>
+                            <div id="collapseGender" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#genderNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="genderGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Task Type -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTaskType">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getTaskTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseTaskType">
-                            Task Type
-                        </button>
-                    </h2>
-                    <div id="collapseTaskType" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#taskTypeNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="taskTypeGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <!-- Relation Type-->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingRelationType">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRelationTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseRelationType">
+                                    Relation Type
+                                </button>
+                            </h2>
+                            <div id="collapseRelationType" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#relationTypeNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="relationTypeGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Role Type -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingRoleType">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRoleTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseRoleType">
-                            Role Type
-                        </button>
-                    </h2>
-                    <div id="collapseRoleType" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#roleTypeNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="roleTypeGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+                        <!-- Language -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingLanguage">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getLanguageList()" data-bs-toggle="collapse" data-bs-target="#collapseLanguage">
+                                    Language
+                                </button>
+                            </h2>
+                            <div id="collapseLanguage" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#languageNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="languageGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Race -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingRace">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRaceList()" data-bs-toggle="collapse" data-bs-target="#collapseRace">
+                                    Race
+                                </button>
+                            </h2>
+                            <div id="collapseRace" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#raceNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="raceGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ethnicity -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingEthnicity">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getEthnicityList()" data-bs-toggle="collapse" data-bs-target="#collapseEthnicity">
+                                    Ethnicity
+                                </button>
+                            </h2>
+                            <div id="collapseEthnicity" class="accordion-collapse collapse" data-bs-parent="#demographicAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#ethnicityNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="ethnicityGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-            </div>
+                <!-- Workflow Tab -->
+                <div class="tab-pane fade" id="workflow">
+                    <div class="accordion accordion-flush" id="workflowAccordion">
+
+                        <!-- Task -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTask">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getTaskList()" data-bs-toggle="collapse" data-bs-target="#collapseTask">
+                                    Tasks
+                                </button>
+                            </h2>
+                            <div id="collapseTask" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#taskNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="taskGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Task Type -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTaskType">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getTaskTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseTaskType">
+                                    Task Type
+                                </button>
+                            </h2>
+                            <div id="collapseTaskType" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#taskTypeNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="taskTypeGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role Type -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingRoleType">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getRoleTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseRoleType">
+                                    Role Type
+                                </button>
+                            </h2>
+                            <div id="collapseRoleType" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#roleTypeNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="roleTypeGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VLTStatus -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingVLTStatus">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getVLTStatusList()" data-bs-toggle="collapse" data-bs-target="#collapseVLTStatus">
+                                    Volunteer Status
+                                </button>
+                            </h2>
+                            <div id="collapseVLTStatus" class="accordion-collapse collapse" data-bs-parent="#workflowAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <button data-bs-toggle="modal" data-bs-target="#vltStatusNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="vltStatusGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Diseases Tab -->
+                <div class="tab-pane fade" id="diseases">
+                    <div class="accordion accordion-flush" id="diseasesAccordion">
+
+                        <!-- Allergy -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingAllergy">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getAllergyList()" data-bs-toggle="collapse" data-bs-target="#collapseAllergy">
+                                    Allergy
+                                </button>
+                            </h2>
+                            <div id="collapseAllergy" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#allergyNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="allergyGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disease -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDisease">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getDiseaseList()" data-bs-toggle="collapse" data-bs-target="#collapseDisease">
+                                    Disease
+                                </button>
+                            </h2>
+                            <div id="collapseDisease" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#diseaseNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="diseaseGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medication -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingMedication">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getMedicationList()" data-bs-toggle="collapse" data-bs-target="#collapseMedication">
+                                    Medication
+                                </button>
+                            </h2>
+                            <div id="collapseMedication" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#medicationNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="medicationGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Others Tab -->
+                <div class="tab-pane fade" id="others">
+                    <div class="accordion accordion-flush" id="OthersAccordion">
+
+                        <!-- Site -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSite">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getSiteList()" data-bs-toggle="collapse" data-bs-target="#collapseSite">
+                                    Sites
+                                </button>
+                            </h2>
+                            <div id="collapseSite" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#siteNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="siteGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Document Type -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDocType">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getDocTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseDocType">
+                                    Document Type
+                                </button>
+                            </h2>
+                            <div id="collapseDocType" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#docTypeNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="docTypeGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sponsor Type -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSponsorType">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getSponsorTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseSponsorType">
+                                    Sponsor Type
+                                </button>
+                            </h2>
+                            <div id="collapseSponsorType" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#sponsorTypeNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="sponsorTypeGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CRO -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingCRO">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getCROList()" data-bs-toggle="collapse" data-bs-target="#collapseCRO">
+                                    CROs
+                                </button>
+                            </h2>
+                            <div id="collapseCRO" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#croNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="croGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Deviation -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDeviation">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getDeviationList()" data-bs-toggle="collapse" data-bs-target="#collapseDeviation">
+                                    Deviation
+                                </button>
+                            </h2>
+                            <div id="collapseDeviation" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <button data-bs-toggle="modal" data-bs-target="#deviationNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="deviationGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div> <!-- /.tab-content -->
         </div>
+    </div>
 
-        <!-- Diseases Tab -->
-        <div class="tab-pane fade" id="diseases">
-            <div class="accordion accordion-flush" id="diseasesAccordion">
-
-                <!-- Allergy -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAllergy">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getAllergyList()" data-bs-toggle="collapse" data-bs-target="#collapseAllergy">
-                            Allergy
-                        </button>
-                    </h2>
-                    <div id="collapseAllergy" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#allergyNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="allergyGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Disease -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingDisease">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getDiseaseList()" data-bs-toggle="collapse" data-bs-target="#collapseDisease">
-                            Disease
-                        </button>
-                    </h2>
-                    <div id="collapseDisease" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#diseaseNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="diseaseGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Medication -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingMedication">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getMedicationList()" data-bs-toggle="collapse" data-bs-target="#collapseMedication">
-                            Medication
-                        </button>
-                    </h2>
-                    <div id="collapseMedication" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#medicationNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="medicationGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-         
-        <!-- Others Tab -->
-        <div class="tab-pane fade" id="others">
-            <div class="accordion accordion-flush" id="OthersAccordion">
-
-                <!-- Site -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingSite">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getSiteList()" data-bs-toggle="collapse" data-bs-target="#collapseSite">
-                            Sites
-                        </button>
-                    </h2>
-                    <div id="collapseSite" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#siteNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="siteGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Document Type -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingDocType">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getDocTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseDocType">
-                            Document Type
-                        </button>
-                    </h2>
-                    <div id="collapseDocType" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#docTypeNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="docTypeGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sponsor Type -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingSponsorType">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getSponsorTypeList()" data-bs-toggle="collapse" data-bs-target="#collapseSponsorType">
-                            Sponsor Type
-                        </button>
-                    </h2>
-                    <div id="collapseSponsorType" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#sponsorTypeNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="sponsorTypeGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CRO -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingCRO">
-                        <button class="accordion-button collapsed accordionStyle" type="button" onclick="getCROList()" data-bs-toggle="collapse" data-bs-target="#collapseCRO">
-                            CROs
-                        </button>
-                    </h2>
-                    <div id="collapseCRO" class="accordion-collapse collapse" data-bs-parent="#OthersAccordion">
-                        <div class="accordion-body p-0">
-                            <div class="card shadow border rounded-3 bg-light" style="width:100%; height:40vh">
-                                <div class="card-header headerReference">
-                                    <a data-bs-toggle="modal" data-bs-target="#croNewModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
-                                </div>
-                                <div class="card-body">
-                                    <div id="croGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div> <!-- /.tab-content -->
 </div>
 
 
 <!-- Gender Modals -->
 <div id="genderNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genderNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Gender</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="gender">Gender</label>
-                    <input type="text" class="form-control pt-4" id="gender" placeholder="Gender">
-                    <span id="validateGender" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="gender">Gender</label>
+                                <input type="text" class="form-control inputsmmodal" id="gender" placeholder="Gender">
+                                <span id="validateGender" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentGender"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentGender"></textarea>
-                </div>
+                
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudGender(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudGender(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -416,27 +483,37 @@
 </div>
 
 <div id="editGender" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editGenderLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Gender</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="gender">Gender</label>
-                    <input type="text" class="form-control pt-4" id="genderEdit" placeholder="Gender">
-                    <span id="validateGenderEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="gender">Gender</label>
+                                <input type="text" class="form-control inputsmmodal" id="genderEdit" placeholder="Gender">
+                                <span id="validateGenderEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentGenderEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentGenderEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="genderidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudGender(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudGender(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -444,15 +521,15 @@
 </div>
 
 <div id="deleteGender" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteGenderLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this gender?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="genderidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Gender:
@@ -472,7 +549,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudGender(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudGender(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -482,27 +559,36 @@
 
 <!-- Allergy Modals -->
 <div id="allergyNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="allergyNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Allergy</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="allergy">Allergy</label>
-                    <input type="text" class="form-control pt-4" id="allergy" placeholder="Allergy">
-                    <span id="validateAllergy" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="allergy">Allergy</label>
+                                <input type="text" class="form-control inputsmmodal" id="allergy" placeholder="Allergy">
+                                <span id="validateAllergy" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentAllergy"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentAllergy"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudAllergy(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudAllergy(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -510,27 +596,37 @@
 </div>
 
 <div id="editAllergy" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editAllergyLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Allergy</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="allergy">Allergy</label>
-                    <input type="text" class="form-control pt-4" id="allergyEdit" placeholder="Allergy">
-                    <span id="validateAllergyEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="allergy">Allergy</label>
+                                <input type="text" class="form-control inputsmmodal" id="allergyEdit" placeholder="Allergy">
+                                <span id="validateAllergyEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentAllergyEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentAllergyEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="allergyidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudAllergy(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudAllergy(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -538,16 +634,17 @@
 </div>
 
 <div id="deleteAllergy" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteAllergyLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this allergy?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="allergyidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
+
                         <dt class="col-sm-6">
                             Allergy:
                         </dt>
@@ -566,7 +663,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudAllergy(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudAllergy(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -577,52 +674,75 @@
 <!-- Disease Modals -->
 
 <div id="diseaseNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="diseaseNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Disease</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="disease">Disease</label>
-                    <input type="text" class="form-control pt-4" id="disease" placeholder="Disease">
-                    <span id="validateDisease" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="diseaseCode">Code</label>
-                    <textarea class="form-control pt-4" placeholder="Code" id="diseaseCode"></textarea>
-                    <span id="validateDose" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="disease">Disease</label>
+                                <input type="text" class="form-control inputsmmodal" id="disease" placeholder="Disease">
+                                <span id="validateDisease" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="diseaseCode">Code</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Code" id="diseaseCode"></textarea>
+                                <span id="validateDose" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudDisease(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudDisease(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
+
 <div id="editDisease" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editDiseaseLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Disease</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="disease">Disease</label>
-                    <input type="text" class="form-control pt-4" id="diseaseEdit" placeholder="Disease">
-                    <span id="validateDiseaseEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="diseaseCode">Code</label>
-                    <textarea class="form-control pt-4" placeholder="Code" id="diseaseCodeEdit"></textarea>
-                    <span id="validatediseaseCodeEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="disease">Disease</label>
+                                <input type="text" class="form-control inputsmmodal" id="diseaseEdit" placeholder="Disease">
+                                <span id="validateDiseaseEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="diseaseCode">Code</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Code" id="diseaseCodeEdit"></textarea>
+                                <span id="validatediseaseCodeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="diseaseidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudDisease(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudDisease(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -630,15 +750,15 @@
 </div>
 
 <div id="deleteDisease" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteDiseaseLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this disease?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="diseaseidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Disease:
@@ -650,63 +770,190 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudDisease(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudDisease(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
 
 </div>
+
 <!-- End Disease Modals -->
+
+<!-- Deviation Modals -->
+<div id="deviationNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deviationNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Deviation</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="deviation">Deviation Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="deviation" placeholder="Deviation Name">
+                                <span id="validateDeviation" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="deviationCode">Code</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Code" id="deviationCode"></textarea>
+                                <span id="validateDeviationCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudDeviation(1)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editDeviation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editDeviationLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Edit Deviation</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="deviation">Deviation Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="deviationEdit" placeholder="Deviation Name">
+                                <span id="validateDeviationEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="deviationCode">Code</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Code" id="deviationCodeEdit"></textarea>
+                                <span id="validateDeviationCodeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="deviationidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudDeviation(2)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteDeviation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteDeviationLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Are you sure you want to delete this deviation?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="deviationidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Deviation:
+                        </dt>
+                        <dd class="col-sm-6" id="deviationD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-danger" onclick="crudDeviation(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Deviation Modals -->
 
 <!-- Medication Modals -->
 <div id="medicationNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="medicationNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Medication</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="medication">Medication</label>
-                    <input type="text" class="form-control pt-4" id="medication" placeholder="Medication">
-                    <span id="validateMedication" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="dose">Dose</label>
-                    <textarea class="form-control pt-4" placeholder="Dose" id="dose"></textarea>
-                    <span id="validateDose" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="medication">Medication</label>
+                                <input type="text" class="form-control inputsmmodal" id="medication" placeholder="Medication">
+                                <span id="validateMedication" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dose">Dose</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Dose" id="dose"></textarea>
+                                <span id="validateDose" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudMedication(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudMedication(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="editMedication" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editMedicationLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Medication</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="medication">Medication</label>
-                    <input type="text" class="form-control pt-4" id="medicationEdit" placeholder="Medication">
-                    <span id="validateMedicationEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="medication">Medication</label>
+                                <input type="text" class="form-control inputsmmodal" id="medicationEdit" placeholder="Medication">
+                                <span id="validateMedicationEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dose">Dose</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Dose" id="doseEdit"></textarea>
+                                <span id="validateDoseEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="dose">Dose</label>
-                    <textarea class="form-control pt-4" placeholder="Dose" id="doseEdit"></textarea>
-                    <span id="validateDoseEdit" class="text-danger"></span>
-                </div>                
                 <input type="hidden" id="medicationidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudMedication(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudMedication(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -714,15 +961,15 @@
 </div>
 
 <div id="deleteMedication" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteMedicationLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this medication?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="medicationidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Medication:
@@ -742,7 +989,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudMedication(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudMedication(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -752,27 +999,35 @@
 
 <!-- Ethnicity Modals -->
 <div id="ethnicityNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ethnicityNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Ethnicity</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="ethnicity">Ethnicity</label>
-                    <input type="text" class="form-control pt-4" id="ethnicity" placeholder="Ethnicity">
-                    <span id="validateEthnicity" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="ethnicity">Ethnicity</label>
+                                <input type="text" class="form-control inputsmmodal" id="ethnicity" placeholder="Ethnicity">
+                                <span id="validateEthnicity" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentEthnicity"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentEthnicity"></textarea>
-                </div>
-
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudEthnicity(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudEthnicity(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -780,27 +1035,37 @@
 </div>
 
 <div id="editEthnicity" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editEthnicityLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Ethnicity</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="ethnicity">Ethnicity</label>
-                    <input type="text" class="form-control pt-4" id="ethnicityEdit" placeholder="Ethnicity">
-                    <span id="validateEthnicityEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="ethnicity">Ethnicity</label>
+                                <input type="text" class="form-control inputsmmodal" id="ethnicityEdit" placeholder="Ethnicity">
+                                <span id="validateEthnicityEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentEthnicityEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentEthnicityEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="ethnicityidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudEthnicity(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudEthnicity(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -808,15 +1073,15 @@
 </div>
 
 <div id="deleteEthnicity" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteEthnicityLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this ethnicity?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="ethnicityidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Ethnicity:
@@ -836,7 +1101,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudEthnicity(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudEthnicity(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -846,27 +1111,36 @@
 
 <!-- End Language Modals -->
 <div id="languageNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="languageNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Language</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="language">Language</label>
-                    <input type="text" class="form-control pt-4" id="language" placeholder="Language">
-                    <span id="validateLanguageEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="language">Language</label>
+                                <input type="text" class="form-control inputsmmodal" id="language" placeholder="Language">
+                                <span id="validateLanguageEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentLanguage"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentLanguage"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudLanguage(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudLanguage(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -874,27 +1148,37 @@
 </div>
 
 <div id="editLanguage" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editLanguageLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Language</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="language">Language</label>
-                    <input type="text" class="form-control pt-4" id="languageEdit" placeholder="Language">
-                    <span id="validateLanguage" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="language">Language</label>
+                                <input type="text" class="form-control inputsmmodal" id="languageEdit" placeholder="Language">
+                                <span id="validateLanguage" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentLanguageEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentLanguageEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="languageidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudLanguage(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudLanguage(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -902,15 +1186,15 @@
 </div>
 
 <div id="deleteLanguage" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteLanguageLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this language?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="languageidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Language:
@@ -930,7 +1214,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudLanguage(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudLanguage(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -940,27 +1224,36 @@
 <!-- Race Modals -->
 
 <div id="raceNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="raceNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Race</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="race">Race</label>
-                    <input type="text" class="form-control pt-4" id="race" placeholder="Race">
-                    <span id="validateRace" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="race">Race</label>
+                                <input type="text" class="form-control inputsmmodal" id="race" placeholder="Race">
+                                <span id="validateRace" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentRace"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentRace"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRace(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRace(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -968,27 +1261,37 @@
 </div>
 
 <div id="editRace" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editRaceLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Race</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="race">Race</label>
-                    <input type="text" class="form-control pt-4" id="raceEdit" placeholder="Race">
-                    <span id="validateRaceEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="race">Race</label>
+                                <input type="text" class="form-control inputsmmodal" id="raceEdit" placeholder="Race">
+                                <span id="validateRaceEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentRaceEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentRaceEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="raceidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRace(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRace(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -996,15 +1299,15 @@
 </div>
 
 <div id="deleteRace" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteRaceLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this race?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="raceidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Race:
@@ -1024,7 +1327,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudRace(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudRace(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1035,22 +1338,29 @@
 
 <!-- Relation Modals -->
 <div id="relationTypeNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="relationTypeNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add RelationType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="relationType">Relation Type</label>
-                    <input type="text" class="form-control pt-4" id="relationType" placeholder="Relation Type">
-                    <span id="validateRelationType" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="relationType">Relation Type</label>
+                                <input type="text" class="form-control inputsmmodal" id="relationType" placeholder="Relation Type">
+                                <span id="validateRelationType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRelationType(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRelationType(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1058,22 +1368,29 @@
 </div>
 
 <div id="editRelationType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editRelationTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit RelationType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="relationType">Relation Type</label>
-                    <input type="text" class="form-control pt-4" id="relationTypeEdit" placeholder="Relation Type">
-                    <span id="validateRelationTypeEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="relationType">Relation Type</label>
+                                <input type="text" class="form-control inputsmmodal" id="relationTypeEdit" placeholder="Relation Type">
+                                <span id="validateRelationTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <input type="hidden" id="relationTypeidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRelationType(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRelationType(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1081,15 +1398,15 @@
 </div>
 
 <div id="deleteRelationType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteRelationTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this relationType?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="relationTypeidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             RelationType:
@@ -1101,7 +1418,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudRelationType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudRelationType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1112,29 +1429,40 @@
 <!-- Task Modals -->
 
 <div id="taskNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Task</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="task">Task</label>
-                    <input type="text" class="form-control pt-4" id="task" placeholder="Task">
-                    <span id="validateTask" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="task">Task</label>
+                                <input type="text" class="form-control inputsmmodal" id="task" placeholder="Task">
+                                <span id="validateTask" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="task">Task Type</label>
+                                <select class="form-select" aria-label="Default select example" id="taskTypeList">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validateTaskT" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="task">Task Type</label>
-                    <select class="form-select" aria-label="Default select example" id="taskTypeList">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validateTaskT" class="text-danger"></span>
-                </div>
+
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudTask(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudTask(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1142,24 +1470,34 @@
 </div>
 
 <div id="editTask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editTaskLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Task</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="task">Task</label>
-                    <input type="text" class="form-control pt-4" id="taskEdit" placeholder="Task">
-                    <span id="validateTaskEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="task">Task</label>
+                                <input type="text" class="form-control inputsmmodal" id="taskEdit" placeholder="Task">
+                                <span id="validateTaskEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="task">Task Type</label>
-                    <select class="form-select" aria-label="Default select example" id="taskTypeListEdit">
-                        <option selected>Open this select menu</option>
-                    </select>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="task">Task Type</label>
+                                <select class="form-select" aria-label="Default select example" id="taskTypeListEdit">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <input type="hidden" id="taskidEdit" />
@@ -1167,7 +1505,7 @@
                 <input type="hidden" id="taskTidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudTask(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudTask(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1175,15 +1513,15 @@
 </div>
 
 <div id="deleteTask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteTaskLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this task?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="taskidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             Task:
@@ -1201,7 +1539,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudTask(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudTask(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1212,21 +1550,28 @@
 
 <!-- Task Type Modals -->
 <div id="taskTypeNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskTypeNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add TaskType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="taskType">TaskType</label>
-                    <input type="text" class="form-control pt-4" id="taskType" placeholder="TaskType">
-                    <span id="validateTaskType" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="taskType">TaskType</label>
+                                <input type="text" class="form-control inputsmmodal" id="taskType" placeholder="TaskType">
+                                <span id="validateTaskType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudTaskType(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudTaskType(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1234,22 +1579,30 @@
 </div>
 
 <div id="editTaskType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editTaskTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit TaskType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="taskType">TaskType</label>
-                    <input type="text" class="form-control pt-4" id="taskTypeEdit" placeholder="TaskType">
-                    <span id="validateTaskTypeEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="taskType">TaskType</label>
+                                <input type="text" class="form-control inputsmmodal" id="taskTypeEdit" placeholder="TaskType">
+                                <span id="validateTaskTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
                 <input type="hidden" id="taskTypeidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudTaskType(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudTaskType(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1257,15 +1610,15 @@
 </div>
 
 <div id="deleteTaskType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteTaskTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this taskType?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="taskTypeidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             TaskType:
@@ -1277,7 +1630,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudTaskType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudTaskType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1287,21 +1640,28 @@
 
 <!-- Role Modals -->
 <div id="roleTypeNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="roleTypeNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add RoleType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="roleType">RoleType</label>
-                    <input type="text" class="form-control pt-4" id="roleType" placeholder="RoleType">
-                    <span id="validateRoleType" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="roleType">RoleType</label>
+                                <input type="text" class="form-control inputsmmodal" id="roleType" placeholder="RoleType">
+                                <span id="validateRoleType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRoleType(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRoleType(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1309,22 +1669,30 @@
 </div>
 
 <div id="editRoleType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editRoleTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit RoleType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="roleType">RoleType</label>
-                    <input type="text" class="form-control pt-4" id="roleTypeEdit" placeholder="RoleType">
-                    <span id="validateRoleTypeEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="roleType">RoleType</label>
+                                <input type="text" class="form-control inputsmmodal" id="roleTypeEdit" placeholder="RoleType">
+                                <span id="validateRoleTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
                 <input type="hidden" id="roleTypeidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudRoleType(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudRoleType(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1332,15 +1700,15 @@
 </div>
 
 <div id="deleteRoleType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteRoleTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this roleType?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="roleTypeidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             RoleType:
@@ -1352,7 +1720,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudRoleType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudRoleType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1361,34 +1729,51 @@
 
 <!-- Doc type Modals -->
 <div id="docTypeNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="docTypeNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add DocType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="docType">DocType</label>
-                    <input type="text" class="form-control pt-4" id="docType" placeholder="DocType">
-                    <span id="validateDocType" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="docType">DocType</label>
+                                <input type="text" class="form-control inputsmmodal" id="docType" placeholder="DocType">
+                                <span id="validateDocType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <select class="form-select" aria-label="Default select example" id="applyList">
+                                    <option value="-1" selected>Open this select menu</option>
+                                    <option value="1">Staff</option>
+                                    <option value="2">Study</option>
+                                    <option value="3">Subject</option>
+                                </select>
+                                <span id="validateDocTypeApply" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentDocType"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group position-relative mb-3">
-                    <select class="form-select" aria-label="Default select example" id="applyList">
-                        <option value="-1" selected>Open this select menu</option>
-                        <option value="1">Staff</option>
-                        <option value="2">Study</option>
-                        <option value="3">Subject</option>
-                    </select>
-                    <span id="validateDocTypeApply" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentDocType"></textarea>
-                </div>
+
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudDocType(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudDocType(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1396,34 +1781,50 @@
 </div>
 
 <div id="editDocType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editDocTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit DocType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="docType">DocType</label>
-                    <input type="text" class="form-control pt-4" id="docTypeEdit" placeholder="DocType">
-                    <span id="validateDocTypeEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <select class="form-select" aria-label="Default select example" id="applyforListEdit">
-                        <option value="1">Staff</option>
-                        <option value="2">Study</option>
-                        <option value="3">Subject</option>
-                    </select>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentDocTypeEdit"></textarea>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="docType">DocType</label>
+                                <input type="text" class="form-control inputsmmodal" id="docTypeEdit" placeholder="DocType">
+                                <span id="validateDocTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <select class="form-select" aria-label="Default select example" id="applyforListEdit">
+                                    <option value="1">Staff</option>
+                                    <option value="2">Study</option>
+                                    <option value="3">Subject</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentDocTypeEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
                 <input type="hidden" id="docTypeidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudDocType(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudDocType(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1431,15 +1832,15 @@
 </div>
 
 <div id="deleteDocType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteDocTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this docType?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="docTypeidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             DocType:
@@ -1467,7 +1868,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudDocType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudDocType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1476,21 +1877,28 @@
 
 <!-- Sponsor Modals -->
 <div id="sponsorTypeNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sponsorTypeNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add SponsorType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="sponsorType">SponsorType</label>
-                    <input type="text" class="form-control pt-4" id="sponsorType" placeholder="SponsorType">
-                    <span id="validateSponsorType" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="sponsorType">SponsorType</label>
+                                <input type="text" class="form-control inputsmmodal" id="sponsorType" placeholder="SponsorType">
+                                <span id="validateSponsorType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSponsorType(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSponsorType(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1498,22 +1906,29 @@
 </div>
 
 <div id="editSponsorType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editSponsorTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit SponsorType</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="sponsorType">SponsorType</label>
-                    <input type="text" class="form-control pt-4" id="sponsorTypeEdit" placeholder="SponsorType">
-                    <span id="validateSponsorTypeEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="sponsorType">SponsorType</label>
+                                <input type="text" class="form-control inputsmmodal" id="sponsorTypeEdit" placeholder="SponsorType">
+                                <span id="validateSponsorTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <input type="hidden" id="sponsorTypeidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSponsorType(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSponsorType(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1521,15 +1936,15 @@
 </div>
 
 <div id="deleteSponsorType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteSponsorTypeLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this sponsorType?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="sponsorTypeidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             SponsorType:
@@ -1541,7 +1956,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudSponsorType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudSponsorType(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1553,53 +1968,65 @@
 <div id="siteNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="siteNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
     <div class="modal-dialog  modal-xl">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Site</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>        
             <div class="modal-body">
-                <div class="row g-3">
-                    <div class="form-group position-relative">
-                        <label class="floating-label" for="siteName">Site</label>
-                        <input type="text" class="form-control pt-4" id="siteName" placeholder="Site">
-                        <span id="validateSite" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="siteName">Site</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteName" placeholder="Site">
+                                <span id="validateSite" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group position-relative">
-                        <label class="floating-label" for="siteAddress">Address</label>
-                        <input type="text" class="form-control pt-4" id="siteAddress" placeholder="Address">
-                    </div>
-           
-                    <div class="col-12 col-md-6">
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteEmail">Email</label>
-                            <input type="text" class="form-control pt-4" id="siteEmail" placeholder="Email">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="siteAddress">Address</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteAddress" placeholder="Address">
+                            </div>
                         </div>
-
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="sitePhone">Phone</label>
-                            <input type="text" class="form-control pt-4" id="sitePhone" placeholder="Phone">
-                        </div>
-
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteContact">Contact</label>
-                            <input type="text" class="form-control pt-4" id="siteContact" placeholder="Contact">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteEmail">Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteEmail" placeholder="Email">
+                            </div>
                         </div>
-
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteCode">Code</label>
-                            <input type="text" class="form-control pt-4" id="siteCode" placeholder="Code">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="sitePhone">Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="sitePhone" placeholder="Phone">
+                            </div>
                         </div>
-
                     </div>
 
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteContact">Contact</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteContact" placeholder="Contact">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteCode">Code</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteCode" placeholder="Code">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
             </div>   
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSite(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSite(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
        </div>
     </div>
@@ -1610,54 +2037,74 @@
     <div class="modal-dialog  modal-xl">
         <div class="modal-content" role="document">
 
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Site</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
        
             <div class="modal-body">
-                <div class="row g-3">
-                    <div class="form-group position-relative">              
-                        <label class="floating-label" for="siteNameEdit">Site</label>
-                        <input type="text" class="form-control pt-4" id="siteNameEdit" placeholder="Site">
-                        <span id="validateSiteEdit" class="text-danger"></span>
-                    </div>
-                    <div class="form-group position-relative">
-                        <label class="floating-label" for="siteAddressEdit">Address</label>
-                        <input type="text" class="form-control pt-4" id="siteAddressEdit" placeholder="Address">
-                        <span id="validateAddressEdit" class="text-danger"></span>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteEmailEdit">Email</label>
-                            <input type="text" class="form-control pt-4" id="siteEmailEdit" placeholder="Email">
-                            <span id="validateEmailEdit" class="text-danger"></span>
-                        </div>
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="sitePhoneEdit">Phone</label>
-                            <input type="text" class="form-control pt-4" id="sitePhoneEdit" placeholder="Phone">
-                            <span id="validatePhoneEdit" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="siteNameEdit">Site</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteNameEdit" placeholder="Site">
+                                <span id="validateSiteEdit" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteContactEdit">Contact</label>
-                            <input type="text" class="form-control pt-4" id="siteContactEdit" placeholder="Contact">
-                            <span id="validateContactEdit" class="text-danger"></span>
-                        </div>
-                        <div class="form-group position-relative">
-                            <label class="floating-label" for="siteCodeEdit">Code</label>
-                            <input type="text" class="form-control pt-4" id="siteCodeEdit" placeholder="Code">
-                            <span id="validateCodeEdit" class="text-danger"></span>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="siteAddressEdit">Address</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteAddressEdit" placeholder="Address">
+                                <span id="validateAddressEdit" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-                </div>            
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteEmailEdit">Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteEmailEdit" placeholder="Email">
+                                <span id="validateEmailEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="sitePhoneEdit">Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="sitePhoneEdit" placeholder="Phone">
+                                <span id="validatePhoneEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteContactEdit">Contact</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteContactEdit" placeholder="Contact">
+                                <span id="validateContactEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="siteCodeEdit">Code</label>
+                                <input type="text" class="form-control inputsmmodal" id="siteCodeEdit" placeholder="Code">
+                                <span id="validateCodeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             <input type="hidden" id="siteidEdit" />
 
                     
             </div> 
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSite(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSite(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>  
@@ -1665,65 +2112,68 @@
 </div>
 
 <div id="deleteSite" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteSiteLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this site?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="siteidDelete" />
             </div>
             <div class="modal-body">
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Name:
-                    </dt>
-                    <dd class="col-sm-6" id="siteNameD">
+                <div class="form-section">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Name:
+                        </dt>
+                        <dd class="col-sm-6" id="siteNameD">
 
-                    </dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Address:
-                    </dt>
-                    <dd class="col-sm-6" id="siteAddressD">
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Address:
+                        </dt>
+                        <dd class="col-sm-6" id="siteAddressD">
 
-                    </dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Contact:
-                    </dt>
-                    <dd class="col-sm-6" id="siteContactD">
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Contact:
+                        </dt>
+                        <dd class="col-sm-6" id="siteContactD">
 
-                    </dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Phone:
-                    </dt>
-                    <dd class="col-sm-6" id="sitePhoneD">
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Phone:
+                        </dt>
+                        <dd class="col-sm-6" id="sitePhoneD">
 
-                    </dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Email:
-                    </dt>
-                    <dd class="col-sm-6" id="siteEmailD">
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Email:
+                        </dt>
+                        <dd class="col-sm-6" id="siteEmailD">
 
-                    </dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        Site Code:
-                    </dt>
-                    <dd class="col-sm-6" id="siteCodeD">
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Site Code:
+                        </dt>
+                        <dd class="col-sm-6" id="siteCodeD">
 
-                    </dd>
-                </dl>
+                        </dd>
+                    </dl>
+                </div>
+                
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudSite(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudSite(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1733,27 +2183,36 @@
 
 <!-- Cros Modals -->
 <div id="croNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="croNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add CRO</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="cro">CRO</label>
-                    <input type="text" class="form-control pt-4" id="cro" placeholder="CRO">
-                    <span id="validateCRO" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="cro">CRO</label>
+                                <input type="text" class="form-control inputsmmodal" id="cro" placeholder="CRO">
+                                <span id="validateCRO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentCRO"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentCRO"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudCRO(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudCRO(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1761,27 +2220,37 @@
 </div>
 
 <div id="editCRO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editCROLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit CRO</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="cro">CRO</label>
-                    <input type="text" class="form-control pt-4" id="croEdit" placeholder="CRO">
-                    <span id="validateCROEdit" class="text-danger"></span>
-                </div>
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="cro">CRO</label>
+                                <input type="text" class="form-control inputsmmodal" id="croEdit" placeholder="CRO">
+                                <span id="validateCROEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="comment">Comment</label>
-                    <textarea class="form-control pt-4" placeholder="Comment" id="commentCROEdit"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentCROEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="croidEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudCRO(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudCRO(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
@@ -1789,15 +2258,15 @@
 </div>
 
 <div id="deleteCRO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteCROLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this cro?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="croidDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6">
                             CRO:
@@ -1817,7 +2286,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudCRO(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudCRO(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -1825,6 +2294,118 @@
 </div>
 <!-- End Cros Modals -->
 
+<!-- VLT Status Modals -->
+<div id="vltStatusNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vltStatusNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Volunteer Status</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="vltStatus">Status</label>
+                                <input type="text" class="form-control inputsmmodal" id="vltStatus" placeholder="Status">
+                                <span id="validateVLTStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentVLTStatus"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudVLTStatus(1)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="editVLTStatus" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editVLTStatusLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Edit Volunteer Status</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="vltStatus">Volunteer Status</label>
+                                <input type="text" class="form-control inputsmmodal" id="vltStatusEdit" placeholder="VLTStatus">
+                                <span id="validateVLTStatusEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="comment">Comment</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Comment" id="commentVLTStatusEdit"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="vltStatusidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudVLTStatus(2)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="deleteVLTStatus" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteVLTStatusLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Are you sure you want to delete this volunteer status?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="vltStatusidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Volunteer Status:
+                        </dt>
+                        <dd class="col-sm-6" id="vltStatusD">
+
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Comment:
+                        </dt>
+                        <dd class="col-sm-6" id="commentVLTStatusD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-danger" onclick="crudVLTStatus(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End VLT Status Modals -->
 
 
  <script>

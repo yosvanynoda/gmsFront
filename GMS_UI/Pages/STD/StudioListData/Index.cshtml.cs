@@ -82,7 +82,7 @@ namespace GMS_UI.Pages.STD.StudioListData
                         Active = st.Active,
                         BlindType = st.BlindType,
                         SponsorName = st.SponsorName,
-                        StudioStatusName = ((StudioStatusEnum)st.StudioStatus).ToString(),
+                        StudioStatusName = ((StudyStatusEnum)st.StudioStatus).ToString(),
                     })];
 
                     return new JsonResult(new

@@ -1,0 +1,91 @@
+@page
+@model GMS_UI.Pages.VLT.Volunteer.PreSelectedModel
+@{
+    ViewData["Title"] = "Pre-Selected Volunteers";
+}
+
+
+
+<div class="container-gms">
+    <div class="card preselected-card">
+        <div class="card-header preselected-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4>
+                        <i class="bi bi-people-fill me-2"></i>Pre-Selected Volunteers
+                        <span class="stats-badge" id="totalCount">0 Candidates</span>
+                    </h4>
+                    <p class="subtitle mb-0">View and manage volunteers pre-assigned to studies</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-section">
+                        <label for="studyFilter">
+                            <i class="bi bi-funnel me-1"></i>Filter by Study
+                        </label>
+                        <select id="studyFilter" class="form-select">
+                            <option value="">All Studies</option>
+                            @foreach (var study in Model.StudyList)
+                            {
+                                <option value="@study.Value">@study.Text</option>
+                            }
+                        </select>
+                        <button id="btnCompleteSelected" class="btn btn-success mt-2 w-100" style="display: none;">
+                            <i class="bi bi-check-circle-fill me-2"></i>Complete Selected (<span id="selectedCount">0</span>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body preselected-grid-container">
+            <div id="preSelectedGrid" class="ag-theme-balham gridIndexSize"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Subject Modal -->
+<div id="createSubjectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createSubjectModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
+                <h2>Create Subject</h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Volunteer Name:</label>
+                    <p id="createSubjectVolunteerName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Study:</label>
+                    <p id="createSubjectStudyName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="subjectCodeInput" class="form-label fw-bold">Subject Code: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="subjectCodeInput" placeholder="Enter subject code" required />
+                    <small class="form-text text-muted">Enter a unique code to identify this subject</small>
+                </div>
+                <input type="hidden" id="createSubjectVolunteerId" />
+                <input type="hidden" id="createSubjectStudyId" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <button class="btn btn-sm btn-success" onclick="confirmCreateSubject()">
+                    <i class="bi bi-check-circle me-1"></i> Create Subject
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add CSRF token to form -->
+<form method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/VLT/Volunteer/PreSelected';
+</script>
+<script src="/js/vlt/volunteer/preSelected.js"></script>

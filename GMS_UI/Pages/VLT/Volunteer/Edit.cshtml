@@ -1,0 +1,537 @@
+@page
+@model GMS_UI.Pages.VLT.Volunteer.EditModel
+@{
+    ViewData["Title"] = "Edit Volunteer";
+}
+
+<div class="wizard-container">
+    <h2 class="text-center mb-4">
+        <i class="bi bi-pencil-fill text-primary"></i>
+        Edit Volunteer
+    </h2>
+
+    <input type="hidden" id="volunteerId" value="@Model.VolunteerId" />
+
+    <form asp-page-handler="Update" method="post" id="wizardForm">
+        @Html.AntiForgeryToken()
+
+        <!-- Progress Indicator -->
+        <div class="step-indicator">
+            <div class="step-circle active" id="step1-indicator" onclick="jumpToStep(1)" style="cursor: pointer;" title="General Information">1</div>
+            <div class="step-line" id="line1"></div>
+            <div class="step-circle" id="step2-indicator" onclick="jumpToStep(2)" style="cursor: pointer;" title="Physical & Demographics">2</div>
+            <div class="step-line" id="line2"></div>
+            <div class="step-circle" id="step3-indicator" onclick="jumpToStep(3)" style="cursor: pointer;" title="Address">3</div>
+            <div class="step-line" id="line3"></div>
+            <div class="step-circle" id="step4-indicator" onclick="jumpToStep(4)" style="cursor: pointer;" title="Emergency Contacts">4</div>
+            <div class="step-line" id="line4"></div>
+            <div class="step-circle" id="step5-indicator" onclick="jumpToStep(5)" style="cursor: pointer;" title="Allergies">5</div>
+            <div class="step-line" id="line5"></div>
+            <div class="step-circle" id="step6-indicator" onclick="jumpToStep(6)" style="cursor: pointer;" title="Diseases">6</div>
+            <div class="step-line" id="line6"></div>
+            <div class="step-circle" id="step7-indicator" onclick="jumpToStep(7)" style="cursor: pointer;" title="Medications">7</div>
+            <div class="step-line" id="line7"></div>
+            <div class="step-circle" id="step8-indicator" onclick="jumpToStep(8)" style="cursor: pointer;" title="Review & Submit">8</div>
+        </div>
+
+        <!-- Step 1: General Information -->
+        <div class="wizard-step active wizard-body" id="step1">
+            <div class="form-section">
+                <h5><i class="bi bi-info-circle"></i> General Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Flag</label>
+                            <select class="form-select" id="flag">
+                                <option value="0">Select Flag</option>
+                                @foreach (var item in Model.FlagList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Flag Reason / Comment</label>
+                            <input type="text" class="form-control" id="flagReason" placeholder="Enter flag reason (optional)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" id="middleName" placeholder="Enter middle name">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth * (MM/DD/YYYY)</label>
+                            <input type="text" class="form-control" id="subjectDOB" placeholder="MM/DD/YYYY" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Social Security Number</label>
+                            <input type="text" class="form-control" id="subjectSS" placeholder="XXX-XX-XXXX">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Phone *</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="(XXX) XXX-XXXX" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="subjectEmail" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Subject ID</label>
+                            <input type="text" class="form-control" id="subjectId" placeholder="Enter subject ID">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Current Status</label>
+                            <select class="form-select" id="currentStatus">
+                                <option value="">Select Status</option>
+                                @foreach (var item in Model.VLTStatusList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Physical & Demographics -->
+        <div class="wizard-step wizard-body" id="step2">
+            <div class="form-section">
+                <h5><i class="bi bi-person-badge"></i> Physical & Demographics</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Weight</label>
+                            <input type="text" class="form-control" id="weight" placeholder="Enter weight (lbs/kg)">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Height</label>
+                            <input type="text" class="form-control" id="height" placeholder="Enter height (ft/cm)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Sex *</label>
+                            <select class="form-select" id="sex" required>
+                                <option value="">Select Sex</option>
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                                <option value="3">Intersex</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" id="gender">
+                                <option value="">Select Gender</option>
+                                @foreach (var item in Model.GenderList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Race</label>
+                            <select class="form-select" id="race">
+                                <option value="">Select Race</option>
+                                @foreach (var item in Model.RaceList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Ethnicity</label>
+                            <select class="form-select" id="ethnicity">
+                                <option value="">Select Ethnicity</option>
+                                @foreach (var item in Model.EthnicityList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Language</label>
+                            <select class="form-select" id="language">
+                                <option value="">Select Language</option>
+                                @foreach (var item in Model.LanguageList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Address Information -->
+        <div class="wizard-step wizard-body" id="step3">
+            <div class="form-section">
+                <h5><i class="bi bi-geo-alt-fill"></i> Address Information</h5>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 1 *</label>
+                            <input type="text" class="form-control" id="address1" placeholder="Street address" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment, suite, etc.">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">City *</label>
+                            <input type="text" class="form-control" id="city" placeholder="City" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">State *</label>
+                            <input type="text" class="form-control" id="state" placeholder="State" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Zip Code *</label>
+                            <input type="text" class="form-control" id="zipCode" placeholder="ZIP Code" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Country *</label>
+                            <input type="text" class="form-control" id="country" placeholder="Country" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Legal Representative</label>
+                            <input type="text" class="form-control" id="legalRepresentative" placeholder="Name of legal representative">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Emergency Contacts -->
+        <div class="wizard-step wizard-body" id="step4">
+            <div class="form-section">
+                <h5><i class="bi bi-telephone-fill"></i> Emergency Contacts</h5>
+
+                <div id="emergencyContactsContainer">
+                    <!-- Emergency contacts will be added here dynamically -->
+                </div>
+
+                <button type="button" class="btn btn-sm btn-primary" onclick="addEmergencyContact()">
+                    <i class="bi bi-plus-circle"></i> Add Emergency Contact
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 5: Allergies -->
+        <div class="wizard-step wizard-body" id="step5">
+            <div class="form-section">
+                <h5><i class="bi bi-exclamation-triangle-fill"></i> Allergies</h5>
+
+                <!-- Add Allergy Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Allergy</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Allergy *</label>
+                                <select class="form-select" id="allergySelect">
+                                    <option value="">Select Allergy</option>
+                                </select>
+                                <span id="validateAllergy" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="allergyStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="allergyEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveAllergy()">
+                                    <i class="bi bi-plus-circle"></i> Add Allergy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Allergies Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Allergies</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="allergiesGrid" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Diseases -->
+        <div class="wizard-step wizard-body" id="step6">
+            <div class="form-section">
+                <h5><i class="bi bi-heart-pulse-fill"></i> Diseases</h5>
+
+                <!-- Add Disease Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Disease</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Disease *</label>
+                                <select class="form-select" id="diseaseSelect">
+                                    <option value="">Select Disease</option>
+                                </select>
+                                <span id="validateDisease" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="diseaseStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="diseaseEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveDisease()">
+                                    <i class="bi bi-plus-circle"></i> Add Disease
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Diseases Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Diseases</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="diseasesGrid" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Medications -->
+        <div class="wizard-step wizard-body" id="step7">
+            <div class="form-section">
+                <h5><i class="bi bi-capsule-pill"></i> Medications</h5>
+
+                <!-- Add Medication Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add Medication</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Select Medication *</label>
+                                <select class="form-select" id="medicationSelect">
+                                    <option value="">Select Medication</option>
+                                </select>
+                                <span id="validateMedication" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Dose</label>
+                                <input type="text" class="form-control" id="medicationDose" placeholder="e.g., 500mg" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="medicationStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="medicationEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveMedication()">
+                                    <i class="bi bi-plus-circle"></i> Add Medication
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Medications Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Medications</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="medicationsGrid" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 8: Documentation & Review -->
+        <div class="wizard-step wizard-body" id="step8">
+            <div class="form-section">
+                <h5><i class="bi bi-file-earmark-text-fill"></i> Documentation & Review</h5>
+
+                <h6 class="mt-3">Documents</h6>
+                <div id="documentsContainer">
+                    <!-- Documents will be added here dynamically -->
+                </div>
+                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addDocument()">
+                    <i class="bi bi-plus-circle"></i> Add Document
+                </button>
+
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle"></i>
+                    Please review all information before submitting. You can go back to previous steps to make changes.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-navigation">
+            <div>
+                <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                    <i class="bi bi-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-wizard" id="cancelBtn" onclick="cancelWizard()">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                    Next <i class="bi bi-arrow-right"></i>
+                </button>
+                <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
+                    <i class="bi bi-check"></i> Update Volunteer
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Get CSRF token from the form
+    window._csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+    // Pass dropdown data to JavaScript
+    window.allergyList = @Html.Raw(Json.Serialize(Model.AllergyList));
+    window.diseaseList = @Html.Raw(Json.Serialize(Model.DiseaseList));
+    window.medicationList = @Html.Raw(Json.Serialize(Model.MedicationList));
+
+    // Pass volunteer data to JavaScript
+    // Use Newtonsoft.Json serialization to match the API response format
+    @{
+        var volunteerDataJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.VolunteerData);
+    }
+    window.volunteerData = @Html.Raw(volunteerDataJson);
+
+    console.log('CSRF Token:', window._csrfToken);
+    console.log('Volunteer Data:', window.volunteerData);
+    console.log('Volunteer Data JSON:', JSON.stringify(window.volunteerData, null, 2));
+</script>
+<script src="/js/vlt/volunteer/volunteerEdit.js?v=@DateTime.Now.Ticks"></script>

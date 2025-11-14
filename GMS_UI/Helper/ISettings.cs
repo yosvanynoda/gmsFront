@@ -11,6 +11,8 @@
 
         string Endpoint_CreateDisease();
 
+        string Endpoint_CreateDeviation();
+
         string Endpoint_CreateMedication();
 
         string Endpoint_CreateDocType();
@@ -33,9 +35,15 @@
 
         string Endpoint_GetDiseaseDropList();
 
+        string Endpoint_GetDeviationList();
+
+        string Endpoint_GetDeviationDropList();
+
         string Endpoint_GetMedicationList();
 
         string Endpoint_GetDocType();
+
+        string Endpoint_GetDocTypeDropList();
 
         string Endpoint_GetRoleTypeList();
 
@@ -75,6 +83,10 @@
 
         string Endpoint_CreateCRO();
 
+        string Endpoint_GetVLTStatusList();
+
+        string Endpoint_CreateVLTStatus();
+
         #endregion
 
         #region STD....
@@ -103,6 +115,20 @@
 
         string Endpoint_CreateStudioDoc();
 
+        string Endpoint_CreateStudioStaff();
+
+        string Endpoint_GetStaffStudio();
+
+        string Endpoint_GetProtocolVersionList();
+
+        string Endpoint_CreateStudyData();
+
+        #endregion
+
+        #region SUB....
+
+        string Endpoint_GetSubjectData();
+
         #endregion
 
         #region VLT...
@@ -113,7 +139,10 @@
 
         string Endpoint_CreateVolunteer();
 
-        string Endpoint_CreateEthniciy();
+        string Endpoint_UpdateVolunteer();
+
+        string Endpoint_GetVLTStatusDropList();
+
 
         #endregion
     }

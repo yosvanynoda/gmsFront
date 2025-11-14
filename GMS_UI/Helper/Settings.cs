@@ -15,6 +15,8 @@
 
         public string Endpoint_CreateDisease()=> _config["Endpoint_CreateDisease"] ?? "";
 
+        public string Endpoint_CreateDeviation()=> _config["Endpoint_CreateDeviation"] ?? "";
+
         public string Endpoint_CreateDocType()=> _config["Endpoint_CreateDocType"] ?? "";
 
         public string Endpoint_CreateRoleType()=> _config["Endpoint_CreateRoleType"] ?? "";
@@ -37,7 +39,13 @@
 
         public string Endpoint_GetDiseaseDropList() => _config["Endpoint_GetDiseaseDropList"] ?? "";
 
+        public string Endpoint_GetDeviationList()=> _config["Endpoint_GetDeviationList"] ?? "";
+
+        public string Endpoint_GetDeviationDropList() => _config["Endpoint_GetDeviationDropList"] ?? "";
+
         public string Endpoint_GetDocType()=> _config["Endpoint_GetDocType"] ?? "";
+
+        public string Endpoint_GetDocTypeDropList() => _config["Endpoint_GetDocTypeDropList"] ?? "";
 
         public string Endpoint_GetRoleTypeList()=> _config["Endpoint_GetRoleTypeList"] ?? "";
 
@@ -77,6 +85,10 @@
 
         public string Endpoint_CreateCRO() => _config["Endpoint_CreateCRO"] ?? "";
 
+        public string Endpoint_GetVLTStatusList() => _config["Endpoint_GetVLTStatusList"] ?? "";
+
+        public string Endpoint_CreateVLTStatus() => _config["Endpoint_CreateVLTStatus"] ?? "";
+
         #endregion
 
         #region STD....
@@ -104,6 +116,19 @@
 
         public string Endpoint_CreateStudioDoc() => _config["Endpoint_CreateStudioDoc"] ?? "";
 
+        public string Endpoint_CreateStudioStaff() => _config["Endpoint_CreateStudioStaff"] ?? "";
+
+        public string Endpoint_GetStaffStudio() => _config["Endpoint_GetStaffStudio"] ?? "";
+
+        public string Endpoint_GetProtocolVersionList() => _config["Endpoint_GetProtocolVersionList"] ?? "";
+
+        public string Endpoint_CreateStudyData() => _config["Endpoint_CreateStudyData"] ?? "";
+
+        #endregion
+
+        #region SUB....
+
+        public string Endpoint_GetSubjectData() => _config["Endpoint_GetSubjectData"] ?? "";
 
         #endregion
 
@@ -115,10 +140,11 @@
 
         public string Endpoint_CreateVolunteer() => _config["Endpoint_CreateVolunteer"] ?? "";
 
-        public string Endpoint_CreateEthniciy()
-        {
-            throw new NotImplementedException();
-        }
+        public string Endpoint_UpdateVolunteer() => _config["Endpoint_UpdateVolunteer"] ?? "";
+
+        public string Endpoint_GetVLTStatusDropList() => _config["Endpoint_GetVLTStatusDropList"] ?? "";
+        
+
 
         #endregion
     }

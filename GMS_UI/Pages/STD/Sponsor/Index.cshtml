@@ -18,144 +18,182 @@
         <p id="failedMsg"></p>
     </div>
 
-    <div class="card shadow border rounded-3 bg-light" style="width:100%; height:90vh">
-        <div class="card-header">
-            <div class="row">
+    <div class="card">
+        <div class="card-header page-card-header">
+            <div class="row align-items-center">
                 <div class="col">
-                    <h4>Sponsor</h4>
+                    <h4><i class="bi bi-building me-2"></i>Sponsor</h4>
                 </div>
-                <div class="col">
-                    <button data-bs-toggle="modal" data-bs-target="#sponsorNewModal" class="btn btn-sm btn-success float-end"><i class="bi bi-plus-circle"></i> Add</button>
+                <div class="col text-end">
+                    <a data-bs-toggle="modal" data-bs-target="#sponsorNewModal" class="btn btn-sm btn-add btn-header"><i class="bi bi-plus-circle me-1"></i> Add Sponsor</a>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <div id="sponsorGrid" style="height:100%; width: 100%;" class="ag-theme-balham"></div>
+        <div class="card-body sponsor-grid-container">
+            <div id="sponsorGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
 </div>
+
+
  <div id="sponsorNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sponsorNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Add Sponsor</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="sponsorName">Sponsor</label>
-                    <input type="text" class="form-control pt-4" id="sponsorName" placeholder="Sponsor">
-                    <span id="validateSponsor" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="sponsorType">Sponsor Type</label>
-                    <select class="form-select" aria-label="Default select example" id="sponsorType">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validateSponsorType" class="text-danger"></span>
-                </div>
-                 <div class="form-group position-relative">
-                    <label class="floating-label" for="contactName">Contact Name</label>
-                    <input type="text" class="form-control pt-4" id="contactName" placeholder="Contact Name">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label  for="sponsorName">Sponsor</label>
+                                <input type="text" class="form-control inputsmmodal" id="sponsorName" placeholder="Sponsor">
+                                <span id="validateSponsor" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                </div>   
-                 <div class="form-group position-relative">
-                    <label class="floating-label" for="contactEmail">Contact Email</label>
-                    <input type="text" class="form-control pt-4" id="contactEmail" placeholder="Contact Email">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label  for="sponsorType">Sponsor Type</label>
+                                <select class="form-select" aria-label="Default select example" id="sponsorType">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validateSponsorType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="contactPhone">Contact Phone</label>
-                    <input type="text" class="form-control pt-4" id="contactPhone" placeholder="Contact Phone">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactName">Contact Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactName" placeholder="Contact Name">
+                            </div>
+                        </div>
 
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactEmail">Contact Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactEmail" placeholder="Contact Email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactPhone">Contact Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactPhone" placeholder="Contact Phone">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSponsor(1)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSponsor(1)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="editSponsor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editSponsorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Edit Sponsor</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="sponsorNameEdit">Sponsor</label>
-                    <input type="text" class="form-control pt-4" id="sponsorNameEdit" placeholder="Sponsor">
-                    <span id="validateSponsorEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative mb-3">
-                    <label class="floating-label" for="sponsorTypeEdit">Sponsor Type</label>
-                    <select class="form-select" aria-label="Default select example" id="sponsorTypeEdit">
-                        <option selected>Open this select menu</option>
-                    </select>
-                    <span id="validateSponsorTypeEdit" class="text-danger"></span>
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="contactNameEdit">Contact Name</label>
-                    <input type="text" class="form-control pt-4" id="contactNameEdit" placeholder="Contact Name">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="sponsorNameEdit">Sponsor</label>
+                                <input type="text" class="form-control inputsmmodal" id="sponsorNameEdit" placeholder="Sponsor">
+                                <span id="validateSponsorEdit" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="contactEmailEdit">Contact Email</label>
-                    <input type="text" class="form-control pt-4" id="contactEmailEdit" placeholder="Contact Email">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="sponsorTypeEdit">Sponsor Type</label>
+                                <select class="form-select" aria-label="Default select example" id="sponsorTypeEdit">
+                                    <option selected>Open this select menu</option>
+                                </select>
+                                <span id="validateSponsorTypeEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-                </div>
-                <div class="form-group position-relative">
-                    <label class="floating-label" for="contactPhoneEdit">Contact Phone</label>
-                    <input type="text" class="form-control pt-4" id="contactPhoneEdit" placeholder="Contact Phone">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactNameEdit">Contact Name</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactNameEdit" placeholder="Contact Name">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactEmailEdit">Contact Email</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactEmailEdit" placeholder="Contact Email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="contactPhoneEdit">Contact Phone</label>
+                                <input type="text" class="form-control inputsmmodal" id="contactPhoneEdit" placeholder="Contact Phone">
+                            </div>
+                        </div>
+
+                    </div>
 
                 </div>
                 <input type="hidden" id="sponsoridEdit" />
                 <input type="hidden" id="sponsorTypeIdEdit" />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-success" onclick="crudSponsor(2)"> Save</button>
+                <button class="btn btn-sm btn-outline-success" onclick="crudSponsor(2)"> <i class="bi bi-save"></i> Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="deleteSponsor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteSponsorLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
-            <div class="modal-header">
+            <div class="modal-header page-card-header">
                 <h2>Are you sure you want to delete this sponsor?</h2>
                 <span class="close" data-bs-dismiss="modal">&times;</span>
                 <input type="hidden" id="sponsoridDelete" />
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="form-section">
                     <dl class="row">
                         <dt class="col-sm-6"> Sponsor Name: </dt>
                         <dd class="col-sm-6" id="nameD"> </dd>
-                    </dl>
-                    <dl class="row">
+
                         <dt class="col-sm-6"> Sponsor Type:</dt>
                         <dd class="col-sm-6" id="typeD">  </dd>
-                    </dl>
-                    <dl class="row">
+
                         <dt class="col-sm-6"> Contact Name:  </dt>
-                        <dd class="col-sm-6" id="contactNameD">         </dd>
-                    </dl>
-                    <dl class="row">
+                        <dd class="col-sm-6" id="contactNameD"> </dd>
+
                         <dt class="col-sm-6"> Contact Email:  </dt>
                         <dd class="col-sm-6" id="contactEmailD">         </dd>
-                    </dl>
-                    <dl class="row">
+
                         <dt class="col-sm-6"> Contact Phone:  </dt>
                         <dd class="col-sm-6" id="contactPhoneD">         </dd>
                     </dl>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-danger" onclick="crudSponsor(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="crudSponsor(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
             </div>
         </div>
     </div>  

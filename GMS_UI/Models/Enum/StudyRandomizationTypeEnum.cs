@@ -1,6 +1,6 @@
 ﻿namespace GMS_UI.Models.Enum
 {
-    public enum StudioRandomizationTypeEnum
+    public enum StudyRandomizationTypeEnum
     {
         None = 1,
 

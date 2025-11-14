@@ -308,7 +308,7 @@ input, select, textarea {
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
-    width: 650;
+    /*width: 650;*/
     font-family: Arial, sans-serif;
 }
 
@@ -340,4 +340,92 @@ input, select, textarea {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.gridsize {
+    height:100% !important; 
+    width: 100% !important;
+}
+
+.referenceDataTabSize {
+    width: 100% !important;
+    height: 45vh !important;
+}
+
+.gridIndexSize {
+    height: 73vh !important;
+    width: 100% !important;
+}
+
+.gridCreateEdit {
+    width: 100% !important;
+    height: stretch !important;
+}
+
+.cardcreate{
+    height: stretch !important;
+}
+
+.page-card-header {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 1.5rem;
+    border: none !important;
+}
+
+.page-card-body{
+    overflow-y: auto !important;
+    height: stretch !important;
+    max-height: 75vh !important;
+}
+
+.btn-header {
+    color: white !important;
+}
+
+    .btn-header:hover {
+        color: black !important;
+        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+    }
+
+.nav-tabs .nav-link {
+    color: #5f9ea0;
+    font-weight: 500;
+    border-color:black;
+}
+
+    .nav-tabs .nav-link.active {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-color: #5f9ea0;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-color: #5f9ea0;
+        color: black;
+        background-color: #5A998A;
+    }
+
+/* Accordion */
+.accordion-button.accordionStyle {
+    /*background: linear-gradient(135deg, #e8f4f5 0%, #d4e9ea 100%);*/
+    color: #2c5f61;
+    font-weight: 500;
+}
+
+    .accordion-button.accordionStyle:not(.collapsed) {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+    }
+
+    .accordion-button.accordionStyle:focus {
+        box-shadow: 0 0 0 0.25rem rgba(95, 158, 160, 0.25);
+    }
+
+.accordion-button:hover {
+    background-color: #e9ecef !important; /* Example: Light grey background on hover ; */
+    color: #0056b3; /* Example: Darker blue text color on hover */
 }

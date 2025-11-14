@@ -3,6 +3,7 @@
 
 // Write your JavaScript code.
 
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.sidebar a[href="#"]').forEach(function (link) {
         link.addEventListener('click', function (e) {

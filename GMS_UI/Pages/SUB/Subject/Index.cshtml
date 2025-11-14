@@ -1,0 +1,67 @@
+@page
+@model GMS_UI.Pages.SUB.Subject.IndexModel
+@{
+    ViewData["Title"] = "Subject List";
+}
+
+<div class="container-gms">
+    <div class="card">
+        <div class="card-header page-card-header">
+            <h4>
+                <i class="bi bi-person-badge-fill me-2"></i>Subject List
+                <span class="stats-badge" id="totalCount">0 Subjects</span>
+            </h4>
+            <p class="subtitle mb-0">View and manage all subjects across studies</p>
+        </div>
+        <div class="card-body">
+            <div id="subjectGrid" class="ag-theme-balham gridIndexSize"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Random Code Assignment Modal -->
+<div id="randomCodeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="randomCodeModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Assign Random Code</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Subject Name:</label>
+                    <p id="randomSubjectName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Study:</label>
+                    <p id="randomStudyName" class="form-control-plaintext"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="randomCodeInput" class="form-label fw-bold">Random Code: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="randomCodeInput" placeholder="Enter random code" required />
+                </div>
+                <input type="hidden" id="randomCodeSubjectId" />
+                <input type="hidden" id="randomCodeStudyId" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <button class="btn btn-sm btn-success" onclick="assignRandomCode()">
+                    <i class="bi bi-shuffle me-1"></i> Assign Random Code
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add CSRF token to form -->
+<form method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/SUB/Subject/Index';
+</script>
+<script src="/js/sub/subject/subject.js"></script>

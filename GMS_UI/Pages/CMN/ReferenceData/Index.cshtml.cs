@@ -361,6 +361,160 @@ namespace GMS_UI.Pages.CMN.ReferenceData
         }
         #endregion
 
+        #region ====== Deviation ======
+        public async Task<JsonResult> OnPostDeviationList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse deviations = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDeviationList(), "a Deviation List", "", requestData);
+
+                if (deviations == null || deviations.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Deviation List",
+                        success = false,
+                        data = new List<DeviationBaseResponse>()
+                    });
+                }
+
+                if (deviations.Success && deviations.Data != null)
+                {
+                    List<DeviationBaseResponse> result = JsonConvert.DeserializeObject<List<DeviationBaseResponse>>(deviations.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Deviation List was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = deviations.Message,
+                        success = false,
+                        data = new List<DeviationBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DeviationBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudDeviation(string deviation, int action, int id, string deviationcode)
+        {
+            try
+            {
+                var createRequest = new CreateDeviationRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    DeviationName = deviation,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    DeviationCode = deviationcode,
+                    DeviationId = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateDeviation(), "a Deviation", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        public async Task<JsonResult> OnPostDeviationDropList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse deviations = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDeviationDropList(), "a Deviation List", "", requestData);
+
+                if (deviations == null || deviations.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Deviation List",
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+
+                if (deviations.Success && deviations.Data != null)
+                {
+                    List<DropListBaseResponse> result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(deviations.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Deviation List was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = deviations.Message,
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DropListBaseResponse>()
+                });
+            }
+
+        }
+        #endregion
+
         #region ====== Medication ======
         public async Task<JsonResult> OnPostMedicationList()
         {
@@ -574,6 +728,77 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                     message = ex.Message,
                 });
             }
+        }
+
+        public async Task<JsonResult> OnPostDocTypeDropList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse docTypes = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetDocTypeDropList(), "a DocType ", "", requestData);
+
+                if (docTypes == null || docTypes.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading DocType",
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+
+                if (docTypes.Success && docTypes.Data != null)
+                {
+                    List<DropListBaseResponse>? result = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(docTypes.Data.ToString());
+
+                    if (result == null)
+                    {
+                        return new JsonResult(new
+                        {
+                            errorCode = 500,
+                            errorMessage = "Error processing DocType data",
+                            success = false,
+                            data = new List<DropListBaseResponse>()
+                        });
+                    }
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "DocType was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = docTypes.Message,
+                        success = false,
+                        data = new List<DropListBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<DropListBaseResponse>()
+                });
+            }
+
         }
 
         #endregion
@@ -1593,6 +1818,104 @@ namespace GMS_UI.Pages.CMN.ReferenceData
             }
 
         }
+
+        #endregion
+
+        #region ====== VLTStatus ======
+
+        public async Task<JsonResult> OnPostVLTStatusList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse name = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetVLTStatusList(), "a VLTStatus List", "", requestData);
+
+                if (name == null || name.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Contract research List",
+                        success = false,
+                        data = new List<VLTStatusBaseResponse>()
+                    });
+                }
+
+                if (name.Success && name.Data != null)
+                {
+                    List<VLTStatusBaseResponse> result = JsonConvert.DeserializeObject<List<VLTStatusBaseResponse>>(name.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Volunteer status list was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = name.Message,
+                        success = false,
+                        data = new List<VLTStatusBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<VLTStatusBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudVLTStatus(string name, string? comment, int action, int id)
+        {
+            try
+            {
+                var createRequest = new CreateVLTStatusRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    Name = name,
+                    Comment = comment,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    Id = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVLTStatus(), "a VLTStatus", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        
 
         #endregion
 

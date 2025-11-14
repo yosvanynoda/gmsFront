@@ -1,4 +1,678 @@
-﻿@page
-@model GMS_UI.Pages.Configuration.IndexModel
+@page
+@model GMS_UI.Pages.GNR.Configuration.IndexModel
 @{
+    ViewData["Title"] = "Configuration";
 }
+
+<style>
+    .configuration-header {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .config-card {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .config-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .config-card .card-header {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-bottom: 2px solid #5f9ea0;
+        border-radius: 10px 10px 0 0 !important;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .config-card .card-header i {
+        color: #5f9ea0;
+        font-size: 1.25rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #5f9ea0;
+        box-shadow: 0 0 0 0.2rem rgba(95, 158, 160, 0.25);
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 0.5rem 2rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 0.5rem 2rem;
+        border-radius: 5px;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+        color: white;
+    }
+
+    .config-section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .form-switch .form-check-input:checked {
+        background-color: #5f9ea0;
+        border-color: #5f9ea0;
+    }
+
+    .info-badge {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 0.875rem;
+        border-left: 4px solid #17a2b8;
+    }
+
+    .nav-pills .nav-link {
+        color: #5f9ea0;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .nav-pills .nav-link.active {
+        background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+        color: white;
+    }
+
+    .nav-pills .nav-link:hover:not(.active) {
+        background-color: #e8f4f5;
+        color: #4a7a7c;
+    }
+</style>
+
+<div style="margin-left: 240px; padding: 1rem; transition: margin-left 0.3s ease;">
+    <!-- Configuration Header -->
+    <div class="configuration-header">
+        <h2 class="mb-1"><i class="bi bi-gear-fill"></i> System Configuration</h2>
+        <p class="mb-0 opacity-75">Manage system settings, preferences, and integrations</p>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div class="alert alert-success alert-dismissible fade show d-none" role="alert" id="successAlert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <strong>Success!</strong> <span id="successMessage">Settings saved successfully.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <!-- Left Navigation -->
+        <div class="col-lg-3">
+            <div class="card config-card">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column" id="configTabs" role="tablist">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active" data-bs-toggle="pill" href="#general" role="tab">
+                                <i class="bi bi-sliders me-2"></i> General Settings
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" data-bs-toggle="pill" href="#notifications" role="tab">
+                                <i class="bi bi-bell me-2"></i> Notifications
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" data-bs-toggle="pill" href="#security" role="tab">
+                                <i class="bi bi-shield-lock me-2"></i> Security
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" data-bs-toggle="pill" href="#email" role="tab">
+                                <i class="bi bi-envelope me-2"></i> Email Settings
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" data-bs-toggle="pill" href="#backup" role="tab">
+                                <i class="bi bi-cloud-arrow-up me-2"></i> Backup & Restore
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="pill" href="#api" role="tab">
+                                <i class="bi bi-code-square me-2"></i> API Configuration
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Content -->
+        <div class="col-lg-9">
+            <div class="tab-content">
+                <!-- General Settings -->
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-sliders"></i> General Settings
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">System Name</label>
+                                    <input type="text" class="form-control" value="GMS Clinical Trials System" placeholder="Enter system name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Organization</label>
+                                    <input type="text" class="form-control" value="Clinical Research Organization" placeholder="Enter organization name">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Default Language</label>
+                                    <select class="form-select">
+                                        <option selected>English (US)</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Time Zone</label>
+                                    <select class="form-select">
+                                        <option selected>UTC-5 (Eastern Time)</option>
+                                        <option>UTC-6 (Central Time)</option>
+                                        <option>UTC-7 (Mountain Time)</option>
+                                        <option>UTC-8 (Pacific Time)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Date Format</label>
+                                    <select class="form-select">
+                                        <option selected>MM/DD/YYYY</option>
+                                        <option>DD/MM/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Items Per Page</label>
+                                    <select class="form-select">
+                                        <option>10</option>
+                                        <option>25</option>
+                                        <option selected>50</option>
+                                        <option>100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="config-section-title">Display Options</h6>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="showWelcomeMsg" checked>
+                                <label class="form-check-label" for="showWelcomeMsg">
+                                    Show welcome message on dashboard
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="compactView">
+                                <label class="form-check-label" for="compactView">
+                                    Use compact view for tables
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableAnimations" checked>
+                                <label class="form-check-label" for="enableAnimations">
+                                    Enable animations and transitions
+                                </label>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="tab-pane fade" id="notifications" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-bell"></i> Notification Settings
+                        </div>
+                        <div class="card-body">
+                            <div class="info-badge mb-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Configure how and when you receive notifications about system events.
+                            </div>
+
+                            <h6 class="config-section-title">Email Notifications</h6>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyNewEnrollment" checked>
+                                <label class="form-check-label" for="notifyNewEnrollment">
+                                    <strong>New Patient Enrollment</strong>
+                                    <small class="d-block text-muted">Receive email when a new patient is enrolled</small>
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyVisitReminder" checked>
+                                <label class="form-check-label" for="notifyVisitReminder">
+                                    <strong>Visit Reminders</strong>
+                                    <small class="d-block text-muted">Daily digest of upcoming scheduled visits</small>
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyProtocolDeviation" checked>
+                                <label class="form-check-label" for="notifyProtocolDeviation">
+                                    <strong>Protocol Deviations</strong>
+                                    <small class="d-block text-muted">Immediate notification of protocol deviations</small>
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyAdverseEvent" checked>
+                                <label class="form-check-label" for="notifyAdverseEvent">
+                                    <strong>Adverse Events</strong>
+                                    <small class="d-block text-muted">Alert when adverse events are reported</small>
+                                </label>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="config-section-title">In-App Notifications</h6>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyInAppUpdates" checked>
+                                <label class="form-check-label" for="notifyInAppUpdates">
+                                    Show real-time updates in navigation bar
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifySound">
+                                <label class="form-check-label" for="notifySound">
+                                    Play notification sounds
+                                </label>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="tab-pane fade" id="security" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-shield-lock"></i> Security Settings
+                        </div>
+                        <div class="card-body">
+                            <h6 class="config-section-title">Password Policy</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Minimum Password Length</label>
+                                    <select class="form-select">
+                                        <option>6 characters</option>
+                                        <option selected>8 characters</option>
+                                        <option>10 characters</option>
+                                        <option>12 characters</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Password Expiration (days)</label>
+                                    <select class="form-select">
+                                        <option>30 days</option>
+                                        <option>60 days</option>
+                                        <option selected>90 days</option>
+                                        <option>Never</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="requireUppercase" checked>
+                                <label class="form-check-label" for="requireUppercase">
+                                    Require uppercase letters
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="requireNumbers" checked>
+                                <label class="form-check-label" for="requireNumbers">
+                                    Require numbers
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="requireSpecialChars" checked>
+                                <label class="form-check-label" for="requireSpecialChars">
+                                    Require special characters
+                                </label>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="config-section-title">Session Management</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Session Timeout (minutes)</label>
+                                    <select class="form-select">
+                                        <option>15 minutes</option>
+                                        <option selected>30 minutes</option>
+                                        <option>60 minutes</option>
+                                        <option>120 minutes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Maximum Login Attempts</label>
+                                    <select class="form-select">
+                                        <option selected>3 attempts</option>
+                                        <option>5 attempts</option>
+                                        <option>10 attempts</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enable2FA">
+                                <label class="form-check-label" for="enable2FA">
+                                    Enable Two-Factor Authentication (2FA)
+                                </label>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Settings -->
+                <div class="tab-pane fade" id="email" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-envelope"></i> Email Configuration
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">SMTP Server</label>
+                                    <input type="text" class="form-control" value="smtp.example.com" placeholder="Enter SMTP server">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">SMTP Port</label>
+                                    <input type="number" class="form-control" value="587" placeholder="587">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" value="notifications@gms.com" placeholder="SMTP username">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" value="••••••••••" placeholder="SMTP password">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">From Email</label>
+                                    <input type="email" class="form-control" value="noreply@gms.com" placeholder="sender@example.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">From Name</label>
+                                    <input type="text" class="form-control" value="GMS System" placeholder="Display name">
+                                </div>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableSSL" checked>
+                                <label class="form-check-label" for="enableSSL">
+                                    Enable SSL/TLS encryption
+                                </label>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-secondary me-2">
+                                    <i class="bi bi-envelope-check me-1"></i> Test Connection
+                                </button>
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup & Restore -->
+                <div class="tab-pane fade" id="backup" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-cloud-arrow-up"></i> Backup & Restore
+                        </div>
+                        <div class="card-body">
+                            <h6 class="config-section-title">Automatic Backup</h6>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableAutoBackup" checked>
+                                <label class="form-check-label" for="enableAutoBackup">
+                                    Enable automatic backups
+                                </label>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Backup Frequency</label>
+                                    <select class="form-select">
+                                        <option selected>Daily</option>
+                                        <option>Weekly</option>
+                                        <option>Monthly</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Backup Time</label>
+                                    <input type="time" class="form-control" value="02:00">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Retention Period (days)</label>
+                                    <select class="form-select">
+                                        <option>7 days</option>
+                                        <option>14 days</option>
+                                        <option selected>30 days</option>
+                                        <option>90 days</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Backup Location</label>
+                                    <select class="form-select">
+                                        <option selected>Cloud Storage</option>
+                                        <option>Local Server</option>
+                                        <option>Network Drive</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="config-section-title">Manual Operations</h6>
+
+                            <div class="info-badge mb-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Last backup: <strong>December 21, 2024 at 2:00 AM</strong> (5.2 GB)
+                            </div>
+
+                            <div class="d-flex gap-2 mb-3">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="bi bi-cloud-download me-1"></i> Download Latest Backup
+                                </button>
+                                <button type="button" class="btn btn-outline-success">
+                                    <i class="bi bi-arrow-clockwise me-1"></i> Create Backup Now
+                                </button>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Configuration -->
+                <div class="tab-pane fade" id="api" role="tabpanel">
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <i class="bi bi-code-square"></i> API Configuration
+                        </div>
+                        <div class="card-body">
+                            <div class="info-badge mb-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Configure API endpoints and authentication settings for external integrations.
+                            </div>
+
+                            <h6 class="config-section-title">API Endpoints</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Base API URL</label>
+                                    <input type="text" class="form-control" value="https://api.gms.com/v1" placeholder="Enter API base URL">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">API Key</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" value="sk_live_••••••••••••••••" readonly>
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">API Secret</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" value="••••••••••••••••••••" readonly>
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableAPILogging" checked>
+                                <label class="form-check-label" for="enableAPILogging">
+                                    Enable API request logging
+                                </label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableRateLimit" checked>
+                                <label class="form-check-label" for="enableRateLimit">
+                                    Enable rate limiting (1000 requests/hour)
+                                </label>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="config-section-title">Webhook Settings</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Webhook URL</label>
+                                    <input type="url" class="form-control" placeholder="https://your-server.com/webhook">
+                                    <small class="text-muted">Receive real-time notifications of system events</small>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-secondary me-2">
+                                    <i class="bi bi-arrow-repeat me-1"></i> Regenerate API Keys
+                                </button>
+                                <button type="button" class="btn btn-cancel me-2">Cancel</button>
+                                <button type="button" class="btn btn-save" onclick="showSuccess()">
+                                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSuccess() {
+        const alert = document.getElementById('successAlert');
+        alert.classList.remove('d-none');
+        setTimeout(() => {
+            alert.classList.add('d-none');
+        }, 3000);
+    }
+</script>

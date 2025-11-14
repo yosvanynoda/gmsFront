@@ -1,0 +1,139 @@
+/* Shared Cadet Blue Styling for all pages */
+
+/* Main Headers and Cards */
+.page-header,
+.staff-header,
+.monitor-header,
+.sponsor-header,
+.protocol-header,
+.study-header,
+.studiodoc-header {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 1.5rem;
+    border: none !important;
+}
+
+.page-header h4,
+.staff-header h4,
+.monitor-header h4,
+.sponsor-header h4,
+.protocol-header h4,
+.study-header h4,
+.studiodoc-header h4 {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.page-card,
+.staff-card,
+.monitor-card,
+.sponsor-card,
+.protocol-card,
+.study-card,
+.studiodoc-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: none;
+    overflow: hidden;
+    height: 90vh;
+}
+
+.grid-container,
+.staff-grid-container,
+.monitor-grid-container,
+.sponsor-grid-container,
+.protocol-grid-container,
+.study-grid-container,
+.studiodoc-grid-container {
+    height: calc(100% - 2rem);
+    padding: 1rem;
+    background: #f9fafb;
+}
+
+/* AG-Grid customizations */
+.ag-theme-balham .ag-header {
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    border-bottom: 2px solid #5f9ea0;
+    font-weight: 600;
+}
+
+.ag-theme-balham .ag-row:hover {
+    background-color: #e8f4f5 !important;
+}
+
+.ag-theme-balham .ag-row-selected {
+    background-color: #d4e9ea !important;
+}
+
+/* Buttons */
+.btn-add,
+.btn-primary {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-add:hover,
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+    border: none;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(95, 158, 160, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #5f9ea0 0%, #4a7a7c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+}
+
+/* Modal Headers */
+.modal-header {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%);
+    color: white;
+    border-bottom: none;
+}
+
+.modal-header h2 {
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 0.9;
+    font-size: 1.5rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+/* Card headers */
+.card-header.bg-primary {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%) !important;
+    border-bottom: 2px solid #5f9ea0;
+}
+
+.card-header.bg-secondary {
+    background: linear-gradient(135deg, #7fb3b5 0%, #5f9ea0 100%) !important;
+    border-bottom: 2px solid #5f9ea0;
+}

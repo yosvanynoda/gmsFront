@@ -97,6 +97,28 @@ function convertDateToISO(dateStr) {
     return `${year}-${month}-${day}`;
 }
 
+// Helper function to format date for DateOnly backend type (always returns YYYY-MM-DD or default)
+function formatDateForBackend(dateStr) {
+    if (!dateStr || dateStr === '0001-01-01') return '0001-01-01';
+
+    // If already in YYYY-MM-DD format (from date input)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        return dateStr;
+    }
+
+    // If in MM/DD/YYYY or MM/DD/YYYY HH:mm:ss format (from API)
+    const dateParts = dateStr.split(' ')[0].split('/');
+    if (dateParts.length === 3) {
+        const year = dateParts[2];
+        const month = dateParts[0].padStart(2, '0');
+        const day = dateParts[1].padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Default fallback
+    return '0001-01-01';
+}
+
 function changeStep(direction) {
     if (direction === 1) {
         // Validate current step before proceeding
@@ -628,8 +650,8 @@ function submitForm() {
         allergiesData.forEach(allergy => {
             volunteerData.VolunteerAllergyData.push({
                 AllergyId: allergy.id,
-                StartDate: allergy.startDate || '0001-01-01',
-                EndDate: allergy.endDate || '0001-01-01',
+                StartDate: formatDateForBackend(allergy.startDate),
+                EndDate: formatDateForBackend(allergy.endDate),
                 CompanyId: 1,
                 SiteId: 1,
                 Active: true
@@ -642,8 +664,8 @@ function submitForm() {
         diseasesData.forEach(disease => {
             volunteerData.VolunteerDeseaseData.push({
                 DiseaseId: disease.id,
-                StartDate: disease.startDate && disease.startDate !== '0001-01-01' ? disease.startDate : '0001-01-01',
-                EndDate: disease.endDate && disease.endDate !== '0001-01-01' ? disease.endDate : '0001-01-01',
+                StartDate: formatDateForBackend(disease.startDate),
+                EndDate: formatDateForBackend(disease.endDate),
                 CompanyId: 1,
                 SiteId: 1,
                 Active: true
@@ -658,8 +680,8 @@ function submitForm() {
                 MedicationId: medication.id,
                 DrogName: medication.name,
                 DrogDose: medication.dose || '',
-                StartDate: medication.startDate || '0001-01-01',
-                EndDate: medication.endDate || '0001-01-01',
+                StartDate: formatDateForBackend(medication.startDate),
+                EndDate: formatDateForBackend(medication.endDate),
                 CompanyId: 1,
                 SiteId: 1,
                 Active: true
@@ -816,7 +838,7 @@ function setupAllergiesGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#allergiesGrid');
@@ -922,7 +944,7 @@ function setupDiseasesGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#diseasesGrid');
@@ -1037,7 +1059,7 @@ function setupMedicationsGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#medicationsGrid');

@@ -112,6 +112,28 @@ function convertDateToISO(dateStr) {
     return `${year}-${month}-${day}`;
 }
 
+// Helper function to format date for DateOnly backend type (always returns YYYY-MM-DD or default)
+function formatDateForBackend(dateStr) {
+    if (!dateStr || dateStr === '0001-01-01') return '0001-01-01';
+
+    // If already in YYYY-MM-DD format (from date input)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        return dateStr;
+    }
+
+    // If in MM/DD/YYYY or MM/DD/YYYY HH:mm:ss format (from API)
+    const dateParts = dateStr.split(' ')[0].split('/');
+    if (dateParts.length === 3) {
+        const year = dateParts[2];
+        const month = dateParts[0].padStart(2, '0');
+        const day = dateParts[1].padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Default fallback
+    return '0001-01-01';
+}
+
 function changeStep(direction) {
     if (direction === 1) {
         // Validate current step before proceeding
@@ -649,14 +671,11 @@ function submitForm() {
     // Collect allergies from grid data
     const vId = parseInt(document.getElementById('volunteerId').value) || 0;
     allergiesData.forEach(allergy => {
-        const startDate = allergy.startDate && allergy.startDate !== '0001-01-01' ? allergy.startDate : '0001-01-01';
-        const endDate = allergy.endDate && allergy.endDate !== '0001-01-01' ? allergy.endDate : '0001-01-01';
-
         volunteerData.VolunteerAllergyData.push({
             VId: vId,
             AllergyId: parseInt(allergy.id),
-            StartDate: startDate,
-            EndDate: endDate,
+            StartDate: formatDateForBackend(allergy.startDate),
+            EndDate: formatDateForBackend(allergy.endDate),
             CompanyId: 1,
             SiteId: 1,
             Active: true,
@@ -666,14 +685,11 @@ function submitForm() {
 
     // Collect diseases from grid data
     diseasesData.forEach(disease => {
-        const startDate = disease.startDate && disease.startDate !== '0001-01-01' ? disease.startDate : '0001-01-01';
-        const endDate = disease.endDate && disease.endDate !== '0001-01-01' ? disease.endDate : '0001-01-01';
-
         volunteerData.VolunteerDiseaseData.push({
             VId: vId,
-            DiseaseId: parseInt(disease.id),  // Note: Using "DeseaseId" to match UDT typo
-            StartDate: startDate,
-            EndDate: endDate,
+            DiseaseId: parseInt(disease.id),
+            StartDate: formatDateForBackend(disease.startDate),
+            EndDate: formatDateForBackend(disease.endDate),
             CompanyId: 1,
             SiteId: 1,
             Active: true,
@@ -683,16 +699,13 @@ function submitForm() {
 
     // Collect medications from grid data
     medicationsData.forEach(medication => {
-        const startDate = medication.startDate && medication.startDate !== '0001-01-01' ? medication.startDate : '0001-01-01';
-        const endDate = medication.endDate && medication.endDate !== '0001-01-01' ? medication.endDate : '0001-01-01';
-
         volunteerData.VolunteerMedicationData.push({
             VId: vId,
             MedicationId: parseInt(medication.id),
             DrogName: medication.name,
             DrogDose: medication.dose || '',
-            StartDate: startDate,
-            EndDate: endDate,
+            StartDate: formatDateForBackend(medication.startDate),
+            EndDate: formatDateForBackend(medication.endDate),
             CompanyId: 1,
             SiteId: 1,
             Active: true,
@@ -1047,7 +1060,7 @@ function setupAllergiesGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#allergiesGrid');
@@ -1149,7 +1162,7 @@ function setupDiseasesGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#diseasesGrid');
@@ -1252,7 +1265,7 @@ function setupMedicationsGrid() {
                 }
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'autoHeight'
     };
 
     const gridDiv = document.querySelector('#medicationsGrid');

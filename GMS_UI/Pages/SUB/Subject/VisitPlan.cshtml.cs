@@ -1,5 +1,6 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
+using GMS.Objects.SUB;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -77,14 +78,16 @@ namespace GMS_UI.Pages.SUB.Subject
                     });
                 }
 
+
                 if (visitPlanResponse.Success && visitPlanResponse.Data != null)
                 {
-                    var result = JsonConvert.DeserializeObject<List<object>>(visitPlanResponse.Data.ToString());
+                    List<SubjectVisitList> result = JsonConvert.DeserializeObject<List<SubjectVisitList>>(visitPlanResponse.Data.ToString());
 
                     return new JsonResult(new
                     {
+                        errorCode = 200,
+                        errorMessage = "Subject List was read successfully",
                         success = true,
-                        errorMessage = "",
                         data = result
                     });
                 }
@@ -92,11 +95,12 @@ namespace GMS_UI.Pages.SUB.Subject
                 {
                     return new JsonResult(new
                     {
-                        success = false,
+                        errorCode = 500,
                         errorMessage = visitPlanResponse.Message,
-                        data = new List<object>()
+                        success = false,
+                        data = new List<SubjectVisitList>()
                     });
-                }
+                }                
             }
             catch (Exception ex)
             {

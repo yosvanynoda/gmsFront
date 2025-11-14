@@ -368,21 +368,93 @@ function previousStep() {
     }
 }
 
-function jumpToStep(step) {
-    if (step >= 1 && step <= totalSteps) {
-        goToStep(step);
+function jumpToStep(targetStep) {
+    if (targetStep === currentStep || targetStep < 1 || targetStep > totalSteps) return;
+
+    // Remove active/completed from current step
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    currentStepElement.classList.remove('active');
+    const currentIndicator = document.getElementById(`step${currentStep}-indicator`);
+    currentIndicator.classList.remove('active');
+
+    // Mark steps as completed or active based on direction
+    if (targetStep > currentStep) {
+        // Going forward - mark intermediate steps as completed
+        for (let i = currentStep; i < targetStep; i++) {
+            const indicator = document.getElementById(`step${i}-indicator`);
+            indicator.classList.add('completed');
+            indicator.classList.remove('active');
+            indicator.innerHTML = '<i class="bi bi-check"></i>';
+
+            if (i < totalSteps) {
+                const line = document.getElementById(`line${i}`);
+                if (line) line.classList.add('completed');
+            }
+        }
+    } else {
+        // Going backward - remove completed from intermediate steps
+        for (let i = targetStep; i < currentStep; i++) {
+            const indicator = document.getElementById(`step${i}-indicator`);
+            indicator.classList.remove('completed');
+            indicator.innerHTML = i;
+
+            const line = document.getElementById(`line${i}`);
+            if (line) line.classList.remove('completed');
+        }
     }
+
+    // Update to target step
+    currentStep = targetStep;
+
+    // Show target step
+    const targetStepElement = document.getElementById(`step${currentStep}`);
+    targetStepElement.classList.add('active');
+
+    // Update target step indicator
+    const targetIndicator = document.getElementById(`step${currentStep}-indicator`);
+    targetIndicator.classList.add('active');
+    targetIndicator.classList.remove('completed');
+    targetIndicator.innerHTML = currentStep;
+
+    // Update button visibility
+    updateButtonVisibility();
 }
 
 function goToStep(step) {
-    // Hide current step
-    $(`#step${currentStep}`).removeClass('active');
-    $(`#step${currentStep}-indicator`).removeClass('active');
+    const direction = step > currentStep ? 1 : -1;
+
+    // Update current step indicator
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    currentStepElement.classList.remove('active');
+
+    const currentIndicator = document.getElementById(`step${currentStep}-indicator`);
+    if (direction === 1) {
+        currentIndicator.classList.remove('active');
+        currentIndicator.classList.add('completed');
+        currentIndicator.innerHTML = '<i class="bi bi-check"></i>';
+
+        if (currentStep < totalSteps) {
+            const line = document.getElementById(`line${currentStep}`);
+            if (line) line.classList.add('completed');
+        }
+    } else {
+        currentIndicator.classList.remove('completed');
+        currentIndicator.classList.add('active');
+        currentIndicator.innerHTML = currentStep;
+    }
+
+    // Update to new step
+    currentStep = step;
 
     // Show new step
-    currentStep = step;
-    $(`#step${currentStep}`).addClass('active');
-    $(`#step${currentStep}-indicator`).addClass('active');
+    const newStepElement = document.getElementById(`step${currentStep}`);
+    newStepElement.classList.add('active');
+
+    // Update new step indicator
+    const newIndicator = document.getElementById(`step${currentStep}-indicator`);
+    if (direction === 1) {
+        newIndicator.classList.add('active');
+    }
 
     // Update button visibility
     updateButtonVisibility();

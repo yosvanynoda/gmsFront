@@ -32,12 +32,20 @@ function loadVisitPlanData() {
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function(response) {
             console.log('Visit Plan Response:', response);
+            console.log('Response success:', response.success);
+            console.log('Response data:', response.data);
+            console.log('Response data type:', typeof response.data);
+
+            if (response.data) {
+                console.log('Data stringified:', JSON.stringify(response.data, null, 2));
+            }
 
             if (response.success && response.data) {
                 displayVisitPlanData(response.data);
             } else {
                 console.error('Visit plan response not successful:', response);
-                $('#visitPlanGrid').html('<div class="alert alert-warning">No visit plan data available.</div>');
+                console.error('Error message:', response.errorMessage);
+                $('#visitPlanGrid').html('<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>' + (response.errorMessage || 'No visit plan data available.') + '</div>');
             }
         },
         error: function(xhr, status, error) {
@@ -52,21 +60,52 @@ function loadVisitPlanData() {
 
 function displayVisitPlanData(data) {
     console.log('Displaying visit plan data:', data);
+    console.log('Data type:', typeof data);
+    console.log('Is array:', Array.isArray(data));
+    console.log('Data stringified:', JSON.stringify(data, null, 2));
 
     // Ensure data is an array
-    const visitData = Array.isArray(data) ? data : [];
+    let visitData = [];
+
+    if (Array.isArray(data)) {
+        visitData = data;
+    } else if (data && typeof data === 'object') {
+        // If data is an object, try to extract array from it
+        visitData = Object.values(data);
+    }
+
+    console.log('Final visitData for grid:', visitData);
+    console.log('Visit data count:', visitData.length);
+
+    if (visitData.length > 0) {
+        console.log('First item:', JSON.stringify(visitData[0], null, 2));
+    }
 
     // Setup AG-Grid options
     const gridOptions = {
         rowData: visitData,
+        domLayout: 'autoHeight',
         columnDefs: [
-            { field: "visitName", headerName: "Visit Name", filter: 'agTextColumnFilter', width: 150 },
-            { field: "dayOffset", headerName: "Day Offset", filter: 'agNumberColumnFilter', width: 120 },
+            {
+                field: "visitName",
+                headerName: "Visit Name",
+                filter: 'agTextColumnFilter',
+                width: 150,
+                valueGetter: params => params.data.visitName || params.data.VisitName || ''
+            },
+            {
+                field: "dayOffset",
+                headerName: "Day Offset",
+                filter: 'agNumberColumnFilter',
+                width: 120,
+                valueGetter: params => params.data.dayOffset || params.data.DayOffset || ''
+            },
             {
                 field: "scheduledDate",
                 headerName: "Scheduled Date",
                 filter: 'agDateColumnFilter',
                 width: 150,
+                valueGetter: params => params.data.scheduledDate || params.data.ScheduledDate,
                 valueFormatter: params => {
                     if (!params.value) return 'Not Scheduled';
                     const date = new Date(params.value);
@@ -82,6 +121,7 @@ function displayVisitPlanData(data) {
                 headerName: "Status",
                 filter: 'agTextColumnFilter',
                 width: 120,
+                valueGetter: params => params.data.status || params.data.Status,
                 cellRenderer: params => {
                     const status = params.value || 'Pending';
                     let badgeClass = 'bg-secondary';
@@ -99,6 +139,7 @@ function displayVisitPlanData(data) {
                 headerName: "Window -",
                 filter: 'agNumberColumnFilter',
                 width: 100,
+                valueGetter: params => params.data.windowMinus || params.data.WindowMinus,
                 valueFormatter: params => params.value ? `${params.value} days` : '-'
             },
             {
@@ -106,12 +147,14 @@ function displayVisitPlanData(data) {
                 headerName: "Window +",
                 filter: 'agNumberColumnFilter',
                 width: 100,
+                valueGetter: params => params.data.windowPlus || params.data.WindowPlus,
                 valueFormatter: params => params.value ? `${params.value} days` : '-'
             },
             {
                 field: "requiredFlag",
                 headerName: "Required",
                 width: 100,
+                valueGetter: params => params.data.requiredFlag || params.data.RequiredFlag,
                 cellRenderer: params => {
                     return params.value ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-dash-circle text-secondary"></i>';
                 }
@@ -121,6 +164,7 @@ function displayVisitPlanData(data) {
                 headerName: "Notes",
                 filter: 'agTextColumnFilter',
                 flex: 1,
+                valueGetter: params => params.data.notes || params.data.Notes,
                 valueFormatter: params => params.value || '-'
             }
         ],
@@ -137,7 +181,15 @@ function displayVisitPlanData(data) {
     const gridDiv = document.querySelector('#visitPlanGrid');
     if (gridDiv) {
         gridDiv.innerHTML = '';
-        visitPlanGridApi = agGrid.createGrid(gridDiv, gridOptions);
+
+        if (visitData.length === 0) {
+            gridDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-info-circle me-2"></i>No visit plan data available for this subject.</div>';
+        } else {
+            visitPlanGridApi = agGrid.createGrid(gridDiv, gridOptions);
+            console.log('Grid created successfully with', visitData.length, 'rows');
+        }
+    } else {
+        console.error('Grid container not found!');
     }
 }
 

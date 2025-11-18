@@ -87,34 +87,6 @@ function displayVisitPlanData(data) {
         domLayout: 'autoHeight',
         columnDefs: [
             {
-                colId: "actions",
-                headerName: "Actions",
-                width: 80,
-                cellRenderer: params => {
-                    const status = params.data.status || params.data.Status || '';
-                    const isSchedulable = status !== 'Completed' && status !== 'Scheduled';
-
-                    if (isSchedulable) {
-                        const visitId = params.data.visitID || params.data.VisitID;
-                        const subjectId = params.data.subjectId || params.data.SubjectId;
-                        const studyId = params.data.studyId || params.data.StudyId;
-                        const visitName = (params.data.visitName || params.data.VisitName || '');
-
-                        return `<i class="bi bi-calendar-plus text-primary schedule-visit-icon"
-                                   style="cursor: pointer; font-size: 1.2rem;"
-                                   title="Schedule Visit"
-                                   data-visit-id="${visitId}"
-                                   data-subject-id="${subjectId}"
-                                   data-study-id="${studyId}"
-                                   data-visit-name="${visitName}"></i>`;
-                    } else {
-                        return `<i class="bi bi-check-circle text-success" style="font-size: 1.2rem;" title="${status}"></i>`;
-                    }
-                },
-                sortable: false,
-                filter: false
-            },
-            {
                 field: "visitName",
                 headerName: "Visit Name",
                 filter: 'agTextColumnFilter',
@@ -132,14 +104,16 @@ function displayVisitPlanData(data) {
                 field: "scheduledDate",
                 headerName: "Scheduled Date",
                 filter: 'agDateColumnFilter',
-                width: 150,
+                width: 180,
                 valueGetter: params => params.data.scheduledDate || params.data.ScheduledDate,
                 valueFormatter: params => {
                     if (!params.value) return 'Not Scheduled';
                     const date = new Date(params.value);
                     // Check if it's a valid date and not the default "0001-01-01"
                     if (date.getFullYear() > 1900) {
-                        return date.toLocaleDateString();
+                        const dateStr = date.toLocaleDateString();
+                        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        return `${dateStr} ${timeStr}`;
                     }
                     return 'Not Scheduled';
                 }
@@ -202,6 +176,63 @@ function displayVisitPlanData(data) {
                 flex: 1,
                 valueGetter: params => params.data.notes || params.data.Notes,
                 valueFormatter: params => params.value || '-'
+            },
+            {
+                colId: "actions",
+                headerName: "Actions",
+                width: 120,
+                cellRenderer: params => {
+                    const status = params.data.status || params.data.Status || '';
+                    const visitId = params.data.visitID || params.data.VisitID;
+                    const subjectId = params.data.subjectId || params.data.SubjectId;
+                    const studyId = params.data.studyId || params.data.StudyId;
+                    const visitName = (params.data.visitName || params.data.VisitName || '');
+                    const subjectVisitId = params.data.subjectVisitID || params.data.SubjectVisitID;
+                    const staffId = params.data.staffId || params.data.StaffId;
+                    const scheduledDate = params.data.scheduledDate || params.data.ScheduledDate;
+                    const notes = params.data.notes || params.data.Notes || '';
+
+                    let actions = '';
+
+                    // Show schedule icon for unscheduled visits
+                    if (status !== 'Completed' && status !== 'Scheduled') {
+                        actions += `<i class="bi bi-calendar-plus text-primary schedule-visit-icon"
+                                       style="cursor: pointer; font-size: 1.2rem; margin-right: 8px;"
+                                       title="Schedule Visit"
+                                       data-visit-id="${visitId}"
+                                       data-subject-id="${subjectId}"
+                                       data-study-id="${studyId}"
+                                       data-visit-name="${visitName}"></i>`;
+                    }
+
+                    // Show re-schedule and cancel icons for scheduled visits
+                    if (status === 'Scheduled') {
+                        actions += `<i class="bi bi-calendar-event text-warning reschedule-visit-icon"
+                                       style="cursor: pointer; font-size: 1.2rem; margin-right: 8px;"
+                                       title="Re-schedule Visit"
+                                       data-visit-id="${visitId}"
+                                       data-subject-id="${subjectId}"
+                                       data-study-id="${studyId}"
+                                       data-visit-name="${visitName}"
+                                       data-staff-id="${staffId}"
+                                       data-scheduled-date="${scheduledDate}"
+                                       data-notes="${notes}"></i>`;
+                        actions += `<i class="bi bi-calendar-x text-danger cancel-visit-icon"
+                                       style="cursor: pointer; font-size: 1.2rem;"
+                                       title="Cancel Visit"
+                                       data-subject-visit-id="${subjectVisitId}"
+                                       data-visit-name="${visitName}"></i>`;
+                    }
+
+                    // Show check icon for completed visits
+                    if (status === 'Completed') {
+                        actions = `<i class="bi bi-check-circle text-success" style="font-size: 1.2rem;" title="${status}"></i>`;
+                    }
+
+                    return actions || '-';
+                },
+                sortable: false,
+                filter: false
             }
         ],
         defaultColDef: {
@@ -215,17 +246,72 @@ function displayVisitPlanData(data) {
         onCellClicked: (event) => {
             // Check if the Actions column was clicked
             if (event.column.getColId() === 'actions') {
-                const status = event.data.status || event.data.Status || '';
-                const isSchedulable = status !== 'Completed' && status !== 'Scheduled';
+                let target = event.event.target;
 
-                if (isSchedulable) {
+                // Find the icon element (could be clicking on the icon or its pseudo-element)
+                if (target.tagName !== 'I') {
+                    // Check if we clicked inside an icon
+                    const iconParent = target.closest('i');
+                    if (iconParent) {
+                        target = iconParent;
+                    } else {
+                        // If clicked on span, use the event coordinates to find which icon
+                        const icons = event.event.target.querySelectorAll('i');
+                        if (icons.length > 0) {
+                            // Get the icon closest to the click position
+                            const clickX = event.event.offsetX;
+                            let clickedIcon = icons[0];
+                            icons.forEach(icon => {
+                                const rect = icon.getBoundingClientRect();
+                                const cellRect = event.event.target.getBoundingClientRect();
+                                const iconX = rect.left - cellRect.left;
+                                if (clickX >= iconX) {
+                                    clickedIcon = icon;
+                                }
+                            });
+                            target = clickedIcon;
+                        } else {
+                            return;
+                        }
+                    }
+                }
+
+                console.log('Actions icon clicked:', target);
+                console.log('Icon classes:', target.className);
+
+                // Check if schedule icon was clicked
+                if (target.classList.contains('schedule-visit-icon')) {
                     const visitId = event.data.visitID || event.data.VisitID;
                     const subjectId = event.data.subjectId || event.data.SubjectId;
                     const studyId = event.data.studyId || event.data.StudyId;
                     const visitName = event.data.visitName || event.data.VisitName || '';
 
-                    console.log('Action cell clicked:', { visitId, subjectId, studyId, visitName });
+                    console.log('Schedule icon clicked:', { visitId, subjectId, studyId, visitName });
                     openScheduleModal(visitId, subjectId, studyId, visitName);
+                }
+                // Check if re-schedule icon was clicked
+                else if (target.classList.contains('reschedule-visit-icon')) {
+                    const visitId = event.data.visitID || event.data.VisitID;
+                    const subjectId = event.data.subjectId || event.data.SubjectId;
+                    const studyId = event.data.studyId || event.data.StudyId;
+                    const visitName = event.data.visitName || event.data.VisitName || '';
+                    const staffId = event.data.staffId || event.data.StaffId;
+                    const scheduledDate = event.data.scheduledDate || event.data.ScheduledDate;
+                    const notes = event.data.notes || event.data.Notes || '';
+
+                    console.log('Re-schedule icon clicked:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes });
+                    openScheduleModal(visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes);
+                }
+                // Check if cancel icon was clicked
+                else if (target.classList.contains('cancel-visit-icon')) {
+                    const visitId = event.data.visitID || event.data.VisitID;
+                    const subjectId = event.data.subjectId || event.data.SubjectId;
+                    const studyId = event.data.studyId || event.data.StudyId;
+                    const visitName = event.data.visitName || event.data.VisitName || '';                    
+                    const notes = event.data.notes || event.data.Notes || '';
+
+                    
+                    cancelVisit(notes, studyId, subjectId, visitId, visitName );
                 }
             }
         }
@@ -253,20 +339,50 @@ function goBack() {
 
 // ==================== Schedule Visit Modal Functions ====================
 
-function openScheduleModal(visitId, subjectId, studyId, visitName) {
-    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName });
+function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = null, scheduledDate = null, notes = null) {
+    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes });
 
     // Set hidden field values
     $('#scheduleVisitId').val(visitId);
     $('#scheduleSubjectId').val(subjectId);
     $('#scheduleStudyId').val(studyId);
-    $('#scheduleVisitName').text(visitName);
 
-    // Clear form
+    // Update modal title based on whether we're scheduling or re-scheduling
+    if (staffId && scheduledDate) {
+        $('#scheduleVisitName').text(visitName + ' (Re-schedule)');
+    } else {
+        $('#scheduleVisitName').text(visitName);
+    }
+
+    // Clear form first
     resetScheduleForm();
 
     // Load staff dropdown
     loadStaffDropdown(studyId);
+
+    // Pre-fill form if re-scheduling
+    if (staffId && scheduledDate) {
+        // Wait a bit for staff dropdown to load, then set the value
+        setTimeout(() => {
+            $('#scheduleStaffId').val(staffId);
+
+            // Format the date for datetime-local input (using local time, not UTC)
+            const date = new Date(scheduledDate);
+            if (date.getFullYear() > 1900) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+                $('#scheduleVisitDate').val(formattedDate);
+            }
+
+            if (notes) {
+                $('#scheduleNotes').val(notes);
+            }
+        }, 500);
+    }
 
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('scheduleVisitModal'));
@@ -379,17 +495,7 @@ function scheduleVisit() {
     const studyId = $('#scheduleStudyId').val();
     const staffId = $('#scheduleStaffId').val();
     const visitDateInput = $('#scheduleVisitDate').val();
-    const notes = $('#scheduleNotes').val();
-
-    
-    //const requestData = {
-    //    VisitId: parseInt(visitId),
-    //    SubjectId: parseInt(subjectId),
-    //    StudioId: parseInt(studyId), // Map StudyId to StudioId
-    //    Staffid: parseInt(staffId),
-    //    VisitDate: visitDateInput,
-    //    Notes: notes || ''
-    //};
+    const notes = $('#scheduleNotes').val();       
       
 
     $.ajax({
@@ -432,4 +538,43 @@ function resetScheduleForm() {
     $('#scheduleNotes').val('');
     $('#validateStaff').text('');
     $('#validateVisitDate').text('');
+}
+
+// ==================== Cancel Visit Functions ====================
+
+function cancelVisit(notes, studyId, subjectId, visitId, visitName) {
+    //console.log('Cancel visit called:', { subjectVisitId, visitName });
+
+    // Confirm cancellation
+    if (!confirm(`Are you sure you want to cancel the visit "${visitName}"?`)) {
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: `${urlVisit}?handler=CancelVisit`,
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: {
+            "notes": parseInt(notes),
+            "studioId": parseInt(studyId),
+            "subjectId": parseInt(subjectId),
+            "visitId": parseInt(visitId)
+        },
+        success: function(response) {
+            console.log('Cancel visit response:', response);
+
+            if (response.success) {
+                alert('Visit cancelled successfully!');
+                // Reload grid data
+                loadVisitPlanData();
+            } else {
+                alert('Failed to cancel visit: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error cancelling visit:', error);
+            console.error('XHR Response:', xhr.responseText);
+            alert('Error cancelling visit. Please try again.');
+        }
+    });
 }

@@ -131,6 +131,8 @@
 
         string Endpoint_CreateVisit();
 
+        string Endpoint_CancelVisit();
+
         #endregion
 
         #region VLT...

@@ -132,6 +132,8 @@
 
         public string Endpoint_CreateVisit() => _config["Endpoint_CreateVisit"] ?? "";
 
+        public string Endpoint_CancelVisit() => _config["Endpoint_CancelVisit"] ?? "";
+
         #endregion
 
         #region VLT...

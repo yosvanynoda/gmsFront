@@ -200,7 +200,7 @@ namespace GMS_UI.Pages.SUB.Subject
                     StudioId = studioId,
                     SubjectId = subjectId,
                     VisitDate = visitDate,
-                    VisitId = visitId,  
+                    VisitId = visitId,
                 };
 
                 var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVisit(), "a Visit", "", createRequest);
@@ -213,6 +213,38 @@ namespace GMS_UI.Pages.SUB.Subject
             }
             catch (Exception ex)
             {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        public async Task<JsonResult> OnPostCancelVisit( string notes, int studioId, int subjectId,int visitId)
+        {
+            try
+            {
+                var cancelRequest = new CancelVisitRequest
+                {
+                    VisitId = visitId,
+                    SubjectId = subjectId,
+                    StudioId = studioId,
+                    Notes = notes,
+                };
+
+               
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CancelVisit(), "cancel Visit", "", cancelRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostCancelVisit: {Message}", ex.Message);
                 return new JsonResult(new
                 {
                     success = false,
@@ -256,4 +288,5 @@ namespace GMS_UI.Pages.SUB.Subject
         public string Name { get; set; } = string.Empty;
         public string RoleType { get; set; } = string.Empty;
     }
+   
 }

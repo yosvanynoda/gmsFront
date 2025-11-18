@@ -78,7 +78,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Code *</label> 
+                            <label class="form-label">Site Number *</label>
                             <input class="form-control"  placeholder="Code" id="studyCode" /> 
                             <span class="text-danger" id="validateStudyCode"></span>
                         </div>
@@ -121,7 +121,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Goal *</label>
+                            <label class="form-label">Goal Enrollment*</label>
                             <input type="number" class="form-control"  placeholder="Goal" id="studyGoal" />
                             <span class="text-danger" id="validateStudyGoal"></span>
                         </div>
@@ -199,9 +199,8 @@
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >End Date *</label>
+                            <label class="form-label" >End Date </label>
                             <input type="date" id="studyEndDate" class="form-control" required />
-                            <span class="text-danger" id="endDateValidate"></span> 
                         </div>
                     </div>
                 </div>
@@ -395,29 +394,91 @@
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="isNewMonitor" value="false" />
                 <div class="form-section">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Monitor *</label>
-                                <select id="monitorList" class="form-select">
-                                    <option value="-1">Select Monitor</option>
-                                </select>
-                                <span id="validateMonitor" class="text-danger"></span>
+                    <div id="selectExists">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Monitor *</label>
+                                    <select id="monitorList" class="form-select">
+                                        <option value="-1">Select Monitor</option>
+                                    </select>
+                                    <span id="validateMonitor" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="monitorRole" class="form-label">Monitor Role *</label>
+                                    <input id="monitorRole" type="text" class="form-control inputsmmodal" placeholder="Monitor Role" required />
+                                    <span class="text-danger" id="validateMonitorRole"></span>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="monitorRole" class="form-label">Monitor Role *</label>
-                                <input id="monitorRole" type="text" class="form-control inputsmmodal" placeholder="Monitor Role" required />
-                                <span class="text-danger" id="validateMonitorRole"></span>
+                        <div class="row">
+                            <div class="col-3 offset-9">
+                                <a class="btn btn-sm btn-outline-primary float-end" title="Create new Monitor" onclick="showNewMonitor()"><i class="bi bi-plus-circle"></i> New</a>
                             </div>
                         </div>
-
-
                     </div>
 
+                    <div id="addNew" >
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="firstName">First Name</label>
+                                    <input type="text" class="form-control inputsmmodal" id="firstName" placeholder="First Name">
+                                    <span id="validateFirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="lastName">Last Name</label>
+                                    <input type="text" class="form-control inputsmmodal" id="lastName" placeholder="Last Name">
+                                    <span id="validateLastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="email">Email</label>
+                                    <input type="text" class="form-control inputsmmodal" id="email" placeholder="Email">
+                                    <span id="validateEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="phone">Phone</label>
+                                    <input type="text" class="form-control inputsmmodal" id="phone" placeholder="Phone">
+                                    <span id="validatePhone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="role">Role</label>
+                                    <input type="text" class="form-control inputsmmodal" id="role" placeholder="Role">
+                                    <span id="validateRole" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-4 offset-8">
+                                <div class="mb-3">
+                                    <a class="btn btn-sm btn-outline-primary float-end" title="Show Existing Monitors" onclick="hideNewMonitor()"><i class="bi bi-check2-square"></i> Select</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

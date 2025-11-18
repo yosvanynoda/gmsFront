@@ -447,8 +447,23 @@ const myMonitorModal = document.getElementById('monitorModal');
 
 myMonitorModal.addEventListener('show.bs.modal', function (event) {
     // Do something before the modal is shown
+    hideNewMonitor();
     getMonitorList();
 });
+
+function showNewMonitor() {
+    $('#selectExists').hide();
+    $('#addNew').show();
+    $('#isNewMonitor').val('true');
+}
+
+
+function hideNewMonitor() {
+    $('#selectExists').show();
+    $('#addNew').hide();
+    $('#isNewMonitor').val('false');
+}
+
 
 function initializeMonitorGrid() {
     const gridOptions = {

@@ -113,6 +113,75 @@ namespace GMS_UI.Pages.SUB.Subject
                 });
             }
         }
+
+        public async Task<JsonResult> OnPostGetStaffListAsync([FromBody] GetStaffListRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("OnPostGetStaffListAsync called for StudioId: {StudioId}", request.StudioId);
+
+                var requestData = new
+                {
+                    CompanyId = request.CompanyId,
+                    SiteId = request.SiteId,
+                    StaffId = (int?)null,
+                    StudioId = request.StudioId
+                };
+
+                BaseResponse staffResponse = await GenericAPI.GetGeneric(
+                    _settings.ApiUrl(),
+                    "api/v1/cmn/getstaffstudio",
+                    "Staff List",
+                    "",
+                    requestData
+                );
+
+                if (staffResponse == null || staffResponse.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Error reading Staff data",
+                        data = new List<object>()
+                    });
+                }
+
+                if (staffResponse.Success && staffResponse.Data != null)
+                {
+                    // Serialize and deserialize to proper format
+                    var jsonString = JsonConvert.SerializeObject(staffResponse.Data);
+                    _logger.LogInformation("Staff response JSON: {Json}", jsonString);
+
+                    var staffList = JsonConvert.DeserializeObject<List<StaffStudioDto>>(jsonString);
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Staff list retrieved successfully",
+                        data = staffList
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = staffResponse.Message,
+                        data = new List<object>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostGetStaffListAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                    data = new List<object>()
+                });
+            }
+        }
     }
 
     public class VisitPlanRequest
@@ -121,5 +190,32 @@ namespace GMS_UI.Pages.SUB.Subject
         public int SiteId { get; set; }
         public int SubjectId { get; set; }
         public int StudyId { get; set; }
+    }
+
+    public class GetStaffListRequest
+    {
+        public int CompanyId { get; set; }
+        public int SiteId { get; set; }
+        public int StudioId { get; set; }
+    }
+
+    public class StaffStudioDto
+    {
+        public int Id { get; set; }
+        public int StudioId { get; set; }
+        public int StaffId { get; set; }
+        public int RoleId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int CompanyId { get; set; }
+        public int UserName { get; set; }
+        public DateTime ActionDateTime { get; set; }
+        public bool Active { get; set; }
+        public DateTime? LastUpdateAt { get; set; }
+        public int SiteId { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string RoleType { get; set; } = string.Empty;
     }
 }

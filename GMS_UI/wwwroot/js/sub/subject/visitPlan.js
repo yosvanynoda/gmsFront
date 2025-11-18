@@ -87,6 +87,34 @@ function displayVisitPlanData(data) {
         domLayout: 'autoHeight',
         columnDefs: [
             {
+                colId: "actions",
+                headerName: "Actions",
+                width: 80,
+                cellRenderer: params => {
+                    const status = params.data.status || params.data.Status || '';
+                    const isSchedulable = status !== 'Completed' && status !== 'Scheduled';
+
+                    if (isSchedulable) {
+                        const visitId = params.data.visitID || params.data.VisitID;
+                        const subjectId = params.data.subjectId || params.data.SubjectId;
+                        const studyId = params.data.studyId || params.data.StudyId;
+                        const visitName = (params.data.visitName || params.data.VisitName || '');
+
+                        return `<i class="bi bi-calendar-plus text-primary schedule-visit-icon"
+                                   style="cursor: pointer; font-size: 1.2rem;"
+                                   title="Schedule Visit"
+                                   data-visit-id="${visitId}"
+                                   data-subject-id="${subjectId}"
+                                   data-study-id="${studyId}"
+                                   data-visit-name="${visitName}"></i>`;
+                    } else {
+                        return `<i class="bi bi-check-circle text-success" style="font-size: 1.2rem;" title="${status}"></i>`;
+                    }
+                },
+                sortable: false,
+                filter: false
+            },
+            {
                 field: "visitName",
                 headerName: "Visit Name",
                 filter: 'agTextColumnFilter',
@@ -135,6 +163,14 @@ function displayVisitPlanData(data) {
                 }
             },
             {
+                field: "staffName",
+                headerName: "Staff Name",
+                filter: 'agTextColumnFilter',
+                width: 150,
+                valueGetter: params => params.data.staffName || params.data.StaffName,
+                valueFormatter: params => params.value || '-'
+            },
+            {
                 field: "windowMinus",
                 headerName: "Window -",
                 filter: 'agNumberColumnFilter',
@@ -175,7 +211,24 @@ function displayVisitPlanData(data) {
         },
         pagination: true,
         paginationPageSize: 20,
-        paginationPageSizeSelector: [20, 50, 100]
+        paginationPageSizeSelector: [20, 50, 100],
+        onCellClicked: (event) => {
+            // Check if the Actions column was clicked
+            if (event.column.getColId() === 'actions') {
+                const status = event.data.status || event.data.Status || '';
+                const isSchedulable = status !== 'Completed' && status !== 'Scheduled';
+
+                if (isSchedulable) {
+                    const visitId = event.data.visitID || event.data.VisitID;
+                    const subjectId = event.data.subjectId || event.data.SubjectId;
+                    const studyId = event.data.studyId || event.data.StudyId;
+                    const visitName = event.data.visitName || event.data.VisitName || '';
+
+                    console.log('Action cell clicked:', { visitId, subjectId, studyId, visitName });
+                    openScheduleModal(visitId, subjectId, studyId, visitName);
+                }
+            }
+        }
     };
 
     const gridDiv = document.querySelector('#visitPlanGrid');
@@ -196,4 +249,183 @@ function displayVisitPlanData(data) {
 function goBack() {
     const returnUrl = $('#returnUrl').val() || '/SUB/Subject/Index';
     window.location.href = returnUrl;
+}
+
+// ==================== Schedule Visit Modal Functions ====================
+
+function openScheduleModal(visitId, subjectId, studyId, visitName) {
+    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName });
+
+    // Set hidden field values
+    $('#scheduleVisitId').val(visitId);
+    $('#scheduleSubjectId').val(subjectId);
+    $('#scheduleStudyId').val(studyId);
+    $('#scheduleVisitName').text(visitName);
+
+    // Clear form
+    resetScheduleForm();
+
+    // Load staff dropdown
+    loadStaffDropdown(studyId);
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('scheduleVisitModal'));
+    modal.show();
+}
+
+function loadStaffDropdown(studyId) {
+    console.log('Loading staff for study:', studyId);
+
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=GetStaffList',
+        contentType: "application/json",
+        data: JSON.stringify({
+            CompanyId: 1,
+            SiteId: 1,
+            StudioId: parseInt(studyId)
+        }),
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function(response) {
+            console.log('Staff dropdown response:', response);
+            console.log('Staff data:', response.data);
+
+            const select = $('#scheduleStaffId');
+            select.empty();
+            select.append('<option value="">Select Staff</option>');
+
+            if (response.success && response.data && response.data.length > 0) {
+                $.each(response.data, function(index, staff) {
+                    console.log('Staff item:', staff);
+                    console.log('Staff item keys:', Object.keys(staff));
+                    console.log('Staff item JSON:', JSON.stringify(staff, null, 2));
+
+                    // Handle both camelCase and PascalCase property names
+                    const firstName = staff.firstName || staff.FirstName || '';
+                    const lastName = staff.lastName || staff.LastName || '';
+                    const staffId = staff.staffId || staff.StaffId;
+
+                    console.log('Extracted values:', {
+                        firstName,
+                        lastName,
+                        staffId,
+                        'staff.firstName': staff.firstName,
+                        'staff.FirstName': staff.FirstName,
+                        'staff.lastName': staff.lastName,
+                        'staff.LastName': staff.LastName
+                    });
+
+                    // Build staff name
+                    let staffName = `${firstName} ${lastName}`.trim();
+
+                    // If no name from first/last, try other properties
+                    if (!staffName) {
+                        staffName = staff.name || staff.Name || `Staff ${staffId}` || 'Unknown';
+                    }
+
+                    console.log('Final staff name:', staffName);
+
+                    select.append($('<option>', {
+                        value: staffId,
+                        text: staffName
+                    }));
+                });
+                console.log('Total staff options added:', response.data.length);
+            } else {
+                console.log('No staff data available');
+                select.append('<option value="">No staff available</option>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading staff dropdown:', error);
+            console.error('XHR Response:', xhr.responseText);
+            alert('Failed to load staff list. Please try again.');
+        }
+    });
+}
+
+function validateScheduleForm() {
+    // Clear previous validation messages
+    $('#validateStaff').text('');
+    $('#validateVisitDate').text('');
+
+    const staffId = $('#scheduleStaffId').val();
+    const visitDate = $('#scheduleVisitDate').val();
+
+    let isValid = true;
+
+    if (!staffId) {
+        $('#validateStaff').text('Please select a staff member');
+        isValid = false;
+    }
+
+    if (!visitDate) {
+        $('#validateVisitDate').text('Please select a visit date and time');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function scheduleVisit() {
+    console.log('Schedule visit button clicked');
+
+    if (!validateScheduleForm()) {
+        return;
+    }
+
+    const visitId = $('#scheduleVisitId').val();
+    const subjectId = $('#scheduleSubjectId').val();
+    const studyId = $('#scheduleStudyId').val();
+    const staffId = $('#scheduleStaffId').val();
+    const visitDateInput = $('#scheduleVisitDate').val();
+    const notes = $('#scheduleNotes').val();
+
+    
+    const requestData = {
+        VisitId: parseInt(visitId),
+        SubjectId: parseInt(subjectId),
+        StudioId: parseInt(studyId), // Map StudyId to StudioId
+        Staffid: parseInt(staffId),
+        VisitDate: visitDateInput,
+        Notes: notes || ''
+    };
+      
+
+    $.ajax({
+        type: "POST",
+        url: '/api/v1/prj/createvisit',
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function(response) {
+            console.log('Schedule visit response:', response);
+
+            if (response.success) {
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleVisitModal'));
+                modal.hide();
+
+                // Show success message
+                alert('Visit scheduled successfully!');
+
+                // Reload grid data
+                loadVisitPlanData();
+            } else {
+                alert('Failed to schedule visit: ' + (response.message || 'Unknown error'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error scheduling visit:', error);
+            console.error('XHR Response:', xhr.responseText);
+            alert('Error scheduling visit. Please try again.');
+        }
+    });
+}
+
+function resetScheduleForm() {
+    $('#scheduleStaffId').val('');
+    $('#scheduleVisitDate').val('');
+    $('#scheduleNotes').val('');
+    $('#validateStaff').text('');
+    $('#validateVisitDate').text('');
 }

@@ -35,6 +35,64 @@
     </div>
 </div>
 
+<!-- Schedule Visit Modal -->
+<div id="scheduleVisitModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleVisitModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Schedule Visit - <span id="scheduleVisitName"></span></h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="scheduleVisitId" />
+                <input type="hidden" id="scheduleSubjectId" />
+                <input type="hidden" id="scheduleStudyId" />
+
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" for="scheduleStaffId">Staff Member <span class="text-danger">*</span></label>
+                                <select class="form-select" id="scheduleStaffId">
+                                    <option value="">Select Staff</option>
+                                </select>
+                                <span id="validateStaff" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" for="scheduleVisitDate">Visit Date & Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="scheduleVisitDate" />
+                                <span id="validateVisitDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" for="scheduleNotes">Notes</label>
+                                <textarea class="form-control" id="scheduleNotes" rows="4" placeholder="Enter any notes for this visit (optional)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <button class="btn btn-sm btn-success" onclick="scheduleVisit()">
+                    <i class="bi bi-calendar-check me-1"></i> Save Visit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @Html.AntiForgeryToken()
 
 <script>

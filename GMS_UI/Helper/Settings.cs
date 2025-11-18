@@ -130,6 +130,8 @@
 
         public string Endpoint_GetSubjectData() => _config["Endpoint_GetSubjectData"] ?? "";
 
+        public string Endpoint_CreateVisit() => _config["Endpoint_CreateVisit"] ?? "";
+
         #endregion
 
         #region VLT...

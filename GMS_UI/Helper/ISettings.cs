@@ -129,6 +129,8 @@
 
         string Endpoint_GetSubjectData();
 
+        string Endpoint_CreateVisit();
+
         #endregion
 
         #region VLT...

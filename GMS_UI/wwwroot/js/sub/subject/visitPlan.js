@@ -382,21 +382,25 @@ function scheduleVisit() {
     const notes = $('#scheduleNotes').val();
 
     
-    const requestData = {
-        VisitId: parseInt(visitId),
-        SubjectId: parseInt(subjectId),
-        StudioId: parseInt(studyId), // Map StudyId to StudioId
-        Staffid: parseInt(staffId),
-        VisitDate: visitDateInput,
-        Notes: notes || ''
-    };
+    //const requestData = {
+    //    VisitId: parseInt(visitId),
+    //    SubjectId: parseInt(subjectId),
+    //    StudioId: parseInt(studyId), // Map StudyId to StudioId
+    //    Staffid: parseInt(staffId),
+    //    VisitDate: visitDateInput,
+    //    Notes: notes || ''
+    //};
       
 
     $.ajax({
         type: "POST",
-        url: '/api/v1/prj/createvisit',
-        contentType: "application/json",
-        data: JSON.stringify(requestData),
+        url: `${urlVisit}?handler=CreateVisit`,
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: {
+            "staffId": parseInt(staffId), "notes": notes, "studioId": parseInt(studyId),
+            "subjectId": parseInt(subjectId), "visitDate": visitDateInput, 
+            "visitId": parseInt(visitId) 
+        },
         success: function(response) {
             console.log('Schedule visit response:', response);
 

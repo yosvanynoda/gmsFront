@@ -1,10 +1,15 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
+using GMS.Objects.PRJ;
+using GMS.Objects.STD;
 using GMS.Objects.SUB;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.Numerics;
 
 namespace GMS_UI.Pages.SUB.Subject
 {
@@ -179,6 +184,39 @@ namespace GMS_UI.Pages.SUB.Subject
                     success = false,
                     message = ex.Message,
                     data = new List<object>()
+                });
+            }
+        }
+
+        public async Task<JsonResult> OnPostCreateVisit(int staffId, string notes, int studioId, int subjectId,
+            DateTime visitDate, int visitId)
+        {
+            try
+            {
+                var createRequest = new CreateVisitRequest
+                {
+                    Staffid = staffId,
+                    Notes = notes,
+                    StudioId = studioId,
+                    SubjectId = subjectId,
+                    VisitDate = visitDate,
+                    VisitId = visitId,  
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVisit(), "a Visit", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
                 });
             }
         }

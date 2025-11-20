@@ -285,9 +285,12 @@ function displayVisitPlanData(data) {
                     const subjectId = event.data.subjectId || event.data.SubjectId;
                     const studyId = event.data.studyId || event.data.StudyId;
                     const visitName = event.data.visitName || event.data.VisitName || '';
+                    const dayOffset = event.data.dayOffset || event.data.DayOffset || 0;
+                    const windowMinus = event.data.windowMinus || event.data.WindowMinus || 0;
+                    const windowPlus = event.data.windowPlus || event.data.WindowPlus || 0;
 
-                    console.log('Schedule icon clicked:', { visitId, subjectId, studyId, visitName });
-                    openScheduleModal(visitId, subjectId, studyId, visitName);
+                    console.log('Schedule icon clicked:', { visitId, subjectId, studyId, visitName, dayOffset, windowMinus, windowPlus });
+                    openScheduleModal(visitId, subjectId, studyId, visitName, null, null, null, dayOffset, windowMinus, windowPlus);
                 }
                 // Check if re-schedule icon was clicked
                 else if (target.classList.contains('reschedule-visit-icon')) {
@@ -298,9 +301,12 @@ function displayVisitPlanData(data) {
                     const staffId = event.data.staffId || event.data.StaffId;
                     const scheduledDate = event.data.scheduledDate || event.data.ScheduledDate;
                     const notes = event.data.notes || event.data.Notes || '';
+                    const dayOffset = event.data.dayOffset || event.data.DayOffset || 0;
+                    const windowMinus = event.data.windowMinus || event.data.WindowMinus || 0;
+                    const windowPlus = event.data.windowPlus || event.data.WindowPlus || 0;
 
-                    console.log('Re-schedule icon clicked:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes });
-                    openScheduleModal(visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes);
+                    console.log('Re-schedule icon clicked:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus });
+                    openScheduleModal(visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus);
                 }
                 // Check if cancel icon was clicked
                 else if (target.classList.contains('cancel-visit-icon')) {
@@ -339,8 +345,16 @@ function goBack() {
 
 // ==================== Schedule Visit Modal Functions ====================
 
-function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = null, scheduledDate = null, notes = null) {
-    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes });
+// Store calculated date range for validation
+let scheduleDateRange = {
+    minDate: null,
+    maxDate: null,
+    idealDate: null,
+    hasRange: false
+};
+
+function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = null, scheduledDate = null, notes = null, dayOffset = 0, windowMinus = 0, windowPlus = 0) {
+    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus });
 
     // Set hidden field values
     $('#scheduleVisitId').val(visitId);
@@ -356,6 +370,9 @@ function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = nul
 
     // Clear form first
     resetScheduleForm();
+
+    // Calculate and display date range based on last completed visit
+    calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus);
 
     // Load staff dropdown
     loadStaffDropdown(studyId);
@@ -387,6 +404,97 @@ function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = nul
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('scheduleVisitModal'));
     modal.show();
+}
+
+function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
+    // Reset date range
+    scheduleDateRange = {
+        minDate: null,
+        maxDate: null,
+        idealDate: null,
+        hasRange: false
+    };
+
+    // Hide range info by default
+    $('#scheduleDateRangeInfo').hide();
+    $('#scheduleDateRangeText').text('');
+
+    // Get all visits from the grid to find the last completed one
+    if (!visitPlanGridApi) {
+        console.log('Grid API not available');
+        return;
+    }
+
+    const allVisits = [];
+    visitPlanGridApi.forEachNode(node => {
+        allVisits.push(node.data);
+    });
+
+    // Find the last completed visit (by scheduled date)
+    const completedVisits = allVisits.filter(visit => {
+        const status = visit.status || visit.Status;
+        return status === 'Completed';
+    });
+
+    console.log('Completed visits:', completedVisits);
+
+    if (completedVisits.length === 0) {
+        // No completed visits - allow any date (first visit scenario)
+        console.log('No completed visits found - allowing any date');
+        return;
+    }
+
+    // Sort completed visits by scheduled date descending to get the most recent
+    completedVisits.sort((a, b) => {
+        const dateA = new Date(a.scheduledDate || a.ScheduledDate);
+        const dateB = new Date(b.scheduledDate || b.ScheduledDate);
+        return dateB - dateA;
+    });
+
+    const lastCompletedVisit = completedVisits[0];
+    const lastVisitDate = new Date(lastCompletedVisit.scheduledDate || lastCompletedVisit.ScheduledDate);
+
+    console.log('Last completed visit:', lastCompletedVisit);
+    console.log('Last visit date:', lastVisitDate);
+
+    // Calculate ideal date (last visit + day offset)
+    const idealDate = new Date(lastVisitDate);
+    idealDate.setDate(idealDate.getDate() + dayOffset);
+
+    // Calculate min date (ideal - windowMinus)
+    const minDate = new Date(idealDate);
+    minDate.setDate(minDate.getDate() - windowMinus);
+
+    // Calculate max date (ideal + windowPlus)
+    const maxDate = new Date(idealDate);
+    maxDate.setDate(maxDate.getDate() + windowPlus);
+
+    // Store for validation
+    scheduleDateRange = {
+        minDate: minDate,
+        maxDate: maxDate,
+        idealDate: idealDate,
+        hasRange: true
+    };
+
+    console.log('Date range calculated:', scheduleDateRange);
+
+    // Format dates for display
+    const formatDate = (date) => {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    };
+
+    // Display the range info
+    const rangeText = `Ideal date: ${formatDate(idealDate)} | Valid range: ${formatDate(minDate)} to ${formatDate(maxDate)}`;
+    $('#scheduleDateRangeText').text(rangeText);
+    $('#scheduleDateRangeInfo').show();
+
+    // Set default date to ideal date (at 9:00 AM)
+    const year = idealDate.getFullYear();
+    const month = String(idealDate.getMonth() + 1).padStart(2, '0');
+    const day = String(idealDate.getDate()).padStart(2, '0');
+    const defaultDateTime = `${year}-${month}-${day}T09:00`;
+    $('#scheduleVisitDate').val(defaultDateTime);
 }
 
 function loadStaffDropdown(studyId) {
@@ -495,8 +603,27 @@ function scheduleVisit() {
     const studyId = $('#scheduleStudyId').val();
     const staffId = $('#scheduleStaffId').val();
     const visitDateInput = $('#scheduleVisitDate').val();
-    const notes = $('#scheduleNotes').val();       
-      
+    const notes = $('#scheduleNotes').val() || '';
+
+    // Check if date is within the valid range
+    if (scheduleDateRange.hasRange && visitDateInput) {
+        const selectedDate = new Date(visitDateInput);
+        const selectedDateOnly = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+        const minDateOnly = new Date(scheduleDateRange.minDate.getFullYear(), scheduleDateRange.minDate.getMonth(), scheduleDateRange.minDate.getDate());
+        const maxDateOnly = new Date(scheduleDateRange.maxDate.getFullYear(), scheduleDateRange.maxDate.getMonth(), scheduleDateRange.maxDate.getDate());
+
+        if (selectedDateOnly < minDateOnly || selectedDateOnly > maxDateOnly) {
+            const formatDate = (date) => {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            };
+
+            const warningMessage = `Warning: The selected date (${formatDate(selectedDate)}) is outside the valid range (${formatDate(scheduleDateRange.minDate)} to ${formatDate(scheduleDateRange.maxDate)}).\n\nDo you want to proceed anyway?`;
+
+            if (!confirm(warningMessage)) {
+                return;
+            }
+        }
+    }
 
     $.ajax({
         type: "POST",

@@ -64,9 +64,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label fw-bold" for="scheduleVisitDate">Visit Date & Time <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control" id="scheduleVisitDate" />
-                                <span id="validateVisitDate" class="text-danger"></span>
+                                <label class="form-label fw-bold" for="scheduleNotes">Notes</label>
+                                <textarea class="form-control" id="scheduleNotes" rows="4" placeholder="Enter any notes for this visit (optional)"></textarea>
                             </div>
                         </div>
                     </div>
@@ -74,8 +73,15 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label fw-bold" for="scheduleNotes">Notes</label>
-                                <textarea class="form-control" id="scheduleNotes" rows="4" placeholder="Enter any notes for this visit (optional)"></textarea>
+                                <label class="form-label fw-bold" for="scheduleVisitDate">Visit Date & Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="scheduleVisitDate" />
+                                <div id="scheduleDateRangeInfo" class="mt-2" style="display: none;">
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <span id="scheduleDateRangeText"></span>
+                                    </small>
+                                </div>
+                                <span id="validateVisitDate" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

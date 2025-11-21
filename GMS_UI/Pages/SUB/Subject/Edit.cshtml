@@ -59,7 +59,13 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label for="currentStatus" class="form-label fw-bold">Current Status:</label>
-                <input type="text" class="form-control" id="currentStatus" readonly />
+                <select class="form-select" id="currentStatus">
+                    <option value="">-- Select Status --</option>
+                    @foreach (var status in Model.SubjectStatusList)
+                    {
+                        <option value="@status.Value">@status.Text</option>
+                    }
+                </select>
             </div>
         </div>
         <div class="row">

@@ -42,12 +42,29 @@ function loadVisitSchedule() {
         success: function(response) {
             console.log('Visit Schedule Response:', response);
 
-            if (response.success && response.data) {
-                displayVisitScheduleData(response.data);
-                updateSummaryCards(response.data);
+            if (response.success) {
+                if (response.data && response.data.length > 0) {
+                    displayVisitScheduleData(response.data);
+                    updateSummaryCards(response.data);
+                } else {
+                    // No visits found - show friendly message
+                    const dateValue = $('#scheduleDate').val();
+                    const [year, month, day] = dateValue.split('-');
+                    const selectedDate = new Date(year, month - 1, day);
+                    const formattedDate = selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    $('#visitScheduleGrid').html(
+                        '<div class="alert alert-info">' +
+                        '<i class="bi bi-calendar-x me-2"></i>' +
+                        '<strong>No visits scheduled</strong><br>' +
+                        'There are no visits scheduled for ' + formattedDate + '.' +
+                        '</div>'
+                    );
+                    updateSummaryCards([]);
+                }
             } else {
-                console.error('Visit schedule response not successful:', response);
-                $('#visitScheduleGrid').html('<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>' + (response.errorMessage || 'No visit schedule data available.') + '</div>');
+                // Actual error
+                console.error('Visit schedule error:', response);
+                $('#visitScheduleGrid').html('<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>' + (response.errorMessage || 'Error loading visit schedule.') + '</div>');
                 updateSummaryCards([]);
             }
         },
@@ -141,6 +158,33 @@ function displayVisitScheduleData(data) {
                     else if (status === 'Pending') badgeClass = 'bg-warning';
 
                     return `<span class="badge ${badgeClass}">${status}</span>`;
+                    return `<span class="badge ${badgeClass}">${status}</span>`;
+                }
+            },
+            {
+                field: "comment",
+                headerName: "Comment",
+                filter: 'agTextColumnFilter',
+                width: 200,
+                valueGetter: params => params.data.comment || params.data.Comment || ''
+            },
+            {
+                field: "visitType",
+                headerName: "Visit Type",
+                filter: 'agNumberColumnFilter',
+                width: 120,
+                valueGetter: params => params.data.visitType !== undefined ? params.data.visitType : (params.data.VisitType !== undefined ? params.data.VisitType : '')
+            },
+            {
+                field: "checkingDate",
+                headerName: "Checking Date",
+                filter: 'agDateColumnFilter',
+                width: 150,
+                valueGetter: params => params.data.checkingDate || params.data.CheckingDate,
+                valueFormatter: params => {
+                    if (!params.value || params.value === '0001-01-01T00:00:00') return '-';
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString('en-US') + ' ' + date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                 }
             },
             {
@@ -201,7 +245,16 @@ function displayVisitScheduleData(data) {
         gridDiv.innerHTML = '';
 
         if (visitData.length === 0) {
-            gridDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-info-circle me-2"></i>No visits scheduled for the selected date.</div>';
+            const dateValue = $('#scheduleDate').val();
+            const [year, month, day] = dateValue.split('-');
+            const selectedDate = new Date(year, month - 1, day);
+            const formattedDate = selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            gridDiv.innerHTML =
+                '<div class="alert alert-info">' +
+                '<i class="bi bi-calendar-x me-2"></i>' +
+                '<strong>No visits scheduled</strong><br>' +
+                'There are no visits scheduled for ' + formattedDate + '.' +
+                '</div>';
         } else {
             visitScheduleGridApi = agGrid.createGrid(gridDiv, gridOptions);
             console.log('Grid created successfully with', visitData.length, 'rows');

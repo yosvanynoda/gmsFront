@@ -12,7 +12,7 @@ namespace GMS_UI.Models
     {
         public int SubjectId { get; set; }
         public DateTime DateCrated { get; set; }
-        public string CurrentStatus { get; set; } = string.Empty;
+        public int CurrentStatus { get; set; }
         public int StudyId { get; set; }
         public string StudyName { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

@@ -4,6 +4,7 @@ using GMS.Objects.General;
 using GMS.Objects.SUB;
 using GMS_UI.Helper;
 using GMS_UI.Models;
+using GMS_UI.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,6 +31,7 @@ namespace GMS_UI.Pages.SUB.Subject
 
         public List<SelectListItem> ProtocolVersionList { get; set; } = new();
         public List<SelectListItem> DeviationList { get; set; } = new();
+        public List<SelectListItem> SubjectStatusList { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -38,6 +40,9 @@ namespace GMS_UI.Pages.SUB.Subject
 
             // Load Deviation Types
             await LoadDeviations();
+
+            // Load Subject Status
+            LoadSubjectStatus();
         }
 
         private async Task LoadProtocolVersions()
@@ -120,6 +125,26 @@ namespace GMS_UI.Pages.SUB.Subject
             {
                 _logger.LogError(ex, "Error loading deviations");
                 DeviationList = new List<SelectListItem>();
+            }
+        }
+
+        private void LoadSubjectStatus()
+        {
+            try
+            {
+                SubjectStatusList = Enum.GetValues(typeof(SubjectStatusEnum))
+                    .Cast<SubjectStatusEnum>()
+                    .Select(status => new SelectListItem
+                    {
+                        Value = ((int)status).ToString(),
+                        Text = status.ToString().Replace("ScreenFail", "Screen Fail")
+                    })
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading subject status");
+                SubjectStatusList = new List<SelectListItem>();
             }
         }
 

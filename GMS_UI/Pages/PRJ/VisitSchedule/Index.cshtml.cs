@@ -44,13 +44,26 @@ namespace GMS_UI.Pages.PRJ.VisitSchedule
                     requestData
                 );
 
-                if (visitScheduleResponse == null || visitScheduleResponse.Data == null)
+                if (visitScheduleResponse == null)
                 {
                     return new JsonResult(new
                     {
                         success = false,
-                        errorMessage = "Error reading Visit Schedule data",
-                        data = new List<object>()
+                        errorMessage = "Error connecting to the API",
+                        data = new List<VisitScheduleDto>()
+                    });
+                }
+
+                // Check for "No data found" - this is not an error, just no visits scheduled
+                if (visitScheduleResponse.Message != null &&
+                    visitScheduleResponse.Message.Contains("No data found", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "No visits scheduled for the selected date",
+                        success = true,
+                        data = new List<VisitScheduleDto>()
                     });
                 }
 
@@ -63,7 +76,7 @@ namespace GMS_UI.Pages.PRJ.VisitSchedule
                         errorCode = 200,
                         errorMessage = "Visit Schedule was read successfully",
                         success = true,
-                        data = result
+                        data = result ?? new List<VisitScheduleDto>()
                     });
                 }
                 else
@@ -71,7 +84,7 @@ namespace GMS_UI.Pages.PRJ.VisitSchedule
                     return new JsonResult(new
                     {
                         errorCode = 500,
-                        errorMessage = visitScheduleResponse.Message,
+                        errorMessage = visitScheduleResponse.Message ?? "Error loading visit schedule",
                         success = false,
                         data = new List<VisitScheduleDto>()
                     });
@@ -148,6 +161,9 @@ namespace GMS_UI.Pages.PRJ.VisitSchedule
         public string StudyName { get; set; } = string.Empty;
         public string StaffName { get; set; } = string.Empty;
         public string VisitStatus { get; set; } = string.Empty;
+        public string Comment { get; set; } = string.Empty;
+        public int VisitType { get; set; }
+        public DateTime CheckingDate { get; set; }
     }
 
     public class CreateCheckInRequest

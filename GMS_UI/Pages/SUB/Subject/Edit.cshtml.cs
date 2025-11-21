@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace GMS_UI.Pages.SUB.Subject
 {
@@ -213,6 +214,74 @@ namespace GMS_UI.Pages.SUB.Subject
                     errorMessage = ex.Message,
                     success = false,
                     data = (object)null
+                });
+            }
+        }
+
+        public async Task<JsonResult> OnPostUpdateSubjectAsync()
+        {
+            try
+            {
+                _logger.LogInformation("OnPostUpdateSubjectAsync called");
+
+                using var reader = new StreamReader(Request.Body);
+                var body = await reader.ReadToEndAsync();
+
+                _logger.LogInformation("Request body: {Body}", body);
+
+                var subjectData = JsonConvert.DeserializeObject<UpdateSubjectRequest>(body);
+
+                if (subjectData == null)
+                {
+                    _logger.LogWarning("Deserialized subject data is null");
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid request data - deserialization returned null"
+                    });
+                }
+
+                _logger.LogInformation("Calling API - URL: {ApiUrl}, Endpoint: {Endpoint}",
+                    _settings.ApiUrl(), _settings.Endpoint_UpdateSubject());
+
+                var result = await GenericAPI.CreateGeneric(
+                    _settings.ApiUrl(),
+                    _settings.Endpoint_UpdateSubject(),
+                    "Update Subject",
+                    "",
+                    subjectData
+                );
+
+                _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
+                    result?.Success, result?.Message);
+
+                if (result?.Success == true)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Subject updated successfully",
+                        data = result.Data
+                    });
+                }
+                else
+                {
+                    var errorMessage = result?.Message ?? "Error updating subject - no message from API";
+                    _logger.LogWarning("API returned error: {ErrorMessage}", errorMessage);
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = errorMessage
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostUpdateSubjectAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = $"Exception: {ex.Message}"
                 });
             }
         }

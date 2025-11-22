@@ -1,4 +1,835 @@
 ﻿@page
 @model GMS_UI.Pages.STD.StudioListData.EditModel
 @{
+    ViewData["Title"] = "Edit Study";
 }
+
+
+<div class="wizard-container">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-center">
+                <i class="fas fa-flask text-primary"></i>
+                Edit Study Research
+            </h2>
+        </div>
+        <div class="col-3">
+            <button type="button" class="btn btn-outline-primary float-end" id="saveLaterBtn" onclick="submitForm()">
+                <i class="bi bi-bookmark-check-fill"></i> Save
+            </button>
+        </div>
+    </div>
+
+
+    <form asp-page-handler="Edit" method="post" id="wizardForm">
+
+        @* <input type="hidden" id="blindingType" value="@Model.BlindingTypeSL" />
+        <input type="hidden" id="phaseType" value="@Model.PhaseTypeSL" />
+        <input type="hidden" id="studyDesignType" value="@Model.StudyDesignTypeSL" />
+        <input type="hidden" id="studioStatus" value="@Model.StudyStatusSL" /> *@
+
+
+        <!-- Progress Indicator -->
+        <div class="step-indicator">
+            <div class="step-circle active" id="step1-indicator" onclick="goToStep(1)">1</div>
+            <div class="step-line" id="line1"></div>
+            <div class="step-circle" id="step2-indicator" onclick="goToStep(2)">2</div>
+            <div class="step-line" id="line2"></div>
+            <div class="step-circle" id="step3-indicator" onclick="goToStep(3)">3</div>
+            <div class="step-line" id="line3"></div>
+            <div class="step-circle" id="step4-indicator" onclick="goToStep(4)">4</div>
+            <div class="step-line" id="line4"></div>
+            <div class="step-circle" id="step5-indicator" onclick="goToStep(5)">5</div>
+            <div class="step-line" id="line5"></div>
+            <div class="step-circle" id="step6-indicator" onclick="goToStep(6)">6</div>
+            <div class="step-line" id="line6"></div>
+            <div class="step-circle" id="step7-indicator" onclick="goToStep(7)">7</div>
+            <div class="step-line" id="line7"></div>
+            <div class="step-circle" id="step8-indicator" onclick="goToStep(8)">8</div>
+            <div class="step-line" id="line8"></div>
+            <div class="step-circle" id="step9-indicator" onclick="goToStep(9)">9</div>
+        </div>
+
+        <!-- Step 1: Studio Data -->
+        <div class="wizard-step active wizard-body" id="step1">
+            <div class="form-section">
+                <h5><i class="fa fa-info-circle"></i> Basic Study Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Sponsor *</label>
+                            <select id="sponsorList" class="form-select" required>
+                                <option value="-1">Select Sponsor</option>
+                            </select>
+                            <span class="text-danger" id="validateSponsor"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Date Created *</label>
+                            <input type="date" class="form-control" placeholder="Date Created" id="studyDateCreated" required />
+                            <span class="text-danger" id="validateStudyDateCreated"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Site Number *</label>
+                            <input class="form-control" placeholder="Code" id="studyCode" />
+                            <span class="text-danger" id="validateStudyCode"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Name *</label>
+                            <input class="form-control" placeholder="Name" id="studyName" />
+                            <span class="text-danger" id="validateStudyName"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="studyDescription" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="studyNotes" placeholder="Notes"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 Other General Data...-->
+        <div class="wizard-step wizard-body" id="step2">
+            <div class="form-section">
+                <h5><i class="fa fa-info-circle"></i> Goal and Other specifications</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Goal Enrollment*</label>
+                            <input type="number" class="form-control" placeholder="Goal" id="studyGoal" />
+                            <span class="text-danger" id="validateStudyGoal"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Phase *</label>
+                            <select id="phaseList" class="form-select" required>
+                                <option value="-1">Select Phase</option>
+                            </select>
+                            <span class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Indication *</label>
+                            <input class="form-control" placeholder="Indication" id="studyIndication" />
+                            <span class="text-danger" id="validateStudyIndication"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Therapeutic Area *</label>
+                            <input class="form-control" placeholder="Therapeutic Area" id="studyTherapeuticArea" />
+                            <span class="text-danger" id="validateStudyTherapeuticArea"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Bliding Type *</label>
+                            <select id="blidingList" class="form-select" required>
+                                <option value="-1">Select Bliding Type</option>
+                            </select>
+                            <span class="text-danger" id=""></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Design Type *</label>
+                            <select id="studyDesignList" class="form-select" required>
+                                <option value="-1">Select Study Design Type</option>
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Dates and Others -->
+        <div class="wizard-step wizard-body" id="step3">
+            <div class="form-section">
+                <h5><i class="fa fa-cogs"></i> Study Design & Methodology</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date *</label>
+                            <input type="date" id="studyStartDate" class="form-control" required />
+                            <span class="text-danger" id="startDateValidate"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">End Date </label>
+                            <input type="date" id="studyEndDate" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Study Status *</label>
+                            <select id="studystatusList" class="form-select" required>
+                                <option value="-1">Select Study Status</option>
+                            </select>
+                            <span class="text-danger" id=""></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Disease *</label> <!--asp-for="StudyPhase"-->
+                            <select id="diseaseList" class="form-select" required>
+                                <!--asp-for="StudyPhase"-->
+                                <option value="-1">Select Disease</option>
+                            </select>
+                            <span class="text-danger"></span> <!--asp-validation-for="StudyPhase"-->
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">CRO </label> <!--asp-for="StudyPhase"-->
+                            <select id="croList" class="form-select">
+                                <!--asp-for="StudyPhase"-->
+                                <option value="-1">Select CRO</option>
+                            </select>
+                            <span class="text-danger" id=""></span> <!--asp-validation-for="StudyPhase"-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step 4: Monitor -->
+        <div class="wizard-step wizard-body" id="step4">
+            <div class="form-section">
+                <h5><i class="fas fa-shield-alt"></i> Monitors</h5>
+
+                <div class="card shadow border rounded-3 bg-light cardcreate">
+                    <div class="card-header headerReference">
+                        <a data-bs-toggle="modal" data-bs-target="#monitorModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="monitorGrid" class="ag-theme-balham gridCreateEdit"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step 5: Documents -->
+        <div class="wizard-step wizard-body" id="step5">
+            <div class="form-section">
+                <h5><i class="fas fa-shield-alt"></i> Regulatory & Ethics Information</h5>
+
+                <div class="card shadow border rounded-3 bg-light cardcreate">
+                    <div class="card-header headerReference">
+                        <a data-bs-toggle="modal" data-bs-target="#documentModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="documentGrid" class="ag-theme-balham gridCreateEdit"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step 6: Protocol -->
+        <div class="wizard-step wizard-body" id="step6">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i>Protocol</h5>
+
+                <div class="card shadow border rounded-3 bg-light cardcreate">
+                    <div class="card-header headerReference">
+                        <a data-bs-toggle="modal" data-bs-target="#protocolModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="protocolGrid" class="ag-theme-balham gridCreateEdit"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step 7: Arms -->
+        <div class="wizard-step wizard-body" id="step7">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Arms</h5>
+
+                <div class="card shadow border rounded-3 bg-light cardcreate">
+                    <div class="card-header headerReference">
+                        <a data-bs-toggle="modal" data-bs-target="#armsModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="armsGrid" class="ag-theme-balham gridCreateEdit"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step 8: Visits -->
+        <div class="wizard-step wizard-body" id="step8">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Visits</h5>
+
+                <div class="card shadow border rounded-3 bg-light cardcreate">
+                    <div class="card-header headerReference">
+                        <a data-bs-toggle="modal" data-bs-target="#visitModal" class="btn btn-sm btn-success float-end buttonReference"><i class="bi bi-plus-circle"></i> Add</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="visitsGrid" class="ag-theme-balham gridCreateEdit"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Step 9: Review and Confirm -->
+        <div class="wizard-step wizard-body" id="step9">
+            <div class="form-section">
+                <h5><i class="fas fa-check-circle"></i> Review & Submit</h5>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Please review all information before submitting. You can go back to previous steps to make changes.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Study Summary</h6>
+                        <div id="reviewSummary" class="p-3 bg-light rounded">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                @* <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label" for="confirmSubmission">
+                            I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
+                </div> *@
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-navigation">
+            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="button" class="btn btn-success btn-wizard" onclick="submitForm()" id="submitBtn">
+                    <i class="fas fa-check"></i> Submit Study
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+
+
+</div>
+
+@*Start Modals.....*@
+
+@*Start Monitor*@
+<div id="monitorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="monitorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Monitor</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="isNewMonitor" value="false" />
+                <div class="form-section">
+                    <div id="selectExists">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Monitor *</label>
+                                    <select id="monitorList" class="form-select">
+                                        <option value="-1">Select Monitor</option>
+                                    </select>
+                                    <span id="validateMonitor" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="monitorRole" class="form-label">Monitor Role *</label>
+                                    <input id="monitorRole" type="text" class="form-control inputsmmodal" placeholder="Monitor Role" required />
+                                    <span class="text-danger" id="validateMonitorRole"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 offset-9">
+                                <a class="btn btn-sm btn-outline-primary float-end" title="Create new Monitor" onclick="showNewMonitor()"><i class="bi bi-plus-circle"></i> New</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="addNew">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="firstName">First Name</label>
+                                    <input type="text" class="form-control inputsmmodal" id="firstName" placeholder="First Name">
+                                    <span id="validateFirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="lastName">Last Name</label>
+                                    <input type="text" class="form-control inputsmmodal" id="lastName" placeholder="Last Name">
+                                    <span id="validateLastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="email">Email</label>
+                                    <input type="text" class="form-control inputsmmodal" id="email" placeholder="Email">
+                                    <span id="validateEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="phone">Phone</label>
+                                    <input type="text" class="form-control inputsmmodal" id="phone" placeholder="Phone">
+                                    <span id="validatePhone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="floating-label" for="role">Role</label>
+                                    <input type="text" class="form-control inputsmmodal" id="role" placeholder="Role">
+                                    <span id="validateRole" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-4 offset-8">
+                                <div class="mb-3">
+                                    <a class="btn btn-sm btn-outline-primary float-end" title="Show Existing Monitors" onclick="hideNewMonitor()"><i class="bi bi-check2-square"></i> Select</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addMonitor()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Monitor*@
+
+@*Start Documents*@
+<div id="documentModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="documentModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Document</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Document Type *</label>
+                                <select id="documentTypeList" class="form-select">
+                                    <option value="-1">Select Document Type</option>
+                                </select>
+                                <span id="validatedocumentType" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="documentName" class="form-label">Document Name *</label>
+                                <input id="documentName" type="text" class="form-control inputsmmodal" placeholder="Document Name" required />
+                                <span class="text-danger" id="validateDocumentType"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docDate" class="form-label">Document Date *</label>
+                                <input type="date" class="form-control inputsmmodal" id="docDate" placeholder="Document Date" required />
+                                <span class="text-danger" id="docDateValidate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docVersion" class="form-label">Document Version *</label>
+                                <input type="text" class="form-control inputsmmodal" id="docVersion" placeholder="Document Version" required />
+                                <span class="text-danger" id="docVersionValidate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docNotes" class="form-label">Document Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="docNotes" placeholder="Document Notes"></textarea>
+                                <span class="text-danger" id="docNotesValidate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3 ">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input chkmodal" type="checkbox" id="docActive">
+                                    <label class="form-check-label" for="docActive">&nbsp;Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success" onclick="addDocument()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Documents*@
+
+@*Start Protocol*@
+<div id="protocolModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="protocolModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Protocol</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="protocolName" class="form-label">Protocol Name *</label>
+                                <input id="protocolName" type="text" class="form-control inputsmmodal" placeholder="Protocol Name" required />
+                                <span class="text-danger" id="validateProtocolName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="protocolVersion" class="form-label">Version *</label>
+                                <input id="protocolVersion" type="text" class="form-control inputsmmodal" placeholder="Version" required />
+                                <span class="text-danger" id="validateProtocolVersion"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Approved Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="approvedDate" placeholder="Approved Date" />
+                                <span class="text-danger" id="validateApprovedDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Created Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="createdDate" placeholder="Created Date" />
+                                <span class="text-danger" id="validateCreatedDate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="startDate" placeholder="Start Date" />
+                                <span class="text-danger" id="validateStartDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control inputsmmodal" id="endDate" placeholder="End Date" />
+                                <span class="text-danger" id="validateEndDate"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="protocolNotes" placeholder="Notes"></textarea>
+                                <span class="text-danger" id="validateprotocolNotes"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="protocolVisit" class="form-label">Number Visit *</label>
+                                <input id="protocolVisit" type="number" class="form-control inputsmmodal" placeholder="Number Visit" required />
+                                <span class="text-danger" id="validateProtocolVisit"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addProtocol()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Protocol*@
+
+@*Start Arms*@
+<div id="armsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="armsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Arms</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="armName" class="form-label">Arm Name *</label>
+                                <input id="armName" type="text" class="form-control inputsmmodal" placeholder="Arm Name" required />
+                                <span class="text-danger" id="validateArmName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Target Enrollment *</label>
+                                <input type="number" class="form-control inputsmmodal" id="targetEnrollment" placeholder="Target Enrollment" required />
+                                <span class="text-danger" id="validateTargetEnrollment"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Dose Level *</label>
+                                <input type="text" class="form-control inputsmmodal" id="doseLevel" placeholder="Dose Level" required />
+                                <span class="text-danger" id="validateDoseLevel"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="armDescription" placeholder="Description"></textarea>
+                                <span class="text-danger" id="validateDescription"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addArm()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Arms*@
+
+@*Start Visits*@
+<div id="visitModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="visitModal" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Visit</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="visitName" class="form-label">Visit Name *</label>
+                                <input id="visitName" type="text" class="form-control inputsmmodal" placeholder="Visit Name" required />
+                                <span class="text-danger" id="validatevisitName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Arm *</label>
+                                <select id="armList" class="form-select">
+                                    <option value="-1">Select Arm</option>
+                                </select>
+                                <span id="validateArm" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Day Off Set *</label>
+                                <input type="number" class="form-control inputsmmodal" id="dayOffSet" placeholder="Day Off Set" required />
+                                <span class="text-danger" id="validateDayOffSet"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="sortOrder" class="form-label">Sort order *</label>
+                                <input id="sortOrder" type="number" class="form-control inputsmmodal" placeholder="Sort order" required />
+                                <span class="text-danger" id="validateSortOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Windows Minus *</label>
+                                <input type="number" class="form-control inputsmmodal" id="windowsMinus" placeholder="Windows Minus" />
+                                <span class="text-danger" id="validateWindowsMinus"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Windows Plus *</label>
+                                <input type="number" class="form-control inputsmmodal" id="windowsPlus" placeholder="Windows Plus" />
+                                <span class="text-danger" id="validateWindowsPlus"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="commentVisit" class="form-label">Comment</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="commentVisit" placeholder="comment"></textarea>
+                                <span class="text-danger" id="validateCommentVisit"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3 ">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input chkmodal" type="checkbox" id="requiredFlag">
+                                    <label class="form-check-label" for="requiredFlag">&nbsp;Required Flag</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" onclick="addVisit()"> Add</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*End Visits*@
+
+@*End Modals.....*@
+
+
+<script>
+    window._csrfToken = $('@Html.AntiForgeryToken()').val();
+    urlIndex = '/STD/StudioListData/Edit';
+    urlIndexSponsor = '/STD/Sponsor';
+    urlIndexReferenceData = '/CMN/ReferenceData';
+    urlIndexMonitor = '/STD/Monitor';
+</script>
+<script src="/js/std/studioListData/studioEdit.js"></script>

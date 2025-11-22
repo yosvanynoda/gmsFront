@@ -201,7 +201,7 @@ step-line.fail {
     /*height: 550px !important;*/
     /* height: 85vh !important*/
     /*height: stretch !important;*/
-    height: 70% !important;
+    height: 77% !important;
 }
 
 .inputsmmodal {
@@ -218,7 +218,7 @@ step-line.fail {
 
 #wizardForm {
     width: 100% !important;
-    height: 96vh !important
+    height: 85vh !important
 }
 
 
@@ -229,5 +229,5 @@ step-line.fail {
 }
 
 .gms-main {
-    height: 93vh;
+    height: 87vh;
 }

@@ -4,10 +4,12 @@ using GMS.Objects.General;
 using GMS.Objects.SUB;
 using GMS_UI.Helper;
 using GMS_UI.Models;
+using GMS_UI.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace GMS_UI.Pages.SUB.Subject
 {
@@ -30,6 +32,7 @@ namespace GMS_UI.Pages.SUB.Subject
 
         public List<SelectListItem> ProtocolVersionList { get; set; } = new();
         public List<SelectListItem> DeviationList { get; set; } = new();
+        public List<SelectListItem> SubjectStatusList { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -38,6 +41,9 @@ namespace GMS_UI.Pages.SUB.Subject
 
             // Load Deviation Types
             await LoadDeviations();
+
+            // Load Subject Status
+            LoadSubjectStatus();
         }
 
         private async Task LoadProtocolVersions()
@@ -123,6 +129,26 @@ namespace GMS_UI.Pages.SUB.Subject
             }
         }
 
+        private void LoadSubjectStatus()
+        {
+            try
+            {
+                SubjectStatusList = Enum.GetValues(typeof(SubjectStatusEnum))
+                    .Cast<SubjectStatusEnum>()
+                    .Select(status => new SelectListItem
+                    {
+                        Value = ((int)status).ToString(),
+                        Text = status.ToString().Replace("ScreenFail", "Screen Fail")
+                    })
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading subject status");
+                SubjectStatusList = new List<SelectListItem>();
+            }
+        }
+
         public async Task<JsonResult> OnPostGetSubjectDataAsync([FromBody] SubjectRequest request)
         {
             try
@@ -188,6 +214,74 @@ namespace GMS_UI.Pages.SUB.Subject
                     errorMessage = ex.Message,
                     success = false,
                     data = (object)null
+                });
+            }
+        }
+
+        public async Task<JsonResult> OnPostUpdateSubjectAsync()
+        {
+            try
+            {
+                _logger.LogInformation("OnPostUpdateSubjectAsync called");
+
+                using var reader = new StreamReader(Request.Body);
+                var body = await reader.ReadToEndAsync();
+
+                _logger.LogInformation("Request body: {Body}", body);
+
+                var subjectData = JsonConvert.DeserializeObject<UpdateSubjectRequest>(body);
+
+                if (subjectData == null)
+                {
+                    _logger.LogWarning("Deserialized subject data is null");
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Invalid request data - deserialization returned null"
+                    });
+                }
+
+                _logger.LogInformation("Calling API - URL: {ApiUrl}, Endpoint: {Endpoint}",
+                    _settings.ApiUrl(), _settings.Endpoint_UpdateSubject());
+
+                var result = await GenericAPI.CreateGeneric(
+                    _settings.ApiUrl(),
+                    _settings.Endpoint_UpdateSubject(),
+                    "Update Subject",
+                    "",
+                    subjectData
+                );
+
+                _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
+                    result?.Success, result?.Message);
+
+                if (result?.Success == true)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Subject updated successfully",
+                        data = result.Data
+                    });
+                }
+                else
+                {
+                    var errorMessage = result?.Message ?? "Error updating subject - no message from API";
+                    _logger.LogWarning("API returned error: {ErrorMessage}", errorMessage);
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = errorMessage
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception in OnPostUpdateSubjectAsync: {Message}", ex.Message);
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = $"Exception: {ex.Message}"
                 });
             }
         }

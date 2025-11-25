@@ -1,9 +1,12 @@
 using GMS.BL.Generic;
 using GMS.Objects.API;
+using GMS.Objects.General;
+using GMS.Objects.STD;
 using GMS.Objects.SUB;
 using GMS_UI.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace GMS_UI.Pages.SUB.Subject
@@ -19,8 +22,22 @@ namespace GMS_UI.Pages.SUB.Subject
             _settings = settings;
         }
 
-        public void OnGet()
+        public List<SelectListItem> StudyList { get; set; } = new List<SelectListItem>();
+
+        public async Task OnGetAsync()
         {
+            // Load Study List
+            var studyRequest = new StudioRequest
+            {
+                CompanyId = 1,
+                SiteId = 1
+            };
+            var studyResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/STD/getstudiodroplist", "Study List", "", studyRequest);
+            if (studyResponse?.Success == true && studyResponse.Data != null)
+            {
+                var studyData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(studyResponse.Data.ToString());
+                StudyList = studyData?.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList() ?? new List<SelectListItem>();
+            }
         }
 
         public async Task<JsonResult> OnPostAsync()

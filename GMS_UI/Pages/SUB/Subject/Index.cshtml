@@ -7,11 +7,23 @@
 <div class="container-gms">
     <div class="card">
         <div class="card-header page-card-header">
-            <h4>
-                <i class="bi bi-person-badge-fill me-2"></i>Subject List
-                <span class="stats-badge" id="totalCount">0 Subjects</span>
-            </h4>
-            <p class="subtitle mb-0">View and manage all subjects across studies</p>
+            <div class="row align-items-center">
+                <div class="col">
+                    <h4>
+                        <i class="bi bi-person-badge-fill me-2"></i>Subject List
+                        <span class="badge bg-light text-dark ms-2" id="totalCount">0</span>
+                    </h4>
+                </div>
+                <div class="col-auto">
+                    <select id="studyFilter" class="form-select form-select-sm" style="display: inline-block; width: auto; min-width: 200px;">
+                        <option value="">All Studies</option>
+                        @foreach (var study in Model.StudyList)
+                        {
+                            <option value="@study.Value">@study.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div id="subjectGrid" class="ag-theme-balham gridIndexSize"></div>

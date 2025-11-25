@@ -7,36 +7,30 @@
 
 
 <div class="container-gms">
-    <div class="card preselected-card">
-        <div class="card-header preselected-header">
+    <div class="card">
+        <div class="card-header page-card-header">
             <div class="row align-items-center">
-                <div class="col-md-8">
+                <div class="col">
                     <h4>
                         <i class="bi bi-people-fill me-2"></i>Pre-Selected Volunteers
-                        <span class="stats-badge" id="totalCount">0 Candidates</span>
+                        <span class="badge bg-light text-dark ms-2" id="totalCount">0</span>
                     </h4>
-                    <p class="subtitle mb-0">View and manage volunteers pre-assigned to studies</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="filter-section">
-                        <label for="studyFilter">
-                            <i class="bi bi-funnel me-1"></i>Filter by Study
-                        </label>
-                        <select id="studyFilter" class="form-select">
-                            <option value="">All Studies</option>
-                            @foreach (var study in Model.StudyList)
-                            {
-                                <option value="@study.Value">@study.Text</option>
-                            }
-                        </select>
-                        <button id="btnCompleteSelected" class="btn btn-success mt-2 w-100" style="display: none;">
-                            <i class="bi bi-check-circle-fill me-2"></i>Complete Selected (<span id="selectedCount">0</span>)
-                        </button>
-                    </div>
+                <div class="col-auto">
+                    <select id="studyFilter" class="form-select form-select-sm me-2" style="display: inline-block; width: auto; min-width: 200px;">
+                        <option value="">All Studies</option>
+                        @foreach (var study in Model.StudyList)
+                        {
+                            <option value="@study.Value">@study.Text</option>
+                        }
+                    </select>
+                    <button id="btnCompleteSelected" class="btn btn-sm btn-success" style="display: none;">
+                        <i class="bi bi-check-circle-fill me-1"></i>Complete (<span id="selectedCount">0</span>)
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="card-body preselected-grid-container">
+        <div class="card-body">
             <div id="preSelectedGrid" class="ag-theme-balham gridIndexSize"></div>
         </div>
     </div>
@@ -45,9 +39,11 @@
 <!-- Create Subject Modal -->
 <div id="createSubjectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createSubjectModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" role="document">
-            <div class="modal-header" style="background: linear-gradient(135deg, #7fb3b5, #5f9ea0); color: white;">
-                <h2>Create Subject</h2>
+        <div class="modal-content">
+            <div class="modal-header page-card-header">
+                <h5 class="modal-title" id="createSubjectModalLabel">
+                    <i class="bi bi-person-plus-fill me-2"></i>Create Subject
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

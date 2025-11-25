@@ -79,6 +79,11 @@ function displayVisitPlanData(data) {
 
     if (visitData.length > 0) {
         console.log('First item:', JSON.stringify(visitData[0], null, 2));
+
+        // Extract and display subject name
+        const firstRecord = visitData[0];
+        const subjectName = firstRecord.subjectName || firstRecord.SubjectName || 'Subject';
+        $('#subjectName').text(subjectName);
     }
 
     // Setup AG-Grid options

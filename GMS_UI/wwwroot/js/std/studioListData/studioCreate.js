@@ -492,11 +492,59 @@ function initializeMonitorGrid() {
 }
 
 function addMonitor() {
-    let monitor = {
-        monitorId: parseInt($('#monitorList').val()),
-        monitorName: $('#monitorList option:selected').text(),
-        role: $('#monitorRole').val(),
-    };
+    const isNewM = $('#isNewMonitor').val();
+    let monitor = {};
+
+    if (isNewM == 'false') {
+        monitor = {
+            monitorId: parseInt($('#monitorList').val()),
+            monitorName: $('#monitorList option:selected').text(),
+            role: $('#monitorRole').val(),
+        };
+    }
+    else
+    {
+        const mnId = 0;
+        const firstName = $('#firstName').val();
+        const lastName = $('#lastName').val();
+        const email = $('#email').val();
+        const phone = $('#phone').val();
+        const role = $('#role').val();
+        const sponsorId = parseInt($('#sponsorList').val());
+        const action = 1;
+
+        $.ajax({
+            type: "POST",
+            url: urlIndexMonitor + '?handler=CrudMonitor',
+            headers: { 'RequestVerificationToken': window._csrfToken },
+            data: {
+                "id": mnId, "firstName": firstName, "lastName": lastName,
+                "email": email, "phone": phone, "role": role, "sponsorId": sponsorId,
+                "action": action
+},
+            success: function (data) {
+                monitor = {
+                    monitorId: data.monitorId,
+                    monitorName: `${firstName} ${lastName}`,
+                    role: role,
+                };
+
+                hideNewMonitor();
+            },
+            failure: function (response) {
+                $('#failedTitle').html('Save Study');
+                $('#failedMsg').html('Save Study failed. Please try again');
+                $('#failedAlert').show();
+            },
+            error: function (response) {
+                $('#failedTitle').html('Save Study');
+                $('#failedMsg').html('Save Study failed. Please try again');
+                $('#failedAlert').show();
+            }
+        });
+    }
+
+    
 
     $('#monitorList').val(-1);
     $('#monitorRole').val('');

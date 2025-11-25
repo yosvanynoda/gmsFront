@@ -101,6 +101,7 @@ namespace GMS_UI.Pages.STD.Monitor
                 {
                     success = response.Success,
                     message = response.Message,
+                    monitorId = response.Data,
                 });
             }
             catch (Exception ex)

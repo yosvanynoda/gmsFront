@@ -2,7 +2,7 @@
 class StudioListButtonRenderer {
     init(params) {
         this.eGui = document.createElement('div')
-        const editLink = createActionLink('Edit', '#editStudioList', 'link-success', 'bi bi-pencil-fill', params.data.id, params.data.studioList, params.data.datecreated,
+        const editLink = createActionLink('Edit', `${urlIndex}/edit?id=${params.data.id}`, 'link-success', 'bi bi-pencil-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes);
         const deleteLink = createActionLink('Delete', '#deleteStudioList', 'link-danger', 'bi bi-x-octagon-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes);

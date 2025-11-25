@@ -8,16 +8,17 @@
 
 <div class="wizard-container">
     <h2 class="text-center mb-4">
-        <i class="bi bi-person-badge-fill text-primary"></i>
-        Subject Data - Edit
+        <i class="bi bi-pencil-fill text-primary"></i>
+        Edit Subject
     </h2>
-
-    @Html.AntiForgeryToken()
 
     <input type="hidden" id="subjectId" value="@Model.SubjectId" />
     <input type="hidden" id="returnUrl" value="@Model.ReturnUrl" />
 
-    <!-- Progress Indicator -->
+    <form asp-page-handler="UpdateSubject" method="post" id="wizardForm">
+        @Html.AntiForgeryToken()
+
+        <!-- Progress Indicator -->
     <div class="step-indicator">
         <div class="step-circle active" id="step1-indicator" onclick="jumpToStep(1)" style="cursor: pointer;" title="General Information">1</div>
         <div class="step-line" id="line1"></div>
@@ -32,10 +33,12 @@
     <div class="wizard-step active wizard-body" id="step1">
         <div class="form-section">
             <h5><i class="bi bi-info-circle"></i> General Information</h5>
+        <input type="hidden" id="subjectIdDisplay" />
+        <input type="hidden" id="volunteerId" value="0" />
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="subjectIdDisplay" class="form-label fw-bold">Subject ID:</label>
-                <input type="text" class="form-control" id="subjectIdDisplay" readonly />
+                <label for="subjectCode" class="form-label fw-bold">Subject Code:</label>
+                <input type="text" class="form-control" id="subjectCode" readonly />
             </div>
             <div class="col-md-6 mb-3">
                 <label for="dateCreated" class="form-label fw-bold">Date Created:</label>
@@ -59,7 +62,13 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label for="currentStatus" class="form-label fw-bold">Current Status:</label>
-                <input type="text" class="form-control" id="currentStatus" readonly />
+                <select class="form-select" id="currentStatus">
+                    <option value="">-- Select Status --</option>
+                    @foreach (var status in Model.SubjectStatusList)
+                    {
+                        <option value="@status.Value">@status.Text</option>
+                    }
+                </select>
             </div>
         </div>
         <div class="row">
@@ -120,25 +129,26 @@
         </div>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="wizard-navigation">
-        <div>
-            <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="previousStep()" style="display: none;">
-                <i class="bi bi-arrow-left"></i> Previous
-            </button>
-            <button type="button" class="btn btn-outline-danger btn-wizard" id="cancelBtn" onclick="cancelEdit()">
-                <i class="bi bi-x-circle"></i> Cancel
-            </button>
+        <!-- Navigation Buttons -->
+        <div class="wizard-navigation">
+            <div>
+                <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                    <i class="bi bi-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-wizard" id="cancelBtn" onclick="cancelWizard()">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                    Next <i class="bi bi-arrow-right"></i>
+                </button>
+                <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
+                    <i class="bi bi-check"></i> Update Subject
+                </button>
+            </div>
         </div>
-        <div class="ms-auto">
-            <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="nextStep()">
-                Next <i class="bi bi-arrow-right"></i>
-            </button>
-            <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
-                <i class="bi bi-check-circle"></i> Save Changes
-            </button>
-        </div>
-    </div>
+    </form>
 </div>
 
 <!-- Consent Modal -->

@@ -1,0 +1,103 @@
+@page
+@model GMS_UI.Pages.PRJ.VisitSchedule.IndexModel
+@{
+    ViewData["Title"] = "Visit Schedule";
+}
+
+<div class="container-gms">
+    <div class="card">
+        <div class="card-header page-card-header">
+            <h4>
+                <i class="bi bi-calendar-week me-2"></i>Visit Schedule
+            </h4>
+            <p class="mb-0" style="color: rgba(255,255,255,0.9);"><small>
+                View and manage scheduled visits for the selected date range
+            </small></p>
+        </div>
+        <div class="card-body">
+            <!-- Quick Filter Buttons and Team Filter -->
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" onclick="filterToday()">
+                            <i class="bi bi-calendar-date me-1"></i> Today
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="filterTomorrow()">
+                            <i class="bi bi-calendar-plus me-1"></i> Tomorrow
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="filterThisWeek()">
+                            <i class="bi bi-calendar-week me-1"></i> This Week
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="filterNextWeek()">
+                            <i class="bi bi-calendar-range me-1"></i> Next Week
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select id="teamFilter" class="form-select form-select-sm">
+                        <option value="">All Teams</option>
+                        @foreach (var team in Model.TeamList)
+                        {
+                            <option value="@team.Value">@team.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date Range Picker Section -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold" for="startDate">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold" for="endDate">End Date</label>
+                    <input type="date" class="form-control" id="endDate" />
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary" onclick="loadCustomRange()">
+                        <i class="bi bi-search me-1"></i> Load Custom Range
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h5 class="mb-0" id="totalVisits">0</h5>
+                            <small class="text-muted">Total Visits</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h5 class="mb-0 text-success" id="completedVisits">0</h5>
+                            <small class="text-muted">Completed</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h5 class="mb-0 text-primary" id="pendingVisits">0</h5>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visit Schedule Grid -->
+            <div id="visitScheduleGrid" class="ag-theme-balham gridIndexSize"></div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+<script>
+    window._csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+</script>
+<script src="~/js/prj/visitSchedule/visitSchedule.js?v=@DateTime.Now.Ticks"></script>

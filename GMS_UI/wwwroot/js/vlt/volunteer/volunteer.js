@@ -43,9 +43,13 @@ const gridOptions = {
             width: 50,
             cellRenderer: (params) => {
                 if (params.value && params.value !== '' && params.value !== '#FFFFFF' && params.value !== 'white') {
-                    return `<i class="bi bi-circle-fill" style="color: ${params.value};"></i>`;
+                    return `<i class="bi bi-circle-fill" style="color: ${params.value}; font-size: 16px;"></i>`;
                 }
                 return '';
+            },
+            tooltipField: "flagName",
+            tooltipValueGetter: (params) => {
+                return params.data.flagName || params.data.FlagName || '';
             },
             sortable: false,
             filter: false
@@ -104,10 +108,6 @@ $(function () {
 });
 
 function setupGrid(data) {
-    console.log('Grid data received:', data);
-    if (data && data.length > 0) {
-        console.log('First record sample:', data[0]);
-    }
     gridOptions.rowData = data;
     gridApi = agGrid.createGrid(document.querySelector("#volunteerGrid"), gridOptions);
 }

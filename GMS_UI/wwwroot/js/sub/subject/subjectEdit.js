@@ -260,12 +260,33 @@ function populateFormData() {
 
     // Populate general information (using PascalCase to match C# model)
     $('#subjectIdDisplay').val(header.SubjectId || header.subjectId || '');
+    $('#volunteerId').val(header.VolunteerId || header.volunteerId || 0);
+    $('#subjectCode').val(header.SubjectCode || header.subjectCode || '');
     $('#dateCreated').val(formatDate(header.DateCrated || header.dateCrated || header.dateCreated));
     $('#firstName').val(header.FirstName || header.firstName || '');
     $('#lastName').val(header.LastName || header.lastName || '');
     $('#dob').val(formatDate(header.SubjectDOB || header.subjectDOB));
-    $('#currentStatus').val(header.CurrentStatus || header.currentStatus || '');
+
+    // Set current status by matching the text
+    const statusText = header.CurrentStatus || header.currentStatus;
+    console.log('Looking for status:', statusText);
+
+    // Find the option with matching text
+    $('#currentStatus option').each(function() {
+        const optionText = $(this).text().trim();
+        const cleanStatusText = statusText ? statusText.replace(/\s+/g, '').toLowerCase() : '';
+        const cleanOptionText = optionText.replace(/\s+/g, '').toLowerCase();
+
+        console.log('Comparing:', cleanStatusText, 'with', cleanOptionText);
+
+        if (cleanStatusText === cleanOptionText) {
+            $(this).prop('selected', true);
+            console.log('Matched! Selected option:', optionText, 'with value:', $(this).val());
+        }
+    });
+
     $('#studyName').val(header.StudyName || header.studyName || '');
+    $('#studyName').data('study-id', header.StudyId || header.studyId || 0);
     $('#randomCode').val(header.RandomCode || header.randomCode || '');
 
     const ramdoDate = header.RamdoDate || header.ramdoDate;
@@ -356,15 +377,10 @@ function updateGrids() {
 }
 
 // Wizard navigation functions
-function nextStep() {
-    if (currentStep < totalSteps) {
-        goToStep(currentStep + 1);
-    }
-}
-
-function previousStep() {
-    if (currentStep > 1) {
-        goToStep(currentStep - 1);
+function changeStep(direction) {
+    const newStep = currentStep + direction;
+    if (newStep >= 1 && newStep <= totalSteps) {
+        goToStep(newStep);
     }
 }
 
@@ -679,12 +695,131 @@ function saveAdverse() {
 
 // Form submission
 function submitForm() {
-    // TODO: Implement save functionality to update subject data via API
-    alert('Save functionality will be implemented to update consent, deviation, and adverse event data');
+    if (!confirm('Are you sure you want to save all changes to this subject?')) {
+        return;
+    }
+
+    const subjectId = parseInt($('#subjectId').val());
+
+    if (!subjectId || subjectId === 0) {
+        alert('Invalid Subject ID');
+        return;
+    }
+
+    // Collect all form data
+    const requestData = {
+        subjectGeneralData: [{
+            subjectId: subjectId,
+            volunteerId: parseInt($('#volunteerId').val()) || 0,
+            studyId: parseInt($('#studyName').data('study-id')) || 0,
+            companyId: 1,
+            siteId: 1,
+            userNameId: 1,
+            currentStatus: $('#currentStatus option:selected').text() || '',
+            currentStatusId: parseInt($('#currentStatus').val()) || 0
+        }],
+        subjectInformedConsent: [],
+        subjectAdverseEvent: [],
+        subjectProtocolDeviation: []
+    };
+
+    // Collect consent data
+    consentData.forEach(consent => {
+        requestData.subjectInformedConsent.push({
+            ConsentID: consent.consentID || 0,
+            SubjectID: subjectId,
+            StudyId: parseInt($('#studyName').data('study-id')) || 0,
+            ProtocolVersionId: consent.protocolVersionId || 0,
+            ConsentDate: consent.consentDate || '',
+            ReconsentFlag: consent.reconsentFlag || false,
+            UserName: 1,
+            Active: true,
+            Signed: consent.signedFlag || false
+        });
+    });
+
+    // Collect deviation data
+    deviationData.forEach(deviation => {
+        requestData.subjectProtocolDeviation.push({
+            PDevID: deviation.pDevID || 0,
+            StudyID: parseInt($('#studyName').data('study-id')) || 0,
+            SubjectID: subjectId,
+            VisitID: deviation.visitID || 0,
+            CategoryId: deviation.deviationId || 0,
+            Description: deviation.description || '',
+            Severity: String(deviation.severity || 1),
+            ReportedDate: deviation.reportedDate || '',
+            Outcome: deviation.outcome || '',
+            UserName: 1,
+            Active: true
+        });
+    });
+
+    // Collect adverse event data
+    adverseData.forEach(adverse => {
+        requestData.subjectAdverseEvent.push({
+            AEID: adverse.aeid || 0,
+            SubjectID: subjectId,
+            StartDate: adverse.startDate || '',
+            EndDate: adverse.endDate || '',
+            Severity: adverse.severity || '',
+            RelationshipToIP: adverse.relationshipToIP || '',
+            SeriousFlag: adverse.seriousFlag || false,
+            SAECriteria: adverse.saeCriteria || '',
+            Outcome: adverse.outcome || '',
+            MedDRACode: adverse.medDRACode || '',
+            UserName: 1,
+            Active: true
+        });
+    });
+
+    console.log('Submitting subject data:', requestData);
+
+    // Submit via AJAX
+    $.ajax({
+        type: "POST",
+        url: window.location.pathname + '?handler=UpdateSubject',
+        data: JSON.stringify(requestData),
+        contentType: "application/json",
+        headers: {
+            'RequestVerificationToken': window._csrfToken
+        },
+        success: function (response) {
+            console.log('Update Response:', response);
+
+            if (response.success) {
+                alert('Subject updated successfully!');
+                const returnUrl = $('#returnUrl').val() || '/SUB/Subject/Index';
+                window.location.href = returnUrl;
+            } else {
+                const errorMsg = response.message || 'Unknown error occurred';
+                console.error('Error details:', response);
+                alert('Error: ' + errorMsg);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', {
+                status: status,
+                error: error,
+                responseText: xhr.responseText,
+                statusCode: xhr.status
+            });
+
+            let errorMessage = 'Unknown error occurred';
+            try {
+                const errorResponse = JSON.parse(xhr.responseText);
+                errorMessage = errorResponse.message || errorMessage;
+            } catch (e) {
+                errorMessage = xhr.responseText || errorMessage;
+            }
+
+            alert('Error updating subject: ' + errorMessage);
+        }
+    });
 }
 
 // Cancel and return
-function cancelEdit() {
+function cancelWizard() {
     const returnUrl = $('#returnUrl').val() || '/SUB/Subject/Index';
     if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
         window.location.href = returnUrl;

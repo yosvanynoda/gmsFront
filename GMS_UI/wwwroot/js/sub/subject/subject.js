@@ -95,6 +95,29 @@ const gridOptions = {
 $(function () {
     loadSubjects();
 
+    // Handle study filter change
+    $('#studyFilter').on('change', function() {
+        const selectedStudyId = $(this).val();
+
+        if (selectedStudyId === '') {
+            // Show all subjects
+            gridApi.setFilterModel(null);
+        } else {
+            // Filter by study
+            const filterModel = {
+                studyId: {
+                    filterType: 'text',
+                    type: 'equals',
+                    filter: selectedStudyId
+                }
+            };
+            gridApi.setFilterModel(filterModel);
+        }
+
+        // Update count
+        updateTotalCount();
+    });
+
     // Handle randomize action link clicks
     $(document).on('click', '.randomize-link', function(e) {
         e.preventDefault();
@@ -150,8 +173,7 @@ function setupGrid(data) {
     gridOptions.rowData = data;
 
     // Update count badge
-    const count = data ? data.length : 0;
-    $('#totalCount').text(`${count} Subject${count !== 1 ? 's' : ''}`);
+    updateTotalCount(data);
 
     // Clear existing grid
     const gridDiv = document.querySelector("#subjectGrid");
@@ -159,6 +181,20 @@ function setupGrid(data) {
 
     // Create new grid
     gridApi = agGrid.createGrid(gridDiv, gridOptions);
+}
+
+function updateTotalCount(data) {
+    let count = 0;
+    if (gridApi) {
+        // Count displayed rows after filtering
+        gridApi.forEachNodeAfterFilter(node => {
+            count++;
+        });
+    } else if (data) {
+        // Initial count from data
+        count = data.length;
+    }
+    $('#totalCount').text(count);
 }
 
 function showRandomCodeModal(subjectData) {

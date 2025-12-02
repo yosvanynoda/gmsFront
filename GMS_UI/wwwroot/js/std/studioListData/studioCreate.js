@@ -493,14 +493,16 @@ function initializeMonitorGrid() {
 
 function addMonitor() {
     const isNewM = $('#isNewMonitor').val();
-    let monitor = {};
+    
 
     if (isNewM == 'false') {
-        monitor = {
-            monitorId: parseInt($('#monitorList').val()),
-            monitorName: $('#monitorList option:selected').text(),
-            role: $('#monitorRole').val(),
+       const monitor = {
+                monitorId: parseInt($('#monitorList').val()),
+                monitorName: $('#monitorList option:selected').text(),
+                role: $('#monitorRole').val(),
         };
+
+        monitorsData.push(monitor);
     }
     else
     {
@@ -523,11 +525,15 @@ function addMonitor() {
                 "action": action
 },
             success: function (data) {
-                monitor = {
+                const monitor = {
                     monitorId: data.monitorId,
                     monitorName: `${firstName} ${lastName}`,
                     role: role,
                 };
+
+                console.log(monitor);
+
+                monitorsData.push(monitor);
 
                 hideNewMonitor();
             },
@@ -549,7 +555,7 @@ function addMonitor() {
     $('#monitorList').val(-1);
     $('#monitorRole').val('');
     
-    monitorsData.push(monitor);
+    
 
     initializeMonitorGrid();
 }

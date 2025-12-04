@@ -23,10 +23,10 @@
 
     <form asp-page-handler="Edit" method="post" id="wizardForm">
 
-        @* <input type="hidden" id="blindingType" value="@Model.BlindingTypeSL" />
+        <input type="hidden" id="blindingType" value="@Model.BlindingTypeSL" />
         <input type="hidden" id="phaseType" value="@Model.PhaseTypeSL" />
         <input type="hidden" id="studyDesignType" value="@Model.StudyDesignTypeSL" />
-        <input type="hidden" id="studioStatus" value="@Model.StudyStatusSL" /> *@
+        <input type="hidden" id="studioStatus" value="@Model.StudyStatusSL" />
 
 
         <!-- Progress Indicator -->
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <!-- Step 2 Other General Data...-->
+        <!-- Step 2: Goal and Other specifications (Regulatory) -->
         <div class="wizard-step wizard-body" id="step2">
             <div class="form-section">
                 <h5><i class="fa fa-info-circle"></i> Goal and Other specifications</h5>
@@ -247,8 +247,8 @@
             </div>
         </div>
 
-        <!-- Step 4: Monitor -->
-        <div class="wizard-step wizard-body" id="step4">
+        <!-- Step 5: Monitor -->
+        <div class="wizard-step wizard-body" id="step5">
             <div class="form-section">
                 <h5><i class="fas fa-shield-alt"></i> Monitors</h5>
 
@@ -264,8 +264,8 @@
             </div>
         </div>
 
-        <!-- Step 5: Documents -->
-        <div class="wizard-step wizard-body" id="step5">
+        <!-- Step 6: Documents -->
+        <div class="wizard-step wizard-body" id="step6">
             <div class="form-section">
                 <h5><i class="fas fa-shield-alt"></i> Regulatory & Ethics Information</h5>
 
@@ -281,8 +281,8 @@
             </div>
         </div>
 
-        <!-- Step 6: Protocol -->
-        <div class="wizard-step wizard-body" id="step6">
+        <!-- Step 4: Protocol -->
+        <div class="wizard-step wizard-body" id="step4">
             <div class="form-section">
                 <h5><i class="fas fa-check-circle"></i>Protocol</h5>
 
@@ -399,21 +399,13 @@
                 <div class="form-section">
                     <div id="selectExists">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Monitor *</label>
                                     <select id="monitorList" class="form-select">
                                         <option value="-1">Select Monitor</option>
                                     </select>
                                     <span id="validateMonitor" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="monitorRole" class="form-label">Monitor Role *</label>
-                                    <input id="monitorRole" type="text" class="form-control inputsmmodal" placeholder="Monitor Role" required />
-                                    <span class="text-danger" id="validateMonitorRole"></span>
                                 </div>
                             </div>
                         </div>
@@ -463,19 +455,9 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <label class="floating-label" for="role">Role</label>
-                                    <input type="text" class="form-control inputsmmodal" id="role" placeholder="Role">
-                                    <span id="validateRole" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-4 offset-8">
                                 <div class="mb-3">
-                                    <a class="btn btn-sm btn-outline-primary float-end" title="Show Existing Monitors" onclick="hideNewMonitor()"><i class="bi bi-check2-square"></i> Select</a>
+                                    <a class="btn btn-sm btn-outline-secondary float-end" title="Back to Existing Monitors" onclick="hideNewMonitor()"><i class="bi bi-arrow-left"></i> Back to List</a>
                                 </div>
                             </div>
                         </div>

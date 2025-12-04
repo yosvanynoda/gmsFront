@@ -4,7 +4,10 @@
 let currentStep = 1;
 const totalSteps = 9;
 
-// general data variables 
+// Studio ID for edit mode
+let studioId = 0;
+
+// general data variables
 let monitorsData = [];
 let documentsData = [];
 let protocolsData = [];
@@ -125,34 +128,11 @@ function goToStep(step) {
 }
 
 function validateStep(step) {
-    //const stepElement = document.getElementById(`step${step}`);
-    //const requiredFields = stepElement.querySelectorAll('[required]');
     let isValid = true;
-
-    //requiredFields.forEach(field => {
-    //    if (!field.value.trim()) {
-    //        field.classList.add('is-invalid');
-    //        isValid = false;
-    //    } else {
-    //        field.classList.remove('is-invalid');
-    //    }
-    //});
-
-    //if (!isValid) {
-    //    alert('Please fill in all required fields before proceeding.');
-    //}
-
-    //if (step == 3)
-    //    return false;
-
     return isValid;
 }
 
 function updateNavigationButtons() {
-    //const prevBtn = document.getElementById('prevBtn');
-    //const nextBtn = document.getElementById('nextBtn');
-    //const submitBtn = document.getElementById('submitBtn');
-
     if (currentStep === 1) {
         $('#prevBtn').hide();
     } else {
@@ -166,29 +146,10 @@ function updateNavigationButtons() {
         $('#nextBtn').show();
         $('#submitBtn').hide();
     }
-
-    //prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
-    //nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    //submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
 }
 
 function updateReviewSummary() {
-    //const summary = document.getElementById('reviewSummary');
-    //const studyTitle = document.querySelector('[name="StudyTitle"]').value;
-    //const studyPhase = document.querySelector('[name="StudyPhase"]').value;
-    //const studyType = document.querySelector('[name="StudyType"]').value;
-    //const principalInvestigator = document.querySelector('[name="PrincipalInvestigator"]').value;
-    //const targetEnrollment = document.querySelector('[name="TargetEnrollment"]').value;
-    //const sponsorName = document.querySelector('[name="SponsorName"]').value;
-
-    //summary.innerHTML = `
-    //        <strong>Study Title:</strong> ${studyTitle}<br>
-    //        <strong>Phase:</strong> ${studyPhase}<br>
-    //        <strong>Type:</strong> ${studyType}<br>
-    //        <strong>Principal Investigator:</strong> ${principalInvestigator}<br>
-    //        <strong>Target Enrollment:</strong> ${targetEnrollment} participants<br>
-    //        <strong>Sponsor:</strong> ${sponsorName}
-    //    `;
+    // Implement review summary if needed
 }
 
 
@@ -197,47 +158,254 @@ updateNavigationButtons();
 
 //#endregion
 
-// Get URL from hidden field
+// Get studio ID from URL and load data
+//#region Get URL Parameters and Load Data
+
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+function loadStudioData() {
+    studioId = parseInt(getUrlParameter('id'));
+    console.log('Loading studio data for ID:', studioId);
+
+    if (!studioId || studioId === 0) {
+        alert('Invalid studio ID');
+        window.location.href = "/STD/StudioListData";
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=GetStudioData',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studioId": studioId },
+        success: function (response) {
+            console.log('API Response:', response);
+            if (response.success && response.data) {
+                console.log('Populating form with data:', response.data);
+                // Store data globally for AJAX dropdown callbacks
+                window.loadedStudioData = response.data;
+                populateFormWithData(response.data);
+            } else {
+                console.error('Failed to load studio data:', response);
+                alert('Failed to load studio data: ' + (response.message || 'Unknown error'));
+            }
+        },
+        failure: function (response) {
+            console.error('AJAX failure:', response);
+            alert('Failed to load studio data');
+        },
+        error: function (response) {
+            console.error('AJAX error:', response);
+            alert('Error loading studio data: ' + (response.responseText || 'Unknown error'));
+        }
+    });
+}
+
+function populateFormWithData(data) {
+    console.log('populateFormWithData called with:', data);
+
+    // Populate general data (Step 1)
+    if (data.header) {
+        console.log('Populating header data:', data.header);
+        console.log('All header properties:', Object.keys(data.header));
+
+        const general = data.header;
+        // API returns 'code' and 'name' for reading
+        $('#studyCode').val(general.code || '');
+        $('#studyName').val(general.name || '');
+        $('textarea#studyDescription').val(general.description || '');
+        $('textarea#studyNotes').val(general.notes || '');
+        $('#studyDateCreated').val(formatDateForInput(general.dateCreated));
+        // Populate Step 2 fields
+        $('#studyGoal').val(general.goal || '');
+        $('#studyIndication').val(general.indication || '');
+        $('#studyTherapeuticArea').val(general.therapeuticArea || '');
+
+        console.log('Step 2 fields populated:', {
+            goal: general.goal,
+            indication: general.indication,
+            therapeuticArea: general.therapeuticArea,
+            goalFieldValue: $('#studyGoal').val(),
+            indicationFieldValue: $('#studyIndication').val(),
+            therapeuticAreaFieldValue: $('#studyTherapeuticArea').val()
+        });
+
+        // Populate Step 3 (Dates) fields
+        $('#studyStartDate').val(formatDateForInput(general.startDate));
+        $('#studyEndDate').val(formatDateForInput(general.endDate));
+
+        // Set dropdown values after they're loaded
+        setTimeout(() => {
+            console.log('Setting dropdown values:', {
+                sponsor: general.sponsorId,
+                phase: general.phase,
+                blindType: general.blindType,
+                randomization: general.randomizationType,
+                status: general.studioStatus,
+                disease: general.diseaseId,
+                cro: general.croId
+            });
+
+            // Check if dropdowns have options
+            console.log('Phase dropdown options count:', $('#phaseList option').length);
+            console.log('Study Design dropdown options count:', $('#studyDesignList option').length);
+            console.log('Blinding Type dropdown options count:', $('#blidingList option').length);
+
+            // Log all option values
+            console.log('Phase options:', $('#phaseList option').map(function() { return this.value; }).get());
+            console.log('Study Design options:', $('#studyDesignList option').map(function() { return this.value; }).get());
+            console.log('Blinding Type options:', $('#blidingList option').map(function() { return this.value; }).get());
+            console.log('Trying to set Phase to:', general.phase);
+            console.log('Trying to set Study Design to:', general.randomizationType);
+            console.log('Trying to set Blinding Type to:', general.blindType);
+
+            // Set TempData dropdowns (populated on page load)
+            $('#phaseList').val(String(general.phase ?? -1));
+            $('#blidingList').val(String(general.blindType ?? -1));
+            $('#studyDesignList').val(String(general.randomizationType ?? -1));
+            $('#studystatusList').val(String(general.studioStatus ?? -1));
+
+            // AJAX dropdowns (sponsor, disease, cro) are set in their own callbacks
+            // after they finish loading
+
+            // Log what was actually selected
+            console.log('Phase selected value:', $('#phaseList').val());
+            console.log('Study Design selected value:', $('#studyDesignList').val());
+            console.log('Blinding Type selected value:', $('#blidingList').val());
+        }, 1000);
+    }
+
+    // Populate monitors data
+    if (data.monitors && data.monitors.length > 0) {
+        console.log('Populating monitors:', data.monitors);
+        monitorsData = data.monitors;
+        initializeMonitorGrid();
+    }
+
+    // Populate documents data
+    if (data.documentation && data.documentation.length > 0) {
+        documentsData = data.documentation.map(doc => ({
+            vId: doc.vId || 0,
+            documentTypeId: doc.documentTypeId || 0,
+            docTypeName: doc.docTypeName || '',
+            docName: doc.docName || '',
+            docDate: doc.docDate || '',
+            docVersion: doc.docVersion || '',
+            docActive: doc.docActive || false,
+            notes: doc.notes || '',
+            companyId: doc.companyId || 0,
+            userName: doc.userName || 0,
+            active: doc.active || true,
+            siteId: doc.siteId || 0,
+            docPath: doc.docPath || ''
+        }));
+        initializeDocumentGrid();
+    }
+
+    // Populate protocols data
+    if (data.protocol && data.protocol.length > 0) {
+        protocolsData = data.protocol.map(protocol => ({
+            name: protocol.name || '',
+            dateCreated: protocol.dateCreated || '',
+            version: protocol.version || '',
+            notes: protocol.notes || '',
+            startDate: protocol.startDate || '',
+            endDate: protocol.endDate || '',
+            numVisit: protocol.numVisit || 0,
+            approvedDate: protocol.approvedDate || '',
+            companyId: protocol.companyId || 0,
+            userName: protocol.userName || 0,
+            siteId: protocol.siteId || 0,
+            studyId: protocol.studyId || 0
+        }));
+        initializeProtocolGrid();
+    }
+
+    // Populate arms data
+    if (data.arms && data.arms.length > 0) {
+        armsData = data.arms.map(arm => ({
+            armID: arm.armID || 0,
+            studyID: arm.studyID || 0,
+            name: arm.name || '',
+            description: arm.description || '',
+            targetEnrollment: arm.targetEnrollment || 0,
+            doseLevel: arm.doseLevel || ''
+        }));
+        initializeArmGrid();
+    }
+
+    // Populate visits data
+    if (data.visitDefinition && data.visitDefinition.length > 0) {
+        visitsData = data.visitDefinition.map(visit => ({
+            visitID: visit.visitID || 0,
+            studyID: visit.studyID || 0,
+            armID: visit.armID || 0,
+            armName: visit.armName || '',
+            name: visit.name || '',
+            dayOffset: visit.dayOffset || 0,
+            windowMinus: visit.windowMinus || 0,
+            windowPlus: visit.windowPlus || 0,
+            sortOrder: visit.sortOrder || 0,
+            comment: visit.comment || '',
+            requiredFlag: visit.requiredFlag || false,
+            dependencyOf: visit.dependencyOf || 0,
+            cost: visit.cost || 0,
+            visitType: visit.visitType || 0
+        }));
+        initializeVisitGrid();
+    }
+}
+
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    try {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+    } catch {
+        return '';
+    }
+}
+
+//#endregion
+
+// Starting Page... and fill all combos
 //#region Starting Page... and fill all combos
 $(function () {
 
     const blinding = JSON.parse($("#blindingType").val());
-
+    console.log('Blinding data:', blinding);
     setCombos("#blidingList", blinding, 'Blinding Type');
 
     const phase = JSON.parse($("#phaseType").val());
-
+    console.log('Phase data:', phase);
+    console.log('First phase item:', phase[0]);
     setCombos("#phaseList", phase, 'Phase Type');
 
     const studyDesign = JSON.parse($("#studyDesignType").val());
-
     setCombos("#studyDesignList", studyDesign, 'Study Design Type');
 
     const studystatus = JSON.parse($("#studioStatus").val());
-
     setCombos("#studystatusList", studystatus, 'Study Status');
 
-    const sponsorId = $("#sponsorId").val()
-
     getSponsor();
-
     getDisease();
-
     getCRO();
-
     getDocumentType();
 
     //initialize grids
     initializeDocumentGrid();
-
     initializeProtocolGrid();
-
     initializeArmGrid();
-
     initializeVisitGrid();
-
     initializeMonitorGrid();
 
+    // Load existing studio data
+    loadStudioData();
 });
 
 function getSponsor() {
@@ -246,9 +414,21 @@ function getSponsor() {
         url: urlIndexSponsor + '?handler=SponsorDropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
-            // Clear existing options (optional)
-
             setCombos("#sponsorList", data.data, 'Sponsor');
+            // Set the selected value after dropdown is populated
+            // Retry if data not loaded yet
+            let retryCount = 0;
+            const setSelectedValue = () => {
+                if (window.loadedStudioData && window.loadedStudioData.header) {
+                    $('#sponsorList').val(String(window.loadedStudioData.header.sponsorId ?? -1));
+                    console.log('Sponsor dropdown set to:', window.loadedStudioData.header.sponsorId);
+                    console.log('Sponsor selected value:', $('#sponsorList').val());
+                } else if (retryCount < 10) {
+                    retryCount++;
+                    setTimeout(setSelectedValue, 200);
+                }
+            };
+            setSelectedValue();
         },
         failure: function (response) {
             $('#failedTitle').html('Sponsor');
@@ -269,9 +449,21 @@ function getCRO() {
         url: urlIndexReferenceData + '?handler=CRODropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
-            // Clear existing options (optional)
-
             setCombos("#croList", data.data, 'CRO');
+            // Set the selected value after dropdown is populated
+            // Retry if data not loaded yet
+            let retryCount = 0;
+            const setSelectedValue = () => {
+                if (window.loadedStudioData && window.loadedStudioData.header) {
+                    $('#croList').val(String(window.loadedStudioData.header.croId ?? -1));
+                    console.log('CRO dropdown set to:', window.loadedStudioData.header.croId);
+                    console.log('CRO selected value:', $('#croList').val());
+                } else if (retryCount < 10) {
+                    retryCount++;
+                    setTimeout(setSelectedValue, 200);
+                }
+            };
+            setSelectedValue();
         },
         failure: function (response) {
             $('#failedTitle').html('CRO');
@@ -292,9 +484,21 @@ function getDisease() {
         url: urlIndexReferenceData + '?handler=DiseaseDropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
-            // Clear existing options (optional)
-
             setCombos("#diseaseList", data.data, 'Disease');
+            // Set the selected value after dropdown is populated
+            // Retry if data not loaded yet
+            let retryCount = 0;
+            const setSelectedValue = () => {
+                if (window.loadedStudioData && window.loadedStudioData.header) {
+                    $('#diseaseList').val(String(window.loadedStudioData.header.diseaseId ?? -1));
+                    console.log('Disease dropdown set to:', window.loadedStudioData.header.diseaseId);
+                    console.log('Disease selected value:', $('#diseaseList').val());
+                } else if (retryCount < 10) {
+                    retryCount++;
+                    setTimeout(setSelectedValue, 200);
+                }
+            };
+            setSelectedValue();
         },
         failure: function (response) {
             $('#failedTitle').html('Disease');
@@ -317,8 +521,6 @@ function getMonitorList() {
         headers: { 'RequestVerificationToken': window._csrfToken },
         data: { "sponsorId": sponsorId },
         success: function (data) {
-            // Clear existing options (optional)
-
             setCombos("#monitorList", data.data, 'Monitor');
         },
         failure: function (response) {
@@ -340,8 +542,6 @@ function getDocumentType() {
         url: urlIndexReferenceData + '?handler=DocTypeDropList',
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function (data) {
-            // Clear existing options (optional)
-
             setCombos("#documentTypeList", data.data, 'Document Type');
         },
         failure: function (response) {
@@ -368,20 +568,24 @@ function setCombos(comboName, values, firstElement) {
     }));
 
     $.each(values, function (index, item) {
+        // Handle both PascalCase (Id, Name) from TempData and camelCase (id, name) from AJAX
+        const itemId = item.Id ?? item.id;
+        const itemName = item.Name ?? item.name;
+
         $(comboName).append($('<option>', {
-            value: item.id,
-            text: item.name
+            value: itemId,
+            text: itemName
         }));
     });
 }
 //#endregion
 
-//Save studio
+//Update studio (changed from Save)
 //#region Form Submission
 
 function submitForm() {
     const generalData = {
-        STDId: 0,
+        STDId: studioId,  // Use the loaded studio ID for update
         Code: $('#studyCode').val(),
         SponsorId: parseInt($('#sponsorList').val()),
         Name: $('#studyName').val(),
@@ -403,7 +607,6 @@ function submitForm() {
     };
 
     let studioGData = [];
-
     studioGData.push(generalData);
 
     const studioData = {
@@ -417,23 +620,20 @@ function submitForm() {
 
     $.ajax({
         type: "POST",
-        url: urlIndex + '?handler=SaveStudy',
+        url: urlIndex + '?handler=UpdateStudy',  // Changed to UpdateStudy
         headers: { 'RequestVerificationToken': window._csrfToken },
         data: { "studioData": studioData },
         success: function (data) {
-            // Clear existing options (optional)
-            //redirect to index
-
             window.location.href = "/STD/StudioListData";
         },
         failure: function (response) {
-            $('#failedTitle').html('Save Study');
-            $('#failedMsg').html('Save Study failed. Please try again');
+            $('#failedTitle').html('Update Study');
+            $('#failedMsg').html('Update Study failed. Please try again');
             $('#failedAlert').show();
         },
         error: function (response) {
-            $('#failedTitle').html('Save Study');
-            $('#failedMsg').html('Save Study failed. Please try again');
+            $('#failedTitle').html('Update Study');
+            $('#failedMsg').html('Update Study failed. Please try again');
             $('#failedAlert').show();
         }
     });
@@ -446,7 +646,6 @@ function submitForm() {
 const myMonitorModal = document.getElementById('monitorModal');
 
 myMonitorModal.addEventListener('show.bs.modal', function (event) {
-    // Do something before the modal is shown
     hideNewMonitor();
     getMonitorList();
 });
@@ -457,13 +656,11 @@ function showNewMonitor() {
     $('#isNewMonitor').val('true');
 }
 
-
 function hideNewMonitor() {
     $('#selectExists').show();
     $('#addNew').hide();
     $('#isNewMonitor').val('false');
 }
-
 
 function initializeMonitorGrid() {
     const gridOptions = {
@@ -477,7 +674,7 @@ function initializeMonitorGrid() {
                 cellRenderer: function (params) {
                     return `
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteMonitor(${params.node.rowIndex})">
-                            <i class="bi bi-x-octagon-fill"></i> 
+                            <i class="bi bi-x-octagon-fill"></i>
                         </a>
                     `;
                 }
@@ -493,7 +690,6 @@ function initializeMonitorGrid() {
 
 function addMonitor() {
     const isNewM = $('#isNewMonitor').val();
-
 
     if (isNewM == 'false') {
        const monitor = {
@@ -567,9 +763,7 @@ function addMonitor() {
 }
 
 function deleteMonitor(index) {
-
     monitorsData.splice(index, 1);
-
     initializeMonitorGrid();
 }
 
@@ -591,15 +785,13 @@ function initializeDocumentGrid() {
                 valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
             },
             { field: "docVersion", headerName: "Version", flex: 1 },
-            //{ field: "docActive", headerName: "Active", flex: 1 },
-            //{ field: "notes", headerName: "Notes", flex: 2 },
             {
                 headerName: "Actions",
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteDocument(${params.node.rowIndex})">
-                            <i class="bi bi-x-octagon-fill"></i> 
+                            <i class="bi bi-x-octagon-fill"></i>
                         </a>
                     `;
                 }
@@ -642,9 +834,7 @@ function addDocument() {
 }
 
 function deleteDocument(index) {
-
     documentsData.splice(index, 1);
-
     initializeDocumentGrid();
 }
 
@@ -658,12 +848,6 @@ function initializeProtocolGrid() {
         rowData: protocolsData,
         columnDefs: [
             { field: "name", headerName: "Name", flex: 1 },
-            //{
-            //    field: "dateCreated",
-            //    headerName: "Created",
-            //    flex: 1,
-            //    valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
-            //},
             { field: "version", headerName: "Version", flex: 1 },
             {
                 field: "startDate",
@@ -671,12 +855,6 @@ function initializeProtocolGrid() {
                 flex: 1,
                 valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
             },
-            //{
-            //    field: "endDate",
-            //    headerName: "End",
-            //    flex: 1,
-            //    valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
-            //},
             { field: "numVisit", headerName: "Visits", flex: 1 },
             {
                 field: "approvedDate",
@@ -690,7 +868,7 @@ function initializeProtocolGrid() {
                 cellRenderer: function (params) {
                     return `
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteProtocol(${params.node.rowIndex})">
-                            <i class="bi bi-x-octagon-fill"></i> 
+                            <i class="bi bi-x-octagon-fill"></i>
                         </a>
                     `;
                 }
@@ -736,9 +914,7 @@ function addProtocol() {
 }
 
 function deleteProtocol(index) {
-
     protocolsData.splice(index, 1);
-
     initializeProtocolGrid();
 }
 
@@ -760,7 +936,7 @@ function initializeArmGrid() {
                 cellRenderer: function (params) {
                     return `
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteArm(${params.node.rowIndex})">
-                            <i class="bi bi-x-octagon-fill"></i> 
+                            <i class="bi bi-x-octagon-fill"></i>
                         </a>
                     `;
                 }
@@ -795,9 +971,7 @@ function addArm() {
 }
 
 function deleteArm(index) {
-
     armsData.splice(index, 1);
-
     initializeArmGrid();
 }
 
@@ -808,8 +982,6 @@ function deleteArm(index) {
 const myVisitModal = document.getElementById('visitModal');
 
 myVisitModal.addEventListener('show.bs.modal', function (event) {
-    // Do something before the modal is shown
-
     let armsCombo = [];
 
     $.each(armsData, function (index, item) {
@@ -820,11 +992,8 @@ myVisitModal.addEventListener('show.bs.modal', function (event) {
         armsCombo.push(armD);
     });
 
-
     setCombos('#armList', armsCombo, 'Arm');
 });
-
-
 
 function initializeVisitGrid() {
     const gridOptions = {
@@ -890,9 +1059,7 @@ function addVisit() {
 }
 
 function deleteVisit(index) {
-
     visitsData.splice(index, 1);
-
     initializeVisitGrid();
 }
 

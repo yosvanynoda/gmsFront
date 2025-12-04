@@ -3,9 +3,9 @@ class StudioListButtonRenderer {
     init(params) {
         this.eGui = document.createElement('div')
         const editLink = createActionLink('Edit', `${urlIndex}/edit?id=${params.data.id}`, 'link-success', 'bi bi-pencil-fill', params.data.id, params.data.studioList, params.data.datecreated,
-            params.data.version, params.data.siteId, params.data.notes);
+            params.data.version, params.data.siteId, params.data.notes, false);
         const deleteLink = createActionLink('Delete', '#deleteStudioList', 'link-danger', 'bi bi-x-octagon-fill', params.data.id, params.data.studioList, params.data.datecreated,
-            params.data.version, params.data.siteId, params.data.notes);
+            params.data.version, params.data.siteId, params.data.notes, true);
         this.eGui.appendChild(editLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(deleteLink);
@@ -94,7 +94,7 @@ function setupGrid(data) {
 //#region general functions create links...
 // Helper function to create each action link
 
-function createActionLink(title, href, linkClass, iconClass, id, studioList, datecreated, version, siteId, notes) {
+function createActionLink(title, href, linkClass, iconClass, id, studioList, datecreated, version, siteId, notes, isModal = false) {
     const a = document.createElement('a');
     a.setAttribute('data-toggle', 'tooltip');
     a.setAttribute('data-placement', 'top');
@@ -103,24 +103,31 @@ function createActionLink(title, href, linkClass, iconClass, id, studioList, dat
     a.href = href;
     const icon = document.createElement('i');
     icon.className = iconClass;
-    a.addEventListener('click', () => {
-        if (href == "#editStudioList") {
-            $('#studioListEdit').val(studioList);
-            $('#versionEdit').val(version);
-            $('#studioListidEdit').val(id);
-            $('#datecreatedEdit').val(datecreated);
-            $('#notesEdit').val(notes);
-            $('#siteIdEdit').val(siteId);
 
-        }
-        else {
-            $('#studioListD').html(studioList);
-            $('#versionD').html(version);
-            $('#siteIdD').html(siteId);
-            $('#studioListidDelete').val(id);
-        }
-        $(href).modal('show');
-    });
+    if (isModal) {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (href == "#editStudioList") {
+                $('#studioListEdit').val(studioList);
+                $('#versionEdit').val(version);
+                $('#studioListidEdit').val(id);
+                $('#datecreatedEdit').val(datecreated);
+                $('#notesEdit').val(notes);
+                $('#siteIdEdit').val(siteId);
+            }
+            else if (href == "#deleteStudioList") {
+                $('#studioListD').html(studioList);
+                $('#versionD').html(version);
+                $('#siteIdD').html(siteId);
+                $('#studioListidDelete').val(id);
+            }
+
+            if (href.startsWith('#')) {
+                $(href).modal('show');
+            }
+        });
+    }
+
     a.appendChild(icon);
 
     return a;

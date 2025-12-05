@@ -27,7 +27,7 @@ namespace GMS_UI.Pages.STD.StudioListData
                     SiteId = 1 // Replace with actual site ID
                 };
 
-                BaseResponse studies = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetStudioList(), "a StudioListData List", "", requestData);
+                BaseResponse<List<StudioListResponse>> studies = await GenericAPI.GetGeneric<List<StudioListResponse>>(_settings.ApiUrl(), _settings.Endpoint_GetStudioList(), "a StudioListData List", "", requestData);
 
                 if (studies == null || studies.Data == null)
                 {
@@ -42,7 +42,14 @@ namespace GMS_UI.Pages.STD.StudioListData
 
                 if (studies.Success && studies.Data != null)
                 {
-                    List<StudioListResponse>? response = JsonConvert.DeserializeObject<List<StudioListResponse>>(studies.Data.ToString());
+                    // Data is already strongly-typed - no need to deserialize again
+                    List<StudioListResponse> response = studies.Data;
+
+                    // DEBUG: Log the first item to see if Team is populated
+                    if (response.Count > 0)
+                    {
+                        _logger.LogInformation("First studio - Team value: '{Team}'", response[0].Team);
+                    }
 
                     if (response == null)
                     {
@@ -83,6 +90,7 @@ namespace GMS_UI.Pages.STD.StudioListData
                         BlindType = st.BlindType,
                         SponsorName = st.SponsorName,
                         StudioStatusName = ((StudyStatusEnum)st.StudioStatus).ToString(),
+                        Team = st.Team,
                     })];
 
                     return new JsonResult(new

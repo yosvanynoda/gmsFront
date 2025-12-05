@@ -123,6 +123,8 @@
         public string Endpoint_GetProtocolVersionList() => _config["Endpoint_GetProtocolVersionList"] ?? "";
 
         public string Endpoint_CreateStudyData() => _config["Endpoint_CreateStudyData"] ?? "";
+        public string Endpoint_UpdateStudyData() => _config["Endpoint_UpdateStudyData"] ?? "";
+        public string Endpoint_GetStudioData() => _config["Endpoint_GetStudioData"] ?? "";
 
         #endregion
 

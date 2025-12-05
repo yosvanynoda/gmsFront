@@ -179,10 +179,8 @@ function loadStudioData() {
     }
 
     $.ajax({
-        type: "POST",
-        url: urlIndex + '?handler=GetStudioData',
-        headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "studioId": studioId },
+        type: "GET",
+        url: urlIndex + '?handler=GetStudioData&studioId=' + studioId,
         success: function (response) {
             console.log('API Response:', response);
             if (response.success && response.data) {
@@ -310,14 +308,14 @@ function populateFormWithData(data) {
     // Populate protocols data
     if (data.protocol && data.protocol.length > 0) {
         protocolsData = data.protocol.map(protocol => ({
-            name: protocol.name || '',
-            dateCreated: protocol.dateCreated || '',
+            protocol: protocol.protocol || '',
+            dateCreated: protocol.dateCreated || null,
             version: protocol.version || '',
             notes: protocol.notes || '',
-            startDate: protocol.startDate || '',
-            endDate: protocol.endDate || '',
+            startDate: protocol.startDate || null,
+            endDate: protocol.endDate || null,
             numVisit: protocol.numVisit || 0,
-            approvedDate: protocol.approvedDate || '',
+            approvedDate: protocol.approvedDate || null,
             companyId: protocol.companyId || 0,
             userName: protocol.userName || 0,
             siteId: protocol.siteId || 0,
@@ -591,7 +589,7 @@ function submitForm() {
         Name: $('#studyName').val(),
         Description: $('textarea#studyDescription').val(),
         Notes: $('textarea#studyNotes').val(),
-        DateCreated: $('#studyDateCreated').val(),
+        DateCreated: $('#studyDateCreated').val() || null,
         Active: true,
         Goal: parseInt($('#studyGoal').val()),
         Phase: parseInt($('#phaseList').val()),
@@ -599,8 +597,8 @@ function submitForm() {
         TherapeuticArea: $('#studyTherapeuticArea').val(),
         BlindingType: parseInt($('#blidingList').val()),
         RandomizationType: parseInt($('#studyDesignList').val()),
-        StartDate: $('#studyStartDate').val(),
-        EndDate: $('#studyEndDate').val(),
+        StartDate: $('#studyStartDate').val() || null,
+        EndDate: $('#studyEndDate').val() || null,
         StudioStatus: parseInt($('#studystatusList').val()),
         DiseaseId: parseInt($('#diseaseList').val()),
         CROId: parseInt($('#croList').val())
@@ -609,11 +607,26 @@ function submitForm() {
     let studioGData = [];
     studioGData.push(generalData);
 
+    // Clean up date fields - convert empty strings to null
+    const cleanedProtocolsData = protocolsData.map(protocol => ({
+        ...protocol,
+        dateCreated: protocol.dateCreated || null,
+        startDate: protocol.startDate || null,
+        endDate: protocol.endDate || null,
+        approvedDate: protocol.approvedDate || null
+    }));
+
+    const cleanedDocumentsData = documentsData.map(doc => ({
+        ...doc,
+        docDate: doc.docDate || null,
+        createdAt: doc.createdAt || null
+    }));
+
     const studioData = {
         STDGeneralData: studioGData,
-        STDDocumentation: documentsData,
+        STDDocumentation: cleanedDocumentsData,
         STDMonitor: monitorsData,
-        STDProtocol: protocolsData,
+        STDProtocol: cleanedProtocolsData,
         STDArms: armsData,
         STDVisits: visitsData
     };
@@ -847,7 +860,7 @@ function initializeProtocolGrid() {
     const gridOptions = {
         rowData: protocolsData,
         columnDefs: [
-            { field: "name", headerName: "Name", flex: 1 },
+            { field: "protocol", headerName: "Name", flex: 1 },
             { field: "version", headerName: "Version", flex: 1 },
             {
                 field: "startDate",
@@ -856,12 +869,6 @@ function initializeProtocolGrid() {
                 valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
             },
             { field: "numVisit", headerName: "Visits", flex: 1 },
-            {
-                field: "approvedDate",
-                headerName: "Approved",
-                flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
-            },
             {
                 headerName: "Actions",
                 flex: 1,

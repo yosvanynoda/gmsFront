@@ -136,6 +136,50 @@ namespace GMS.BL.Generic
             return result;
         }
 
+        // Generic version with strongly-typed Data property
+        public static async Task<BaseResponse<T>> GetGeneric<T>(string apiURL, string endpoint, string catalog, string token, object requestData)
+        {
+            BaseResponse<T> result = new();
+
+            try
+            {
+                RestClientOptions options = new(apiURL)
+                {
+                    //Authenticator = new JwtAuthenticator(token) comment for now not security implemented yet
+                };
+
+                RestClient client = new(options);
+
+                RestRequest request = new(endpoint);
+
+                _ = request.AddJsonBody(requestData);
+
+                RestResponse response = await client.ExecutePostAsync(request);
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(response.Content))
+                {
+                    result = JsonConvert.DeserializeObject<BaseResponse<T>>(response.Content) ?? new BaseResponse<T>();
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Data = default;
+                    result.StatusCode = 500;
+                    result.Message = response.Content ?? $"An error occurred while reading {catalog}.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.StatusCode = 500;
+                result.Message = $"An error occurred while reading {catalog}. {ex.Message}";
+                result.Data = default;
+            }
+
+            return result;
+        }
+
         //public static async Task<BaseResponse> GetGeneric(string apiURL, string endpoint, string catalog, string token, GeneralCompanySiteRequest requestData)
         //{
         //    BaseResponse result = new();

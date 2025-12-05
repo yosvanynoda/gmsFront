@@ -1,4 +1,5 @@
 using GMS.BL.Generic;
+using GMS.Objects.API;
 using GMS_UI.Helper;
 using GMS_UI.Models.Enum;
 using GMS_UI.Models.STD;
@@ -33,7 +34,7 @@ namespace GMS_UI.Pages.STD.StudioListData
             return Page();
         }
 
-        public async Task<IActionResult> OnPostGetStudioData(int studioId)
+        public async Task<IActionResult> OnGetGetStudioData(int studioId)
         {
             try
             {
@@ -44,7 +45,7 @@ namespace GMS_UI.Pages.STD.StudioListData
                     StudyId = studioId
                 };
 
-                var result = await GenericAPI.GetGeneric(_settings.ApiUrl(),
+                var result = await GenericAPI.GetGeneric<StudioDataResponse>(_settings.ApiUrl(),
                     _settings.Endpoint_GetStudioData(),
                     "Get Studio Data", "", requestData);
 
@@ -52,7 +53,7 @@ namespace GMS_UI.Pages.STD.StudioListData
                 {
                     _logger.LogInformation("API Result Data: {Data}", JsonConvert.SerializeObject(result.Data));
 
-                    // Return result.Data directly to preserve all properties
+                    // Return result.Data directly - now strongly-typed to preserve all properties
                     var response = new
                     {
                         success = true,

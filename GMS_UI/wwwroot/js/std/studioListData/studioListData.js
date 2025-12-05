@@ -42,6 +42,7 @@ const gridOptions = {
         { field: "description", filter: 'agTextColumnFilter' },
         { field: "protocolName", filter: 'agTextColumnFilter' },
         { field: "studioStatusName", filter: 'agTextColumnFilter' },
+        { field: "team", headerName: "Team", filter: 'agTextColumnFilter' },
         { field: "companyId", filter: true, hide: true },
         { field: "goal", filter: true, hide: true },
         { field: "userName", filter: true, hide: true },

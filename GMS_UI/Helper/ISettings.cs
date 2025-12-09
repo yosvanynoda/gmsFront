@@ -122,6 +122,8 @@
         string Endpoint_GetProtocolVersionList();
 
         string Endpoint_CreateStudyData();
+        string Endpoint_UpdateStudyData();
+        string Endpoint_GetStudioData();
 
         #endregion
 

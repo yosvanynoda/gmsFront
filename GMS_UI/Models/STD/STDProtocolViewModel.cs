@@ -2,9 +2,10 @@
 {
     public class STDProtocolViewModel
     {
-        public string Name { get; set; } = string.Empty;
 
-        public DateTime DateCreated { get; set; } = DateTime.MinValue;
+        public string Protocol { get; set; } = string.Empty;
+
+        public DateTime? DateCreated { get; set; } = DateTime.MinValue;
 
         public string Version { get; set; } = string.Empty;
 
@@ -16,13 +17,13 @@
 
         public string Notes { get; set; } = string.Empty;
 
-        public DateTime StartDate { get; set; } = DateTime.MinValue;
+        public DateTime? StartDate { get; set; } = DateTime.MinValue;
 
-        public DateTime EndDate { get; set; } = DateTime.MinValue;
+        public DateTime? EndDate { get; set; } = DateTime.MinValue;
 
         public int NumVisit { get; set; } = 0;
 
-        public DateTime ApprovedDate { get; set; } = DateTime.MinValue;
+        public DateTime? ApprovedDate { get; set; } = DateTime.MinValue;
 
         public int StudyId { get; set; } = 0;
     }

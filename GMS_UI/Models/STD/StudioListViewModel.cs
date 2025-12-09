@@ -56,6 +56,8 @@
 
         public string StudioStatusName { get; set; }
 
+        public string Team { get; set; }
+
         public StudioListViewModel()
         {
             Code = "";
@@ -75,6 +77,8 @@
             SiteName = "";
 
             StudioStatusName = "";
+
+            Team = "";
         }
     }
 }

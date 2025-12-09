@@ -68,11 +68,13 @@ namespace GMS.BL.Generic
                 RestResponse response = await client.ExecutePostAsync(request);
 
                 if (response.IsSuccessStatusCode)
-
                 {
+                    BaseResponse? data = JsonConvert.DeserializeObject<BaseResponse>(response.Content ?? string.Empty);
+
                     result.Success = true;
                     result.Message = response.Content ?? $"{catalog} was created successfully.";
                     result.StatusCode = 200;
+                    result.Data = data?.Data;
                 }
                 else
                 {
@@ -129,6 +131,50 @@ namespace GMS.BL.Generic
                 result.StatusCode = 500;
                 result.Message = $"An error occurred while reading {catalog}. {ex.Message}";
                 result.Data = null;
+            }
+
+            return result;
+        }
+
+        // Generic version with strongly-typed Data property
+        public static async Task<BaseResponse<T>> GetGeneric<T>(string apiURL, string endpoint, string catalog, string token, object requestData)
+        {
+            BaseResponse<T> result = new();
+
+            try
+            {
+                RestClientOptions options = new(apiURL)
+                {
+                    //Authenticator = new JwtAuthenticator(token) comment for now not security implemented yet
+                };
+
+                RestClient client = new(options);
+
+                RestRequest request = new(endpoint);
+
+                _ = request.AddJsonBody(requestData);
+
+                RestResponse response = await client.ExecutePostAsync(request);
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(response.Content))
+                {
+                    result = JsonConvert.DeserializeObject<BaseResponse<T>>(response.Content) ?? new BaseResponse<T>();
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Data = default;
+                    result.StatusCode = 500;
+                    result.Message = response.Content ?? $"An error occurred while reading {catalog}.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.StatusCode = 500;
+                result.Message = $"An error occurred while reading {catalog}. {ex.Message}";
+                result.Data = default;
             }
 
             return result;

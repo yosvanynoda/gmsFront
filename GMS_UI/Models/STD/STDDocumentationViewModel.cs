@@ -2,6 +2,8 @@
 {
     public class STDDocumentationViewModel
     {
+        public int VId { get; set; } = 0;
+
         public int DocumentTypeId { get; set; } = 0;
 
         public string DocName { get; set; } = string.Empty;
@@ -13,6 +15,18 @@
         public bool DocActive { get; set; } = false;
 
         public string Notes { get; set; } = string.Empty;
+
+        public int CompanyId { get; set; } = 0;
+
+        public int UserName { get; set; } = 0;
+
+        public bool Active { get; set; } = false;
+
+        public int SiteId { get; set; } = 0;
+
+        public string? DocPath { get; set; } = string.Empty;
+
+        public IFormFile? Document { get; set; }
 
     }
 }

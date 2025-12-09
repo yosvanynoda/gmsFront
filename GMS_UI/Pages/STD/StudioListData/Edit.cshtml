@@ -1,15 +1,16 @@
 ﻿@page
-@model GMS_UI.Pages.STD.StudioListData.CreateModel
+@model GMS_UI.Pages.STD.StudioListData.EditModel
 @{
-    ViewData["Title"] = "Create Study";
+    ViewData["Title"] = "Edit Study";
 }
+
 
 <div class="wizard-container">
     <div class="row">
         <div class="col">
             <h2 class="text-center">
                 <i class="fas fa-flask text-primary"></i>
-                Create Study Research
+                Edit Study Research
             </h2>
         </div>
         <div class="col-3">
@@ -18,9 +19,9 @@
             </button>
         </div>
     </div>
-    
 
-    <form asp-page-handler="Create" method="post" id="wizardForm" >
+
+    <form asp-page-handler="Edit" method="post" id="wizardForm">
 
         <input type="hidden" id="blindingType" value="@Model.BlindingTypeSL" />
         <input type="hidden" id="phaseType" value="@Model.PhaseTypeSL" />
@@ -67,49 +68,48 @@
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Date Created *</label>
-                            <input type="date" class="form-control"  placeholder="Date Created" id="studyDateCreated" required />
+                            <label class="form-label">Date Created *</label>
+                            <input type="date" class="form-control" placeholder="Date Created" id="studyDateCreated" required />
                             <span class="text-danger" id="validateStudyDateCreated"></span>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Site Number *</label>
-                            <input class="form-control"  placeholder="Code" id="studyCode" /> 
+                            <input class="form-control" placeholder="Code" id="studyCode" />
                             <span class="text-danger" id="validateStudyCode"></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Name *</label> 
-                            <input class="form-control"  placeholder="Name" id="studyName" />
+                            <label class="form-label">Name *</label>
+                            <input class="form-control" placeholder="Name" id="studyName" />
                             <span class="text-danger" id="validateStudyName"></span>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Description</label>
-                            <textarea rows="4" class="form-control" id="studyDescription" placeholder="Description"></textarea>
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="studyDescription" placeholder="Description"></textarea>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Notes</label>
-                            <textarea rows="4" class="form-control" id="studyNotes" placeholder="Notes"></textarea>
+                            <textarea class="form-control" id="studyNotes" placeholder="Notes"></textarea>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Goal Enrollment*</label>
-                            <input type="number" class="form-control"  placeholder="Goal" id="studyGoal" />
+                            <input type="number" class="form-control" placeholder="Goal" id="studyGoal" />
                             <span class="text-danger" id="validateStudyGoal"></span>
                         </div>
                     </div>
@@ -134,8 +134,8 @@
                             <select id="phaseList" class="form-select" required>
                                 <option value="-1">Select Phase</option>
                             </select>
-                            <span class="text-danger"></span> 
-                            
+                            <span class="text-danger"></span>
+
                         </div>
                     </div>
 
@@ -144,15 +144,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Indication *</label>
-                            <input class="form-control"  placeholder="Indication" id="studyIndication" />
+                            <label class="form-label">Indication *</label>
+                            <input class="form-control" placeholder="Indication" id="studyIndication" />
                             <span class="text-danger" id="validateStudyIndication"></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Therapeutic Area *</label>
+                            <label class="form-label">Therapeutic Area *</label>
                             <input class="form-control" placeholder="Therapeutic Area" id="studyTherapeuticArea" />
                             <span class="text-danger" id="validateStudyTherapeuticArea"></span>
                         </div>
@@ -162,11 +162,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Bliding Type *</label> 
+                            <label class="form-label">Bliding Type *</label>
                             <select id="blidingList" class="form-select" required>
                                 <option value="-1">Select Bliding Type</option>
                             </select>
-                            <span class="text-danger" id=""></span> 
+                            <span class="text-danger" id=""></span>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
                             <select id="studyDesignList" class="form-select" required>
                                 <option value="-1">Select Study Design Type</option>
                             </select>
-                            <span class="text-danger"></span> 
+                            <span class="text-danger"></span>
                         </div>
                     </div>
 
@@ -192,29 +192,29 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >Start Date *</label> 
+                            <label class="form-label">Start Date *</label>
                             <input type="date" id="studyStartDate" class="form-control" required />
-                            <span class="text-danger" id="startDateValidate"></span> 
+                            <span class="text-danger" id="startDateValidate"></span>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" >End Date </label>
+                            <label class="form-label">End Date </label>
                             <input type="date" id="studyEndDate" class="form-control" required />
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    
+
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Study Status *</label> 
+                            <label class="form-label">Study Status *</label>
                             <select id="studystatusList" class="form-select" required>
                                 <option value="-1">Select Study Status</option>
                             </select>
-                            <span class="text-danger" id=""></span> 
+                            <span class="text-danger" id=""></span>
                         </div>
                     </div>
 
@@ -235,7 +235,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">CRO </label> <!--asp-for="StudyPhase"-->
-                            <select id="croList" class="form-select" >
+                            <select id="croList" class="form-select">
                                 <!--asp-for="StudyPhase"-->
                                 <option value="-1">Select CRO</option>
                             </select>
@@ -243,7 +243,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -277,7 +277,7 @@
                         <div id="documentGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                         <div id="protocolGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -364,7 +364,7 @@
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="wizard-navigation" >
+        <div class="wizard-navigation">
             <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)">
                 <i class="fas fa-arrow-left"></i> Previous
             </button>
@@ -372,7 +372,7 @@
                 <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
                     Next <i class="fas fa-arrow-right"></i>
                 </button>
-                <button type="button" class="btn btn-success btn-wizard" onclick="submitForm()" id="submitBtn" >
+                <button type="button" class="btn btn-success btn-wizard" onclick="submitForm()" id="submitBtn">
                     <i class="fas fa-check"></i> Submit Study
                 </button>
             </div>
@@ -380,7 +380,7 @@
 
     </form>
 
-    
+
 
 </div>
 
@@ -416,7 +416,7 @@
                         </div>
                     </div>
 
-                    <div id="addNew" >
+                    <div id="addNew">
                         <div class="row">
                             <div class="col-6">
                                 <div class="mb-3">
@@ -482,7 +482,7 @@
                 <span class="close" data-bs-dismiss="modal">&times;</span>
             </div>
             <div class="modal-body">
-                    <div class="form-section">
+                <div class="form-section">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -525,37 +525,24 @@
 
                     <div class="row">
                         <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="docNotes" class="form-label">Document Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="docNotes" placeholder="Document Notes"></textarea>
+                                <span class="text-danger" id="docNotesValidate"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
                             <div class="mb-3 ">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input chkmodal float-start" type="checkbox" id="docActive">
+                                    <input class="form-check-input chkmodal" type="checkbox" id="docActive">
                                     <label class="form-check-label" for="docActive">&nbsp;Active</label>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="documentFile" class="form-label">Document *</label>
-                                <input type="file" class="form-control inputsmmodal" id="documentFile" placeholder="Document" required />
-                                <span class="text-danger" id="documentFileValidate"></span>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="docNotes" class="form-label">Document Notes</label>
-                                <textarea rows="4" class="form-control inputsmmodal" id="docNotes" placeholder="Document Notes"></textarea>
-                            </div>
-                        </div>
                     </div>
                 </div>
-           
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-success" onclick="addDocument()"> Add</button>
@@ -630,9 +617,19 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
-                     <div class="row">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="protocolNotes" placeholder="Notes"></textarea>
+                                <span class="text-danger" id="validateprotocolNotes"></span>
+                            </div>
+                        </div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="protocolVisit" class="form-label">Number Visit *</label>
@@ -640,30 +637,6 @@
                                 <span class="text-danger" id="validateProtocolVisit"></span>
                             </div>
                         </div>
-                     </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="documentProtocolFile" class="form-label">Document *</label>
-                                <input type="file" class="form-control inputsmmodal" id="documentProtocolFile" placeholder="Document" required />
-                                <span class="text-danger" id="documentProtocolFileValidate"></span>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Notes</label>
-                                <textarea rows="4" type="text" class="form-control inputsmmodal" id="protocolNotes" placeholder="Notes"></textarea>
-                                <span class="text-danger" id="validateprotocolNotes"></span>
-                            </div>
-                        </div>
-
-                        
                     </div>
                 </div>
 
@@ -713,13 +686,11 @@
                                 <span class="text-danger" id="validateDoseLevel"></span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
-                                <textarea rows="4" type="text" class="form-control inputsmmodal" id="armDescription" placeholder="Description"></textarea>
+                                <textarea type="text" class="form-control inputsmmodal" id="armDescription" placeholder="Description"></textarea>
                                 <span class="text-danger" id="validateDescription"></span>
                             </div>
                         </div>
@@ -749,20 +720,21 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="sortOrder" class="form-label">Visit Number *</label>
-                                <input id="sortOrder" type="number" class="form-control inputsmmodal" placeholder="Visit Number" required />
-                                <span class="text-danger" id="validateSortOrder"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
                                 <label for="visitName" class="form-label">Visit Name *</label>
                                 <input id="visitName" type="text" class="form-control inputsmmodal" placeholder="Visit Name" required />
                                 <span class="text-danger" id="validatevisitName"></span>
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Arm *</label>
+                                <select id="armList" class="form-select">
+                                    <option value="-1">Select Arm</option>
+                                </select>
+                                <span id="validateArm" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -776,30 +748,9 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Depend Of *</label>
-                                <input type="number" class="form-control inputsmmodal" id="dependOf" placeholder="Depend Of" required />
-                                <span class="text-danger" id="validatedependOf"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Visit Type </label>
-                                <select id="visitTypeList" class="form-select">
-                                    <option value="-1">Select Visit Type</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Arm </label>
-                                <select id="armList" class="form-select">
-                                    <option value="-1">Select Arm</option>
-                                </select>
+                                <label for="sortOrder" class="form-label">Sort order *</label>
+                                <input id="sortOrder" type="number" class="form-control inputsmmodal" placeholder="Sort order" required />
+                                <span class="text-danger" id="validateSortOrder"></span>
                             </div>
                         </div>
                     </div>
@@ -823,32 +774,20 @@
                     </div>
 
                     <div class="row">
-
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Cost *</label>
-                                <input type="number" class="form-control inputsmmodal" id="cost" placeholder="Cost" step="0.01" />
-                                <span class="text-danger" id="validateCost"></span>
+                                <label for="commentVisit" class="form-label">Comment</label>
+                                <textarea type="text" class="form-control inputsmmodal" id="commentVisit" placeholder="comment"></textarea>
+                                <span class="text-danger" id="validateCommentVisit"></span>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="mb-3 ">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input chkmodal"  type="checkbox" id="requiredFlag">
+                                    <input class="form-check-input chkmodal" type="checkbox" id="requiredFlag">
                                     <label class="form-check-label" for="requiredFlag">&nbsp;Required Flag</label>
                                 </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="commentVisit" class="form-label">Comment</label>
-                                <textarea rows="4" type="text" class="form-control inputsmmodal" id="commentVisit" placeholder="comment"></textarea>
-                                <span class="text-danger" id="validateCommentVisit"></span>
                             </div>
                         </div>
                     </div>
@@ -870,9 +809,9 @@
 
 <script>
     window._csrfToken = $('@Html.AntiForgeryToken()').val();
-    urlIndex = '/STD/StudioListData/Create';
+    urlIndex = '/STD/StudioListData/Edit';
     urlIndexSponsor = '/STD/Sponsor';
     urlIndexReferenceData = '/CMN/ReferenceData';
     urlIndexMonitor = '/STD/Monitor';
 </script>
-<script src="/js/std/studioListData/studioCreate.js"></script>
+<script src="/js/std/studioListData/studioEdit.js"></script>

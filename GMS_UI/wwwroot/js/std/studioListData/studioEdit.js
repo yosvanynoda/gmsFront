@@ -281,6 +281,8 @@ function populateFormWithData(data) {
     // Populate monitors data
     if (data.monitors && data.monitors.length > 0) {
         console.log('Populating monitors:', data.monitors);
+        console.log('First monitor structure:', data.monitors[0]);
+        console.log('First monitor keys:', Object.keys(data.monitors[0]));
         monitorsData = data.monitors;
         initializeMonitorGrid();
     }
@@ -622,10 +624,26 @@ function submitForm() {
         createdAt: doc.createdAt || null
     }));
 
+    // Clean up monitors data - ensure only MonitorId and Role with PascalCase
+    const cleanedMonitorsData = monitorsData.map(monitor => {
+        console.log('Original monitor object:', monitor);
+        console.log('Monitor properties:', Object.keys(monitor));
+
+        // Get the monitor ID (API returns as 'id')
+        const monitorId = monitor.id || monitor.Id || monitor.monitorId || monitor.MonitorId || 0;
+
+        console.log('Extracted monitorId:', monitorId);
+
+        return {
+            MonitorId: monitorId,
+            Role: monitor.role || monitor.Role || 'Monitor'
+        };
+    });
+
     const studioData = {
         STDGeneralData: studioGData,
         STDDocumentation: cleanedDocumentsData,
-        STDMonitor: monitorsData,
+        STDMonitor: cleanedMonitorsData,
         STDProtocol: cleanedProtocolsData,
         STDArms: armsData,
         STDVisits: visitsData
@@ -706,7 +724,7 @@ function addMonitor() {
 
     if (isNewM == 'false') {
        const monitor = {
-                monitorId: parseInt($('#monitorList').val()),
+                id: parseInt($('#monitorList').val()),
                 monitorName: $('#monitorList option:selected').text(),
                 role: 'Monitor',
         };
@@ -718,6 +736,9 @@ function addMonitor() {
 
         // Reinitialize grid
         initializeMonitorGrid();
+
+        // Close the modal
+        $('#monitorModal').modal('hide');
     }
     else
     {
@@ -740,13 +761,16 @@ function addMonitor() {
                 "action": action
 },
             success: function (data) {
+                console.log('CrudMonitor response:', data);
+                console.log('Returned monitorId:', data.monitorId);
+
                 const monitor = {
-                    monitorId: data.monitorId,
+                    id: data.monitorId,
                     monitorName: `${firstName} ${lastName}`,
                     role: role,
                 };
 
-                console.log(monitor);
+                console.log('Created monitor object:', monitor);
 
                 monitorsData.push(monitor);
 
@@ -760,6 +784,12 @@ function addMonitor() {
 
                 // Reinitialize grid after adding the monitor
                 initializeMonitorGrid();
+
+                // Refresh the monitor dropdown to include the newly created monitor
+                getMonitorList();
+
+                // Close the modal
+                $('#monitorModal').modal('hide');
             },
             failure: function (response) {
                 $('#failedTitle').html('Save Monitor');

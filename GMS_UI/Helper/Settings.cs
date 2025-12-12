@@ -55,6 +55,8 @@
 
         public string Endpoint_GetStaffList()=> _config["Endpoint_GetStaffList"] ?? "";
 
+        public string Endpoint_GetStaffDropList() => _config["Endpoint_GetStaffDropList"] ?? "";
+
         public string Endpoint_GetTaskList()=> _config["Endpoint_GetTaskList"] ?? "";
 
         public string Endpoint_GetTaskTypeList()=> _config["Endpoint_GetTaskTypeList"] ?? "";

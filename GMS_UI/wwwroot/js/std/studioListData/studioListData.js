@@ -4,9 +4,13 @@ class StudioListButtonRenderer {
         this.eGui = document.createElement('div')
         const editLink = createActionLink('Edit', `${urlIndex}/edit?id=${params.data.id}`, 'link-success', 'bi bi-pencil-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes, false);
+        const assignStaffLink = createActionLink('Assign Staff', '#assignStaffModal', 'link-primary', 'bi bi-person-plus-fill', params.data.id, params.data.name, params.data.datecreated,
+            params.data.version, params.data.siteId, params.data.notes, true);
         const deleteLink = createActionLink('Delete', '#deleteStudioList', 'link-danger', 'bi bi-x-octagon-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes, true);
         this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
+        this.eGui.appendChild(assignStaffLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(deleteLink);
     }
@@ -121,6 +125,12 @@ function createActionLink(title, href, linkClass, iconClass, id, studioList, dat
                 $('#versionD').html(version);
                 $('#siteIdD').html(siteId);
                 $('#studioListidDelete').val(id);
+            }
+            else if (href == "#assignStaffModal") {
+                $('#assignStaffStudyId').val(id);
+                $('#assignStaffStudyName').html(studioList);
+                loadAssignedStaff(id);
+                loadStaffDropList();
             }
 
             if (href.startsWith('#')) {
@@ -253,6 +263,157 @@ function hideAlerts(alertName) {
 //#region General...
 function hideAlerts(alertName) {
     $('#' + alertName).hide();
+}
+//#endregion
+
+//#region Assign Staff
+function loadAssignedStaff(studyId) {
+    console.log('Loading assigned staff for study:', studyId);
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=GetAssignedStaff',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studyId": studyId },
+        success: function (data) {
+            console.log('Assigned staff response:', data);
+            if (data.success && data.data && data.data.length > 0) {
+                displayAssignedStaff(data.data);
+            } else {
+                $('#assignedStaffList').html('<span class="text-muted">No staff currently assigned</span>');
+            }
+        },
+        error: function (response) {
+            console.error('Error loading assigned staff:', response);
+            $('#assignedStaffList').html('<span class="text-muted">No staff currently assigned</span>');
+        }
+    });
+}
+
+function displayAssignedStaff(assignedStaff) {
+    const $assignedList = $('#assignedStaffList');
+    $assignedList.empty();
+
+    if (!assignedStaff || assignedStaff.length === 0) {
+        $assignedList.html('<span class="text-muted">No staff currently assigned</span>');
+        return;
+    }
+
+    const listHtml = assignedStaff.map(staff => {
+        // Handle both PascalCase and camelCase
+        const firstName = staff.FirstName ?? staff.firstName ?? '';
+        const lastName = staff.LastName ?? staff.lastName ?? '';
+        const fullName = `${firstName} ${lastName}`.trim() || 'Unknown';
+        const role = staff.RoleType ?? staff.roleType ?? 'Staff';
+        const staffId = staff.StaffId ?? staff.staffId;
+        const id = staff.Id ?? staff.id;
+
+        return `<span class="badge bg-info me-1" data-staff-id="${staffId}" data-id="${id}">${fullName} (${role})</span>`;
+    }).join('');
+
+    $assignedList.html(listHtml);
+}
+
+function loadStaffDropList() {
+    console.log('Loading staff drop list...');
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=StaffDropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "companyId": 1, "siteId": 1 },
+        success: function (data) {
+            console.log('Staff drop list response:', data);
+            if (data.success) {
+                console.log('Staff data:', data.data);
+                populateStaffDropdown(data.data);
+            } else {
+                console.error('Failed to load staff list:', data.errorMessage || data.message);
+                $('#failedTitle').html('Load Staff');
+                $('#failedMsg').html(data.errorMessage || 'Failed to load staff list. Please try again');
+                $('#failedAlert').show();
+            }
+        },
+        failure: function (response) {
+            console.error('Staff drop list failure:', response);
+            $('#failedTitle').html('Load Staff');
+            $('#failedMsg').html('Failed to load staff list. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            console.error('Staff drop list error:', response);
+            $('#failedTitle').html('Load Staff');
+            $('#failedMsg').html('Failed to load staff list. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function populateStaffDropdown(staffList) {
+    setCombos('#staffList', staffList, 'Staff');
+}
+
+function setCombos(comboName, values, firstElement) {
+    // Empty combo
+    $(comboName).empty();
+
+    // Set first element
+    $(comboName).append($('<option>', {
+        value: -1,
+        text: `Select ${firstElement ? firstElement : '...'}`
+    }));
+
+    $.each(values, function (index, item) {
+        // Handle both PascalCase (Id, Name) from TempData and camelCase (id, name) from AJAX
+        const itemId = item.Id ?? item.id;
+        const itemName = item.Name ?? item.name;
+
+        $(comboName).append($('<option>', {
+            value: itemId,
+            text: itemName
+        }));
+    });
+}
+
+function assignStaff() {
+    const studyId = $('#assignStaffStudyId').val();
+    const staffId = $('#staffList').val();
+
+    if (staffId == -1) {
+        $('#validateStaffAssign').text('Please select a staff member');
+        return;
+    }
+
+    $('#validateStaffAssign').text('');
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=AssignStaff',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studyId": studyId, "staffId": staffId },
+        success: function (data) {
+            $('#assignStaffModal').modal('hide');
+            if (data.success) {
+                $('#successTitle').html('Assign Staff');
+                $('#successMsg').html('Staff assigned successfully');
+                $('#successAlert').show();
+            } else {
+                $('#failedTitle').html('Assign Staff');
+                $('#failedMsg').html(data.message || 'Failed to assign staff. Please try again');
+                $('#failedAlert').show();
+            }
+        },
+        failure: function (response) {
+            $('#assignStaffModal').modal('hide');
+            $('#failedTitle').html('Assign Staff');
+            $('#failedMsg').html('Failed to assign staff. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#assignStaffModal').modal('hide');
+            $('#failedTitle').html('Assign Staff');
+            $('#failedMsg').html('Failed to assign staff. Please try again');
+            $('#failedAlert').show();
+        }
+    });
 }
 //#endregion
 

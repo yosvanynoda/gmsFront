@@ -37,6 +37,42 @@
     </div>
 </div>
 
+<!-- Assign Staff Modal -->
+<div id="assignStaffModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignStaffModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header page-card-header">
+                <h5 class="modal-title" id="assignStaffModalLabel">Assign Staff to Study</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="assignStaffStudyId" />
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Study:</label>
+                    <p id="assignStaffStudyName"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Currently Assigned Staff:</label>
+                    <div id="assignedStaffList" class="mb-2">
+                        <span class="text-muted">Loading...</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="staffList">Select Staff to Assign <span class="text-danger">*</span></label>
+                    <select class="form-select" id="staffList">
+                        <option value="-1">Select Staff</option>
+                    </select>
+                    <span class="text-danger" id="validateStaffAssign"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="assignStaff()">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Studio Modal -->
 <div id="deleteStudioList" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteStudioListLabel" aria-hidden="true">
     <div class="modal-dialog">

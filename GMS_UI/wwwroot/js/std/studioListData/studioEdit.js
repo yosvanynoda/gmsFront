@@ -920,15 +920,48 @@ function initializeProtocolGrid() {
 }
 
 function addProtocol() {
+    // Clear previous validation messages
+    $('#validateCreatedDate').text('');
+    $('#validateApprovedDate').text('');
+    $('#validateStartDate').text('');
+    $('#validateEndDate').text('');
+
+    const createdDate = $('#createdDate').val();
+    const approvedDate = $('#approvedDate').val();
+    const startDate = $('#startDate').val();
+    const endDate = $('#endDate').val();
+
+    // Validate: Approved Date must be >= Created Date
+    if (createdDate && approvedDate) {
+        const created = new Date(createdDate);
+        const approved = new Date(approvedDate);
+
+        if (approved < created) {
+            $('#validateApprovedDate').text('Approved Date must be greater than or equal to Created Date');
+            return;
+        }
+    }
+
+    // Validate: End Date must be >= Start Date
+    if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end < start) {
+            $('#validateEndDate').text('End Date must be greater than or equal to Start Date');
+            return;
+        }
+    }
+
     let protocol = {
-        name: $('#protocolName').val(),
-        dateCreated: $('#createdDate').val(),
+        protocol: $('#protocolName').val(),
+        dateCreated: createdDate,
         version: $('#protocolVersion').val(),
         notes: $('textarea#protocolNotes').val() || '',
-        startDate: $('#startDate').val(),
-        endDate: $('#endDate').val(),
+        startDate: startDate,
+        endDate: endDate,
         numVisit: parseInt($('#protocolVisit').val()) || 0,
-        approvedDate: $('#approvedDate').val(),
+        approvedDate: approvedDate,
         companyId: 0,
         userName: 0,
         siteId: 0,

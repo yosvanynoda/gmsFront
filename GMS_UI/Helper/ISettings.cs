@@ -53,6 +53,8 @@
 
         string Endpoint_GetStaffList();
 
+        string Endpoint_GetStaffDropList();
+
         string Endpoint_GetTaskList();
 
         string Endpoint_GetTaskTypeList();

@@ -5,10 +5,23 @@
 }
 
 <div class="wizard-container">
-    <h2 class="text-center mb-4">
-        <i class="bi bi-person-plus-fill text-primary"></i>
-        Create New Volunteer
-    </h2>
+    <!-- Sticky Action Bar -->
+    <div class="sticky-top bg-white border-bottom shadow-sm mb-3" style="z-index: 1000; margin-left: -20px; margin-right: -20px; padding: 15px 20px;">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="bi bi-person-plus-fill text-primary"></i>
+                Create New Volunteer
+            </h4>
+            <div>
+                <button type="button" class="btn btn-secondary me-2" onclick="cancelWizardTop()">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-success" onclick="submitFormTop()">
+                    <i class="bi bi-check-circle"></i> Save Volunteer
+                </button>
+            </div>
+        </div>
+    </div>
 
     <form asp-page-handler="Create" method="post" id="wizardForm">
         @Html.AntiForgeryToken()
@@ -490,27 +503,34 @@
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
-        <div class="wizard-navigation">
-            <div>
-                <button type="button" class="btn btn-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+        <!-- Sticky Navigation Buttons -->
+        <div class="wizard-navigation bg-white border-top shadow-sm" style="position: sticky; bottom: 0; z-index: 999; margin: 0 -20px; padding: 15px 20px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-outline-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
                     <i class="bi bi-arrow-left"></i> Previous
                 </button>
-                <button type="button" class="btn btn-outline-danger btn-wizard" id="cancelBtn" onclick="cancelWizard()">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </button>
-            </div>
-            <div class="ms-auto">
-                <button type="button" class="btn btn-primary btn-wizard" id="nextBtn" onclick="changeStep(1)">
+                <button type="button" class="btn btn-primary btn-wizard ms-auto" id="nextBtn" onclick="changeStep(1)">
                     Next <i class="bi bi-arrow-right"></i>
-                </button>
-                <button type="button" class="btn btn-success btn-wizard" id="submitBtn" onclick="submitForm()" style="display: none;">
-                    <i class="bi bi-check"></i> Submit Volunteer
                 </button>
             </div>
         </div>
     </form>
 </div>
+
+<style>
+    /* Add significant padding to wizard steps so sticky navigation doesn't cover content */
+    .wizard-body {
+        padding-bottom: 200px !important;
+    }
+
+    .wizard-step {
+        padding-bottom: 100px !important;
+    }
+
+    #wizardForm {
+        padding-bottom: 150px !important;
+    }
+</style>
 
 <script>
     // Get CSRF token from the form

@@ -219,11 +219,11 @@ function validateStep(step) {
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
 
     prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
     nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
-    submitBtn.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+
+    // Note: Submit button is now in the sticky top action bar, not in wizard navigation
 }
 
 // Cancel wizard and return to volunteer list
@@ -231,6 +231,35 @@ function cancelWizard() {
     if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
         window.location.href = '/VLT/Volunteer/Index';
     }
+}
+
+// Cancel from top sticky action bar
+function cancelWizardTop() {
+    cancelWizard(); // Reuse existing cancel logic
+}
+
+// Submit form from top sticky action bar - validates all steps first
+function submitFormTop() {
+    // Validate all steps
+    for (let step = 1; step <= totalSteps; step++) {
+        if (!validateStep(step)) {
+            // Jump to the first step with errors
+            jumpToStep(step);
+            // Mark the step indicator as having errors
+            const indicator = document.getElementById(`step${step}-indicator`);
+            indicator.style.borderColor = 'red';
+            indicator.style.color = 'red';
+            setTimeout(() => {
+                indicator.style.borderColor = '';
+                indicator.style.color = '';
+            }, 3000);
+            alert(`Please complete all required fields in Step ${step} before saving.`);
+            return;
+        }
+    }
+
+    // All steps are valid - proceed to submit
+    submitForm();
 }
 
 // Jump to a specific step by clicking on step indicator

@@ -139,4 +139,10 @@
         urlIndex = '/STD/StudioListData';
     </script>
     <script src="/js/std/studioListData/studioListData.js"></script>
+    <script>
+        // Refresh the page when staff management modal is closed
+        document.getElementById('staffManagementModal').addEventListener('hidden.bs.modal', function () {
+            location.reload();
+        });
+    </script>
 

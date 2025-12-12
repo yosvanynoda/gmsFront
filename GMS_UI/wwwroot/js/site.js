@@ -5,17 +5,14 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.sidebar a[href="#"]').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            this.parentElement.classList.toggle('active');
-            document.querySelectorAll('.sidebar a[href="#"]').forEach(function (el) {
-                if (el.id !== link.id) {
-                    el.parentElement.classList.remove('active');
-                }
-            });
+    // Handle submenu expansion on hover
+    document.querySelectorAll('.sidebar li:has(.submenu)').forEach(function (menuItem) {
+        menuItem.addEventListener('mouseenter', function () {
+            this.classList.add('active');
+        });
+
+        menuItem.addEventListener('mouseleave', function () {
+            this.classList.remove('active');
         });
     });
-     
-   
 });

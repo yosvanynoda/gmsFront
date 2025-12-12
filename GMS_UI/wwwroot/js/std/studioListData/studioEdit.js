@@ -308,9 +308,9 @@ function populateFormWithData(data) {
     }
 
     // Populate protocols data
-    if (data.protocol && data.protocol.length > 0) {
+    if (data.name && data.name.length > 0) {
         protocolsData = data.protocol.map(protocol => ({
-            protocol: protocol.protocol || '',
+            protocol: protocol.name || '',
             dateCreated: protocol.dateCreated || null,
             version: protocol.version || '',
             notes: protocol.notes || '',
@@ -890,7 +890,7 @@ function initializeProtocolGrid() {
     const gridOptions = {
         rowData: protocolsData,
         columnDefs: [
-            { field: "protocol", headerName: "Name", flex: 1 },
+            { field: "name", headerName: "Name", flex: 1 },
             { field: "version", headerName: "Version", flex: 1 },
             {
                 field: "startDate",
@@ -954,7 +954,7 @@ function addProtocol() {
     }
 
     let protocol = {
-        protocol: $('#protocolName').val(),
+        name: $('#protocolName').val(),
         dateCreated: createdDate,
         version: $('#protocolVersion').val(),
         notes: $('textarea#protocolNotes').val() || '',

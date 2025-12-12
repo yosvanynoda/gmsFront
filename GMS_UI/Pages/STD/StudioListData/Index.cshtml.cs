@@ -189,42 +189,66 @@ namespace GMS_UI.Pages.STD.StudioListData
             }
         }
 
-        public async Task<JsonResult> OnPostGetAssignedStaff(int studyId)
+        public async Task<JsonResult> OnPostStudioStaffAssignments(int studioId)
         {
             try
             {
-                BaseResponse assignedStaff = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetStaffStudio(), "Assigned Staff", "", new { CompanyId = 1, SiteId = 1, StaffId = (int?)null, StudioId = studyId });
+                _logger.LogInformation("OnPostStudioStaffAssignments - StudioId: {StudioId}", studioId);
 
-                if (assignedStaff == null || assignedStaff.Data == null)
+                var requestData = new
                 {
-                    return new JsonResult(new
+                    CompanyId = 1,
+                    SiteId = 1,
+                    StaffId = (int?)null,
+                    StudioId = (int?)studioId
+                };
+
+                var response = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetStaffStudio(), "Studio Staff Assignments", "", requestData);
+
+                _logger.LogInformation("API Response - Success: {Success}, DataIsNull: {DataIsNull}",
+                    response?.Success, response?.Data == null);
+
+                if (response?.Success == true && response.Data != null)
+                {
+                    _logger.LogInformation("Raw Data: {Data}", response.Data.ToString());
+
+                    var staffList = JsonConvert.DeserializeObject<List<dynamic>>(response.Data.ToString());
+                    _logger.LogInformation("Deserialized {Count} staff assignments", staffList?.Count ?? 0);
+
+                    // Transform the data to match JavaScript expectations
+                    var transformedData = staffList?.Select(item => new
                     {
-                        success = false,
-                        message = "Error reading assigned staff",
-                        data = new List<object>()
-                    });
-                }
+                        staffId = (int)item.staffId,
+                        firstName = (string)item.firstName,
+                        lastName = (string)item.lastName,
+                        studioId = (int)item.studioId,
+                        roleId = (int)item.roleId,
+                        roleName = (string)item.roleType,
+                        startDate = item.startDate,
+                        endDate = item.endDate
+                    }).ToList();
 
-                if (assignedStaff.Success && assignedStaff.Data != null)
-                {
+                    _logger.LogInformation("Returning {Count} transformed assignments", transformedData?.Count ?? 0);
+
                     return new JsonResult(new
                     {
                         success = true,
-                        data = assignedStaff.Data
+                        data = transformedData
                     });
                 }
                 else
                 {
+                    _logger.LogWarning("No data or Success=false, returning empty list");
                     return new JsonResult(new
                     {
-                        success = false,
-                        message = assignedStaff.Message,
+                        success = true,
                         data = new List<object>()
                     });
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Exception in OnPostStudioStaffAssignments: {Message}", ex.Message);
                 return new JsonResult(new
                 {
                     success = false,
@@ -234,45 +258,44 @@ namespace GMS_UI.Pages.STD.StudioListData
             }
         }
 
-        public async Task<JsonResult> OnPostAssignStaff(int studyId, int staffId)
+        public async Task<JsonResult> OnPostSaveStaffForStudioAssignment(int studioId, int staffId, int roleId,
+            DateTime? startDate, DateTime? endDate, int companyId, int siteId, int userName, int action)
         {
             try
             {
-                var createRequest = new CreateStudioStaffRequest
+                _logger.LogInformation("OnPostSaveStaffForStudioAssignment - StudioId: {StudioId}, StaffId: {StaffId}, Action: {Action}",
+                    studioId, staffId, action);
+
+                var requestData = new CreateStudioStaffRequest
                 {
-                    CompanyId = 1,
-                    SiteId = 1,
-                    StudioId = studyId,
+                    StudioId = studioId,
                     StaffId = staffId,
-                    RoleId = 0,
-                    UserName = 1,
-                    Action = 1
+                    RoleId = roleId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    CompanyId = companyId,
+                    SiteId = siteId,
+                    UserName = userName,
+                    Action = action
                 };
 
-                BaseResponse result = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateStudioStaff(), "Assign Staff", "", createRequest);
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateStudioStaff(), "Staff For Studio Assignment", "", requestData);
 
-                if (result == null)
-                {
-                    return new JsonResult(new
-                    {
-                        success = false,
-                        message = "Error assigning staff to study"
-                    });
-                }
+                _logger.LogInformation("API Response - Success: {Success}, Message: {Message}", response?.Success, response?.Message);
 
                 return new JsonResult(new
                 {
-                    success = result.Success,
-                    message = result.Message
+                    success = response?.Success ?? false,
+                    message = response?.Message ?? "Failed to save staff assignment"
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Exception in OnPostAssignStaff: {Message}", ex.Message);
+                _logger.LogError(ex, "Exception in OnPostSaveStaffForStudioAssignment: {Message}", ex.Message);
                 return new JsonResult(new
                 {
                     success = false,
-                    message = $"Exception: {ex.Message}"
+                    message = ex.Message
                 });
             }
         }

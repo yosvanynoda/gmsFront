@@ -4,13 +4,13 @@ class StudioListButtonRenderer {
         this.eGui = document.createElement('div')
         const editLink = createActionLink('Edit', `${urlIndex}/edit?id=${params.data.id}`, 'link-success', 'bi bi-pencil-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes, false);
-        const assignStaffLink = createActionLink('Assign Staff', '#assignStaffModal', 'link-primary', 'bi bi-person-plus-fill', params.data.id, params.data.name, params.data.datecreated,
+        const staffManagementLink = createActionLink('Staff', '#staffManagementModal', 'link-info', 'bi bi-people-fill', params.data.id, params.data.name, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes, true);
         const deleteLink = createActionLink('Delete', '#deleteStudioList', 'link-danger', 'bi bi-x-octagon-fill', params.data.id, params.data.studioList, params.data.datecreated,
             params.data.version, params.data.siteId, params.data.notes, true);
         this.eGui.appendChild(editLink);
         this.eGui.appendChild(document.createTextNode(' | '));
-        this.eGui.appendChild(assignStaffLink);
+        this.eGui.appendChild(staffManagementLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(deleteLink);
     }
@@ -126,11 +126,12 @@ function createActionLink(title, href, linkClass, iconClass, id, studioList, dat
                 $('#siteIdD').html(siteId);
                 $('#studioListidDelete').val(id);
             }
-            else if (href == "#assignStaffModal") {
-                $('#assignStaffStudyId').val(id);
-                $('#assignStaffStudyName').html(studioList);
-                loadAssignedStaff(id);
-                loadStaffDropList();
+            else if (href == "#staffManagementModal") {
+                $('#currentStudioId').val(id);
+                $('#studioNameHeader').text(studioList);
+                resetStaffAssignmentForm();
+                loadStaffForStudioDropdown();
+                loadStaffForStudioAssignments(id);
             }
 
             if (href.startsWith('#')) {
@@ -266,91 +267,7 @@ function hideAlerts(alertName) {
 }
 //#endregion
 
-//#region Assign Staff
-function loadAssignedStaff(studyId) {
-    console.log('Loading assigned staff for study:', studyId);
-    $.ajax({
-        type: "POST",
-        url: urlIndex + '?handler=GetAssignedStaff',
-        headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "studyId": studyId },
-        success: function (data) {
-            console.log('Assigned staff response:', data);
-            if (data.success && data.data && data.data.length > 0) {
-                displayAssignedStaff(data.data);
-            } else {
-                $('#assignedStaffList').html('<span class="text-muted">No staff currently assigned</span>');
-            }
-        },
-        error: function (response) {
-            console.error('Error loading assigned staff:', response);
-            $('#assignedStaffList').html('<span class="text-muted">No staff currently assigned</span>');
-        }
-    });
-}
-
-function displayAssignedStaff(assignedStaff) {
-    const $assignedList = $('#assignedStaffList');
-    $assignedList.empty();
-
-    if (!assignedStaff || assignedStaff.length === 0) {
-        $assignedList.html('<span class="text-muted">No staff currently assigned</span>');
-        return;
-    }
-
-    const listHtml = assignedStaff.map(staff => {
-        // Handle both PascalCase and camelCase
-        const firstName = staff.FirstName ?? staff.firstName ?? '';
-        const lastName = staff.LastName ?? staff.lastName ?? '';
-        const fullName = `${firstName} ${lastName}`.trim() || 'Unknown';
-        const role = staff.RoleType ?? staff.roleType ?? 'Staff';
-        const staffId = staff.StaffId ?? staff.staffId;
-        const id = staff.Id ?? staff.id;
-
-        return `<span class="badge bg-info me-1" data-staff-id="${staffId}" data-id="${id}">${fullName} (${role})</span>`;
-    }).join('');
-
-    $assignedList.html(listHtml);
-}
-
-function loadStaffDropList() {
-    console.log('Loading staff drop list...');
-    $.ajax({
-        type: "POST",
-        url: urlIndex + '?handler=StaffDropList',
-        headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "companyId": 1, "siteId": 1 },
-        success: function (data) {
-            console.log('Staff drop list response:', data);
-            if (data.success) {
-                console.log('Staff data:', data.data);
-                populateStaffDropdown(data.data);
-            } else {
-                console.error('Failed to load staff list:', data.errorMessage || data.message);
-                $('#failedTitle').html('Load Staff');
-                $('#failedMsg').html(data.errorMessage || 'Failed to load staff list. Please try again');
-                $('#failedAlert').show();
-            }
-        },
-        failure: function (response) {
-            console.error('Staff drop list failure:', response);
-            $('#failedTitle').html('Load Staff');
-            $('#failedMsg').html('Failed to load staff list. Please try again');
-            $('#failedAlert').show();
-        },
-        error: function (response) {
-            console.error('Staff drop list error:', response);
-            $('#failedTitle').html('Load Staff');
-            $('#failedMsg').html('Failed to load staff list. Please try again');
-            $('#failedAlert').show();
-        }
-    });
-}
-
-function populateStaffDropdown(staffList) {
-    setCombos('#staffList', staffList, 'Staff');
-}
-
+//#region Helper Functions
 function setCombos(comboName, values, firstElement) {
     // Empty combo
     $(comboName).empty();
@@ -372,49 +289,404 @@ function setCombos(comboName, values, firstElement) {
         }));
     });
 }
+//#endregion
 
-function assignStaff() {
-    const studyId = $('#assignStaffStudyId').val();
-    const staffId = $('#staffList').val();
+//#region Staff Management for Studio
 
-    if (staffId == -1) {
-        $('#validateStaffAssign').text('Please select a staff member');
-        return;
+let staffForStudioGridApi;
+
+// Load staff dropdown for studio
+function loadStaffForStudioDropdown() {
+    console.log('Loading staff dropdown for studio...');
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=StaffDropList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "companyId": 1, "siteId": 1 },
+        success: function (data) {
+            console.log('Staff dropdown response:', data);
+            if (data.success && data.data) {
+                setCombos('#staffSelectForStudio', data.data, 'Staff');
+            } else {
+                console.error('Failed to load staff dropdown:', data.errorMessage);
+            }
+        },
+        error: function (response) {
+            console.error('Error loading staff dropdown:', response);
+        }
+    });
+}
+
+// Load staff assignments for studio
+function loadStaffForStudioAssignments(studioId) {
+    console.log('Loading staff assignments for studio:', studioId);
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=StudioStaffAssignments',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "studioId": studioId },
+        success: function (response) {
+            console.log('Staff assignments response:', response);
+            console.log('Response data:', response.data);
+            if (response.data && response.data.length > 0) {
+                console.log('First assignment:', response.data[0]);
+                console.log('Properties:', Object.keys(response.data[0]));
+            }
+            if (response.success && response.data) {
+                setupStaffForStudioGrid(response.data);
+            } else {
+                setupStaffForStudioGrid([]);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading assignments:', status, error);
+            setupStaffForStudioGrid([]);
+        }
+    });
+}
+
+// Setup AG Grid for staff assignments
+function setupStaffForStudioGrid(data) {
+    $('#staffForStudioGrid').html('');
+
+    const gridOptions = {
+        rowData: data,
+        columnDefs: [
+            { field: "studioId", hide: true },
+            { field: "staffId", hide: true },
+            { field: "id", hide: true },
+            {
+                field: "staffName",
+                headerName: "Staff Member",
+                flex: 2,
+                filter: 'agTextColumnFilter',
+                valueGetter: params => {
+                    const firstName = params.data.FirstName || params.data.firstName || '';
+                    const lastName = params.data.LastName || params.data.lastName || '';
+                    return `${firstName} ${lastName}`.trim();
+                }
+            },
+            {
+                field: "startDate",
+                headerName: "Start Date",
+                flex: 1,
+                valueFormatter: params => {
+                    if (!params.value || params.value === null) return '';
+                    const dateStr = String(params.value);
+                    if (dateStr.startsWith('0001-01-01') || dateStr.startsWith('1/1/0001')) return '';
+                    try {
+                        const date = new Date(params.value);
+                        if (isNaN(date.getTime()) || date.getFullYear() < 1900) return '';
+                        return date.toLocaleDateString();
+                    } catch (e) {
+                        return '';
+                    }
+                }
+            },
+            {
+                field: "endDate",
+                headerName: "End Date",
+                flex: 1,
+                valueFormatter: params => {
+                    if (!params.value || params.value === null) return 'Ongoing';
+                    const dateStr = String(params.value);
+                    if (dateStr.startsWith('0001-01-01') || dateStr.startsWith('1/1/0001')) return 'Ongoing';
+                    try {
+                        const date = new Date(params.value);
+                        if (isNaN(date.getTime()) || date.getFullYear() < 1900) return 'Ongoing';
+                        return date.toLocaleDateString();
+                    } catch (e) {
+                        return 'Ongoing';
+                    }
+                }
+            },
+            {
+                field: "actions",
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: params => {
+                    const div = document.createElement('div');
+
+                    const editLink = document.createElement('a');
+                    editLink.href = '#';
+                    editLink.className = 'link-success';
+                    editLink.title = 'Edit';
+                    editLink.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+                    editLink.onclick = (e) => {
+                        e.preventDefault();
+                        editStaffForStudioAssignment(params.data);
+                    };
+
+                    const deleteLink = document.createElement('a');
+                    deleteLink.href = '#';
+                    deleteLink.className = 'link-danger ms-2';
+                    deleteLink.title = 'Delete';
+                    deleteLink.innerHTML = '<i class="bi bi-trash-fill"></i>';
+                    deleteLink.onclick = (e) => {
+                        e.preventDefault();
+                        deleteStaffForStudioAssignment(params.data);
+                    };
+
+                    div.appendChild(editLink);
+                    div.appendChild(deleteLink);
+
+                    return div;
+                }
+            }
+        ],
+        defaultColDef: {
+            flex: 1,
+            resizable: true
+        },
+        domLayout: 'autoHeight'
+    };
+
+    staffForStudioGridApi = agGrid.createGrid(document.querySelector("#staffForStudioGrid"), gridOptions);
+}
+
+// Save staff assignment
+function saveStaffForStudioAssignment() {
+    console.log('Saving staff assignment...');
+
+    // Clear validation
+    $('#validateStaffForStudio').html('');
+    $('#validateStaffStartDate').html('');
+
+    const staffId = $('#staffSelectForStudio').val();
+    const startDate = $('#staffStartDate').val();
+    const endDate = $('#staffEndDate').val();
+    const studioId = $('#currentStudioId').val();
+    const action = parseInt($('#staffAssignmentAction').val());
+
+    // Validation
+    let isValid = true;
+
+    if (!staffId) {
+        $('#validateStaffForStudio').html('Please select a staff member');
+        isValid = false;
     }
 
-    $('#validateStaffAssign').text('');
+    if (!startDate) {
+        $('#validateStaffStartDate').html('Please select a start date');
+        isValid = false;
+    }
+
+    if (!isValid) return;
+
+    const requestData = {
+        StudioId: parseInt(studioId),
+        StaffId: parseInt(staffId),
+        RoleId: 0, // No role for now
+        StartDate: startDate,
+        EndDate: endDate || null,
+        CompanyId: 1,
+        SiteId: 1,
+        UserName: 1,
+        Action: action
+    };
+
+    console.log('Request data:', requestData);
 
     $.ajax({
         type: "POST",
-        url: urlIndex + '?handler=AssignStaff',
+        url: urlIndex + '?handler=SaveStaffForStudioAssignment',
         headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "studyId": studyId, "staffId": staffId },
-        success: function (data) {
-            $('#assignStaffModal').modal('hide');
-            if (data.success) {
-                $('#successTitle').html('Assign Staff');
-                $('#successMsg').html('Staff assigned successfully');
+        data: requestData,
+        success: function (response) {
+            if (response.success) {
+                $('#successTitle').html('Staff Assignment');
+                $('#successMsg').html('Staff assignment saved successfully');
                 $('#successAlert').show();
+
+                // Reset form and reload grid
+                resetStaffAssignmentForm();
+                loadStaffForStudioAssignments(studioId);
+
+                // Refresh main studio grid
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=StudioList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupGrid(data.data);
+                    }
+                });
             } else {
-                $('#failedTitle').html('Assign Staff');
-                $('#failedMsg').html(data.message || 'Failed to assign staff. Please try again');
+                $('#failedTitle').html('Staff Assignment');
+                $('#failedMsg').html(response.message || 'Failed to save assignment');
                 $('#failedAlert').show();
             }
         },
-        failure: function (response) {
-            $('#assignStaffModal').modal('hide');
-            $('#failedTitle').html('Assign Staff');
-            $('#failedMsg').html('Failed to assign staff. Please try again');
-            $('#failedAlert').show();
-        },
-        error: function (response) {
-            $('#assignStaffModal').modal('hide');
-            $('#failedTitle').html('Assign Staff');
-            $('#failedMsg').html('Failed to assign staff. Please try again');
+        error: function (error) {
+            console.error('Error saving assignment:', error);
+            $('#failedTitle').html('Staff Assignment');
+            $('#failedMsg').html('Error saving assignment. Please try again.');
             $('#failedAlert').show();
         }
     });
 }
+
+// Edit staff assignment
+function editStaffForStudioAssignment(data) {
+    console.log('Editing assignment:', data);
+    $('#staffAssignmentFormTitle').text('Edit Staff Assignment');
+    $('#staffAssignmentAction').val('2');
+    $('#staffSelectForStudio').val(data.staffId || data.StaffId);
+
+    // Handle dates
+    let startDateValue = '';
+    let endDateValue = '';
+
+    if (data.startDate || data.StartDate) {
+        const dateStr = String(data.startDate || data.StartDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(dateStr);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1900) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    startDateValue = `${year}-${month}-${day}`;
+                }
+            } catch (e) {
+                console.error('Error parsing startDate:', e);
+            }
+        }
+    }
+
+    if (data.endDate || data.EndDate) {
+        const dateStr = String(data.endDate || data.EndDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(dateStr);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1900) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    endDateValue = `${year}-${month}-${day}`;
+                }
+            } catch (e) {
+                console.error('Error parsing endDate:', e);
+            }
+        }
+    }
+
+    $('#staffStartDate').val(startDateValue);
+    $('#staffEndDate').val(endDateValue);
+}
+
+// Delete staff assignment
+function deleteStaffForStudioAssignment(data) {
+    const firstName = data.FirstName || data.firstName || '';
+    const lastName = data.LastName || data.lastName || '';
+    const staffName = `${firstName} ${lastName}`.trim();
+
+    if (!confirm(`Are you sure you want to remove "${staffName}" from this study?`)) {
+        return;
+    }
+
+    const studioId = $('#currentStudioId').val();
+
+    // Convert dates
+    let startDate = null;
+    let endDate = null;
+
+    if (data.startDate || data.StartDate) {
+        const dateStr = String(data.startDate || data.StartDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(dateStr);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1753) {
+                    startDate = date.toISOString();
+                }
+            } catch (e) {
+                console.error('Error parsing startDate:', e);
+            }
+        }
+    }
+
+    if (data.endDate || data.EndDate) {
+        const dateStr = String(data.endDate || data.EndDate);
+        if (!dateStr.startsWith('0001-01-01') && !dateStr.startsWith('1/1/0001')) {
+            try {
+                const date = new Date(dateStr);
+                if (!isNaN(date.getTime()) && date.getFullYear() >= 1753) {
+                    endDate = date.toISOString();
+                }
+            } catch (e) {
+                console.error('Error parsing endDate:', e);
+            }
+        }
+    }
+
+    const requestData = {
+        StudioId: parseInt(studioId),
+        StaffId: data.staffId || data.StaffId,
+        RoleId: 0,
+        CompanyId: 1,
+        SiteId: 1,
+        UserName: 1,
+        Action: 3
+    };
+
+    if (startDate !== null) {
+        requestData.StartDate = startDate;
+    }
+    if (endDate !== null) {
+        requestData.EndDate = endDate;
+    }
+
+    console.log('Delete request data:', requestData);
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=SaveStaffForStudioAssignment',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: requestData,
+        success: function (response) {
+            if (response.success) {
+                $('#successTitle').html('Staff Assignment');
+                $('#successMsg').html('Staff assignment removed successfully');
+                $('#successAlert').show();
+
+                // Reload grid
+                loadStaffForStudioAssignments(studioId);
+
+                // Refresh main studio grid
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=StudioList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupGrid(data.data);
+                    }
+                });
+            } else {
+                $('#failedTitle').html('Staff Assignment');
+                $('#failedMsg').html(response.message || 'Failed to remove assignment');
+                $('#failedAlert').show();
+            }
+        },
+        error: function (error) {
+            console.error('Error removing assignment:', error);
+            $('#failedTitle').html('Staff Assignment');
+            $('#failedMsg').html('Error removing assignment. Please try again.');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+// Reset assignment form
+function resetStaffAssignmentForm() {
+    $('#staffAssignmentFormTitle').text('Add Staff Assignment');
+    $('#staffAssignmentAction').val('1');
+    $('#staffSelectForStudio').val('');
+    $('#staffStartDate').val('');
+    $('#staffEndDate').val('');
+    $('#validateStaffForStudio').html('');
+    $('#validateStaffStartDate').html('');
+}
+
 //#endregion
 
 

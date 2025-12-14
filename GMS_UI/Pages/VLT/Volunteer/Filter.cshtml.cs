@@ -5,6 +5,7 @@ using GMS.Objects.General;
 using GMS.Objects.STD;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
+using GMS_UI.Models.VLT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -152,7 +153,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
                         //    _logger.LogInformation("Converted JToken/JArray data");
                         //}
 
-                        var volunteers = JsonConvert.DeserializeObject(result.Data.ToString());
+                        var volunteers = JsonConvert.DeserializeObject<List<VLTVolunteerSearchResult>>(result.Data.ToString());
 
                         return new JsonResult(new
                         {
@@ -172,6 +173,12 @@ namespace GMS_UI.Pages.VLT.Volunteer
                         message = result?.Message ?? "Error searching volunteers"
                     });
                 }
+
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = result?.Message ?? "Error searching volunteers"
+                });
             }
             catch (Exception ex)
             {

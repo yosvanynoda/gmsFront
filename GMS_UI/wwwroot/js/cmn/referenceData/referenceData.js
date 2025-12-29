@@ -62,6 +62,30 @@ function createActionLink(title, href, linkClass, iconClass, mainvalue, secondVa
             $('#medicationidDelete').val(id);
         }
 
+        if (href == "#editVaccine") {
+            $('#vaccineEdit').val(mainvalue);
+            $('#dosevEdit').val(secondValue);
+            $('#vaccineidEdit').val(id);
+        }
+
+        if (href == "#deleteVaccine") {
+            $('#vaccineD').html(mainvalue);
+            $('#doseD').html(secondValue);
+            $('#vaccineidDelete').val(id);
+        }
+
+        if (href == "#editSurgical") {
+            $('#surgicalEdit').val(mainvalue);
+            $('#dosesgEdit').val(secondValue);
+            $('#surgicalidEdit').val(id);
+        }
+
+        if (href == "#deleteSurgical") {
+            $('#surgicalD').html(mainvalue);
+            $('#doseD').html(secondValue);
+            $('#surgicalidDelete').val(id);
+        }
+
         if (href == "#editEthnicity") {
             $('#ethnicityEdit').val(mainvalue);
             $('textarea#commentEthnicityEdit').val(secondValue);
@@ -1189,6 +1213,398 @@ function crudMedication(action) {
         error: function (response) {
             $('#failedTitle').html('Medication');
             $('#failedMsg').html('Medication failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+//#endregion
+//#endregion
+
+//#region ====== Vaccine =======
+
+//#region Grid...
+class VaccineButtonRenderer {
+    init(params) {
+        this.eGui = document.createElement('div')
+        const editLink = createActionLink('Edit', '#editVaccine', 'link-success', 'bi bi-pencil-fill', params.data.vaccineName, params.data.vaccineDose, params.data.vaccineId);
+        const deleteLink = createActionLink('Delete', '#deleteVaccine', 'link-danger', 'bi bi-x-octagon-fill', params.data.vaccineName, params.data.vaccineDose, params.data.vaccineId);
+        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
+        this.eGui.appendChild(deleteLink);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    // Optional: Implement refresh or destroy methods if needed
+    refresh(params) {
+        return false; // Return true if the component can refresh, false otherwise
+    }
+
+    destroy() {
+        // Clean up resources if necessary
+        this.eGui.removeEventListener('click', () => { });
+    }
+}
+
+let gridVaccineApi;
+
+// Grid Options: Contains all of the grid configurations
+const gridVaccineOptions = {
+    // Data to be displayed
+    rowData: [],
+
+    // Columns to be displayed (Should match rowData properties)
+    columnDefs: [
+        { field: "vaccineId", filter: 'agTextColumnFilter', hide: true },
+        { field: "vaccineName", filter: 'agTextColumnFilter' },
+        { field: "vaccineDose", filter: 'agTextColumnFilter' },
+        { field: "companyId", filter: true, hide: true },
+        { field: "userName", filter: true, hide: true },
+        { field: "actionDateTime", filter: true, hide: true },
+        { field: "active", filter: true, hide: true },
+        { field: "lastUpdateAt", filter: true, hide: true },
+        {
+            field: "button",
+            headerName: "Actions",
+            cellRenderer: VaccineButtonRenderer,
+        }
+    ],
+    defaultColDef: {
+        flex: 1,
+    },
+    enableFilter: true,
+    pagination: true,
+
+};
+// Create Grid: Create new grid within the #myGrid div, using the Grid Options object
+
+window.getVaccineList = function () {
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=VaccineList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            setupVaccineGrid(data.data);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Vaccine');
+            $('#failedMsg').html('Vaccine failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Vaccine');
+            $('#failedMsg').html('Vaccine failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function setupVaccineGrid(data) {
+    console.log(data);
+    $('#vaccineGrid').html('');
+    gridVaccineOptions.rowData = data;
+    gridDieaseApi = agGrid.createGrid(document.querySelector("#vaccineGrid"), gridVaccineOptions);
+    //alert('done');
+}
+//#endregion
+
+//#region Add Vaccine
+
+function crudVaccine(action) {
+    $('#validateVaccine').html('');
+    $('#validateVaccineEdit').html('');
+    let vaccine = '';
+    let dosev = '';
+    let id = 0;
+    switch (action) {
+        case 1: // Add
+            vaccine = $("#vaccine").val();
+            if (vaccine === "") {
+                $('#validateVaccine').html('Please enter a vaccine');
+                $('#validateVaccine').show();
+                return;
+            }
+            dosev = $('#dosev').val();
+            if (dosev === "") {
+                $('#validateDose').html('Please enter a type');
+                $('#validateDose').show();
+                return;
+            }
+            id = 0; // New vaccine, so id is 0
+            $('#vaccine').val('');
+            $('#vaccineNewModal').modal('hide');
+            break;
+        case 2: // Edit
+            vaccine = $("#vaccineEdit").val();
+            if (vaccine === "") {
+                $('#validateVaccineEdit').html('Please enter a vaccine');
+                $('#validateVaccineEdit').show();
+                return;
+            }
+            dosev = $("#dosevEdit").val();
+            if (dosev === "") {
+                $('#validateDoseEdit').html('Please enter a dose');
+                $('#validateDoseEdit').show();
+                return;
+            }
+            id = $("#vaccineidEdit").val(); // Get the id from the hidden input
+            $('#vaccineEdit').val('');
+            $('#vaccineidEdit').val('');
+            $('#editVaccine').modal('hide');
+            break;
+        case 3: // Delete
+            vaccine = 'N/A';
+            dosev = 'N/A';
+            id = $("#vaccineidDelete").val(); // Get the id from the hidden input
+            $('#vaccineidDelete').val('');
+            $('#deleteVaccine').modal('hide');
+            break;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CrudVaccine',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "vaccine": vaccine, "dose": dosev, "action": action, "id": id },
+        success: function (data) {
+            if (data.success === false) {
+                $('#failedTitle').html('Vaccine');
+                $('#failedMsg').html('Vaccine failed. Please try again');
+                $('#failedAlert').show();
+            }
+            else {
+                $('#successTitle').html('Vaccine');
+                $('#successMsg').html('Vaccine was saved successfully');
+                $('#successAlert').show();
+                // Refresh the grid with the new data
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=VaccineList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupVaccineGrid(data.data);
+                    },
+                    failure: function (response) {
+                        $('#failedTitle').html('Vaccine');
+                        $('#failedMsg').html('Vaccine failed. Please try again');
+                        $('#failedAlert').show();
+                    },
+                    error: function (response) {
+                        $('#failedTitle').html('Vaccine');
+                        $('#failedMsg').html('Vaccine failed. Please try again');
+                        $('#failedAlert').show();
+                    }
+                });
+
+            }
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Vaccine');
+            $('#failedMsg').html('Vaccine failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Vaccine');
+            $('#failedMsg').html('Vaccine failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+//#endregion
+//#endregion
+
+//#region ====== Surgical =======
+
+//#region Grid...
+class SurgicalButtonRenderer {
+    init(params) {
+        this.eGui = document.createElement('div')
+        const editLink = createActionLink('Edit', '#editSurgical', 'link-success', 'bi bi-pencil-fill', params.data.surgicalName, params.data.surgicalDose, params.data.surgicalId);
+        const deleteLink = createActionLink('Delete', '#deleteSurgical', 'link-danger', 'bi bi-x-octagon-fill', params.data.surgicalName, params.data.surgicalDose, params.data.surgicalId);
+        this.eGui.appendChild(editLink);
+        this.eGui.appendChild(document.createTextNode(' | '));
+        this.eGui.appendChild(deleteLink);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    // Optional: Implement refresh or destroy methods if needed
+    refresh(params) {
+        return false; // Return true if the component can refresh, false otherwise
+    }
+
+    destroy() {
+        // Clean up resources if necessary
+        this.eGui.removeEventListener('click', () => { });
+    }
+}
+
+let gridSurgicalApi;
+
+// Grid Options: Contains all of the grid configurations
+const gridSurgicalOptions = {
+    // Data to be displayed
+    rowData: [],
+
+    // Columns to be displayed (Should match rowData properties)
+    columnDefs: [
+        { field: "surgicalId", filter: 'agTextColumnFilter', hide: true },
+        { field: "surgicalName", filter: 'agTextColumnFilter' },
+        { field: "surgicalDose", filter: 'agTextColumnFilter' },
+        { field: "companyId", filter: true, hide: true },
+        { field: "userName", filter: true, hide: true },
+        { field: "actionDateTime", filter: true, hide: true },
+        { field: "active", filter: true, hide: true },
+        { field: "lastUpdateAt", filter: true, hide: true },
+        {
+            field: "button",
+            headerName: "Actions",
+            cellRenderer: SurgicalButtonRenderer,
+        }
+    ],
+    defaultColDef: {
+        flex: 1,
+    },
+    enableFilter: true,
+    pagination: true,
+
+};
+// Create Grid: Create new grid within the #myGrid div, using the Grid Options object
+
+window.getSurgicalList = function () {
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=SurgicalList',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        success: function (data) {
+            setupSurgicalGrid(data.data);
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Surgical');
+            $('#failedMsg').html('Surgical failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Surgical');
+            $('#failedMsg').html('Surgical failed. Please try again');
+            $('#failedAlert').show();
+        }
+    });
+}
+
+function setupSurgicalGrid(data) {
+    console.log(data);
+    $('#surgicalGrid').html('');
+    gridSurgicalOptions.rowData = data;
+    gridDieaseApi = agGrid.createGrid(document.querySelector("#surgicalGrid"), gridSurgicalOptions);
+    //alert('done');
+}
+//#endregion
+
+//#region Add Surgical
+
+function crudSurgical(action) {
+    $('#validateSurgical').html('');
+    $('#validateSurgicalEdit').html('');
+    let surgical = '';
+    let dosesg = '';
+    let id = 0;
+    switch (action) {
+        case 1: // Add
+            surgical = $("#surgical").val();
+            if (surgical === "") {
+                $('#validateSurgical').html('Please enter a surgical');
+                $('#validateSurgical').show();
+                return;
+            }
+            dosesg = $('#dosesg').val();
+            if (dosesg === "") {
+                $('#validateDose').html('Please enter a dose');
+                $('#validateDose').show();
+                return;
+            }
+            id = 0; // New surgical, so id is 0
+            $('#surgical').val('');
+            $('#surgicalNewModal').modal('hide');
+            break;
+        case 2: // Edit
+            surgical = $("#surgicalEdit").val();
+            if (surgical === "") {
+                $('#validateSurgicalEdit').html('Please enter a surgical');
+                $('#validateSurgicalEdit').show();
+                return;
+            }
+            dosesg = $("#dosesgEdit").val();
+            if (dosesg === "") {
+                $('#validateDoseEdit').html('Please enter a dose');
+                $('#validateDoseEdit').show();
+                return;
+            }
+            id = $("#surgicalidEdit").val(); // Get the id from the hidden input
+            $('#surgicalEdit').val('');
+            $('#surgicalidEdit').val('');
+            $('#editSurgical').modal('hide');
+            break;
+        case 3: // Delete
+            surgical = 'N/A';
+            dose = 'N/A';
+            id = $("#surgicalidDelete").val(); // Get the id from the hidden input
+            $('#surgicalidDelete').val('');
+            $('#deleteSurgical').modal('hide');
+            break;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: urlIndex + '?handler=CrudSurgical',
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "surgical": surgical, "dose": dosesg, "action": action, "id": id },
+        success: function (data) {
+            if (data.success === false) {
+                $('#failedTitle').html('Surgical');
+                $('#failedMsg').html('Surgical failed. Please try again');
+                $('#failedAlert').show();
+            }
+            else {
+                $('#successTitle').html('Surgical');
+                $('#successMsg').html('Surgical was saved successfully');
+                $('#successAlert').show();
+                // Refresh the grid with the new data
+                $.ajax({
+                    type: "POST",
+                    url: urlIndex + '?handler=SurgicalList',
+                    headers: { 'RequestVerificationToken': window._csrfToken },
+                    success: function (data) {
+                        setupSurgicalGrid(data.data);
+                    },
+                    failure: function (response) {
+                        $('#failedTitle').html('Surgical');
+                        $('#failedMsg').html('Surgical failed. Please try again');
+                        $('#failedAlert').show();
+                    },
+                    error: function (response) {
+                        $('#failedTitle').html('Surgical');
+                        $('#failedMsg').html('Surgical failed. Please try again');
+                        $('#failedAlert').show();
+                    }
+                });
+
+            }
+        },
+        failure: function (response) {
+            $('#failedTitle').html('Surgical');
+            $('#failedMsg').html('Surgical failed. Please try again');
+            $('#failedAlert').show();
+        },
+        error: function (response) {
+            $('#failedTitle').html('Surgical');
+            $('#failedMsg').html('Surgical failed. Please try again');
             $('#failedAlert').show();
         }
     });

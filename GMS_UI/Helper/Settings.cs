@@ -13,6 +13,10 @@
 
         public string Endpoint_CreateMedication() => _config["Endpoint_CreateMedication"] ?? "";
 
+        public string Endpoint_CreateVaccine() => _config["Endpoint_CreateVaccine"] ?? "";
+
+        public string Endpoint_CreateSurgical() => _config["Endpoint_CreateSurgical"] ?? "";
+
         public string Endpoint_CreateDisease()=> _config["Endpoint_CreateDisease"] ?? "";
 
         public string Endpoint_CreateDeviation()=> _config["Endpoint_CreateDeviation"] ?? "";
@@ -35,6 +39,10 @@
 
         public string Endpoint_GetMedicationList() => _config["Endpoint_GetMedicationList"] ?? "";
 
+        public string Endpoint_GetVaccineList() => _config["Endpoint_GetVaccineList"] ?? "";
+
+        public string Endpoint_GetSurgicalList() => _config["Endpoint_GetSurgicalList"] ?? "";
+
         public string Endpoint_GetDiseaseList()=> _config["Endpoint_GetDiseaseList"] ?? "";
 
         public string Endpoint_GetDiseaseDropList() => _config["Endpoint_GetDiseaseDropList"] ?? "";
@@ -54,6 +62,8 @@
         public string Endpoint_GetSponsorTypeList()=> _config["Endpoint_GetSponsorTypeList"] ?? "";
 
         public string Endpoint_GetStaffList()=> _config["Endpoint_GetStaffList"] ?? "";
+
+        public string Endpoint_GetStaffDropList() => _config["Endpoint_GetStaffDropList"] ?? "";
 
         public string Endpoint_GetTaskList()=> _config["Endpoint_GetTaskList"] ?? "";
 

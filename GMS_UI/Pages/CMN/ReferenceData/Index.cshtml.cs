@@ -1915,8 +1915,196 @@ namespace GMS_UI.Pages.CMN.ReferenceData
             }
         }
 
-        
 
+
+        #endregion
+
+        #region ====== Vaccine ======
+        public async Task<JsonResult> OnPostVaccineList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse vaccines = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetVaccineList(), "a Vaccine List", "", requestData);
+
+                if (vaccines == null || vaccines.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Vaccine List",
+                        success = false,
+                        data = new List<VaccineBaseResponse>()
+                    });
+                }
+
+                if (vaccines.Success && vaccines.Data != null)
+                {
+                    List<VaccineBaseResponse> result = JsonConvert.DeserializeObject<List<VaccineBaseResponse>>(vaccines.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Vaccine List was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = vaccines.Message,
+                        success = false,
+                        data = new List<VaccineBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<VaccineBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudVaccine(string vaccine, string dose, int action, int id)
+        {
+            try
+            {
+                var createRequest = new CreateVaccineRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    VaccineName = vaccine,
+                    VaccineDose = dose,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    VaccineId = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateVaccine(), "a Vaccine", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+        #endregion
+
+        #region ====== Surgical ======
+        public async Task<JsonResult> OnPostSurgicalList()
+        {
+            try
+            {
+
+                var requestData = new GeneralRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                };
+
+                BaseResponse surgicals = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetSurgicalList(), "a Surgical List", "", requestData);
+
+                if (surgicals == null || surgicals.Data == null)
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = "Error reading Surgical List",
+                        success = false,
+                        data = new List<SurgicalBaseResponse>()
+                    });
+                }
+
+                if (surgicals.Success && surgicals.Data != null)
+                {
+                    List<SurgicalBaseResponse> result = JsonConvert.DeserializeObject<List<SurgicalBaseResponse>>(surgicals.Data.ToString());
+
+                    return new JsonResult(new
+                    {
+                        errorCode = 200,
+                        errorMessage = "Surgical List was read successfully",
+                        success = true,
+                        data = result
+                    });
+
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        errorCode = 500,
+                        errorMessage = surgicals.Message,
+                        success = false,
+                        data = new List<SurgicalBaseResponse>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    errorCode = 500,
+                    errorMessage = ex.Message,
+                    success = false,
+                    data = new List<SurgicalBaseResponse>()
+                });
+            }
+
+        }
+
+        public async Task<JsonResult> OnPostCrudSurgical(string surgical, string dose, int action, int id)
+        {
+            try
+            {
+                var createRequest = new CreateSurgicalRequest
+                {
+                    CompanyId = 1, // Assuming CompanyId is always 1
+                    SurgicalName = surgical,
+                    SurgicalDose = dose,
+                    Username = 1, // Assuming a default user name for the system
+                    Action = action,
+                    SurgicalId = id
+                };
+
+                var response = await GenericAPI.CreateGeneric(_settings.ApiUrl(), _settings.Endpoint_CreateSurgical(), "a Surgical", "", createRequest);
+
+                return new JsonResult(new
+                {
+                    success = response.Success,
+                    message = response.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
         #endregion
 
     }

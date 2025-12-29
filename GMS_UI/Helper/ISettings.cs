@@ -15,6 +15,10 @@
 
         string Endpoint_CreateMedication();
 
+        string Endpoint_CreateVaccine();
+
+        string Endpoint_CreateSurgical();
+
         string Endpoint_CreateDocType();
 
         string Endpoint_CreateRoleType();
@@ -41,6 +45,10 @@
 
         string Endpoint_GetMedicationList();
 
+        string Endpoint_GetVaccineList();
+
+        string Endpoint_GetSurgicalList();
+
         string Endpoint_GetDocType();
 
         string Endpoint_GetDocTypeDropList();
@@ -52,6 +60,8 @@
         string Endpoint_GetSponsorTypeList();
 
         string Endpoint_GetStaffList();
+
+        string Endpoint_GetStaffDropList();
 
         string Endpoint_GetTaskList();
 

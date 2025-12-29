@@ -107,11 +107,8 @@ function performSearch() {
     $.ajax({
         type: "POST",
         url: window.location.pathname + '?handler=Search',
-        data: JSON.stringify(searchRequest),
-        contentType: "application/json",
-        headers: {
-            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-        },
+        headers: { 'RequestVerificationToken': window._csrfToken },
+        data: { "searchRequest": searchRequest },
         success: function(response) {
             console.log('=== AJAX SUCCESS ===');
             console.log('Full response:', response);

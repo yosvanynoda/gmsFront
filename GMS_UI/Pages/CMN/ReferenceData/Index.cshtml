@@ -319,6 +319,48 @@
                             </div>
                         </div>
 
+                         <!-- Vaccine -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingVaccine">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getVaccineList()" data-bs-toggle="collapse" data-bs-target="#collapseVaccine">
+                                    Vaccine
+                                </button>
+                            </h2>
+                            <div id="collapseVaccine" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#vaccineNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="vaccineGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Surgical -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSurgical">
+                                <button class="accordion-button collapsed accordionStyle" type="button" onclick="getSurgicalList()" data-bs-toggle="collapse" data-bs-target="#collapseSurgical">
+                                    Surgical
+                                </button>
+                            </h2>
+                            <div id="collapseSurgical" class="accordion-collapse collapse" data-bs-parent="#diseasesAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="card shadow border rounded-3 bg-light referenceDataTabSize">
+                                        <div class="card-header headerReference page-card-header">
+                                            <a data-bs-toggle="modal" data-bs-target="#surgicalNewModal" class="btn btn-sm float-end buttonReference btn-header"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="surgicalGrid" class="ag-theme-balham gridsize"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -996,6 +1038,233 @@
 
 </div>
 <!-- End Medication Modals -->
+
+<!-- Vaccine Modals -->
+<div id="vaccineNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vaccineNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Vaccine</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="vaccine">Vaccine</label>
+                                <input type="text" class="form-control inputsmmodal" id="vaccine" placeholder="Vaccine">
+                                <span id="validateVaccine" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dosev">Type</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Type" id="dosev"></textarea>
+                                <span id="validateDose" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudVaccine(1)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editVaccine" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editVaccineLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Edit Vaccine</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="vaccine">Vaccine</label>
+                                <input type="text" class="form-control inputsmmodal" id="vaccineEdit" placeholder="Vaccine">
+                                <span id="validateVaccineEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dosev">Type</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Type" id="dosevEdit"></textarea>
+                                <span id="validateDoseEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="vaccineidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudVaccine(2)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="deleteVaccine" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteVaccineLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Are you sure you want to delete this vaccine?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="vaccineidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Vaccine:
+                        </dt>
+                        <dd class="col-sm-6" id="vaccineD">
+
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Type:
+                        </dt>
+                        <dd class="col-sm-6" id="doseD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-danger" onclick="crudVaccine(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End Vaccine Modals -->
+<!-- Surgical Modals -->
+<div id="surgicalNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="surgicalNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Add Surgical</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="surgical">Surgical</label>
+                                <input type="text" class="form-control inputsmmodal" id="surgical" placeholder="Surgical">
+                                <span id="validateSurgical" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dosesg">Description</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Description" id="dosesg"></textarea>
+                                <span id="validateDose" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudSurgical(1)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editSurgical" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editSurgicalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Edit Surgical</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="surgical">Surgical</label>
+                                <input type="text" class="form-control inputsmmodal" id="surgicalEdit" placeholder="Surgical">
+                                <span id="validateSurgicalEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="dosesg">Description</label>
+                                <textarea rows="4" class="form-control inputsmmodal" placeholder="Description" id="dosesgEdit"></textarea>
+                                <span id="validateDoseEdit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="surgicalidEdit" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-success" onclick="crudSurgical(2)"> <i class="bi bi-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="deleteSurgical" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteSurgicalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2>Are you sure you want to delete this surgical?</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+                <input type="hidden" id="surgicalidDelete" />
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Surgical:
+                        </dt>
+                        <dd class="col-sm-6" id="surgicalD">
+
+                        </dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Description:
+                        </dt>
+                        <dd class="col-sm-6" id="doseD">
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-danger" onclick="crudSurgical(3)"><i class="bi bi-x-octagon-fill"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End Surgical Modals -->
 
 <!-- Ethnicity Modals -->
 <div id="ethnicityNewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ethnicityNewModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">

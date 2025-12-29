@@ -5,6 +5,7 @@ using GMS.Objects.General;
 using GMS.Objects.STD;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
+using GMS_UI.Models.VLT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -101,18 +102,18 @@ namespace GMS_UI.Pages.VLT.Volunteer
             }
         }
 
-        public async Task<JsonResult> OnPostSearchAsync()
+        public async Task<JsonResult> OnPostSearchAsync(VolunteerSearchRequest searchRequest)
         {
             try
             {
                 _logger.LogInformation("OnPostSearchAsync called");
 
-                using var reader = new StreamReader(Request.Body);
-                var body = await reader.ReadToEndAsync();
+                //using var reader = new StreamReader(Request.Body);
+                //var body = await reader.ReadToEndAsync();
 
-                _logger.LogInformation("Request body: {Body}", body);
+                //_logger.LogInformation("Request body: {Body}", body);
 
-                var searchRequest = JsonConvert.DeserializeObject<VolunteerSearchRequest>(body);
+                //var searchRequest = JsonConvert.DeserializeObject<VolunteerSearchRequest>(body);
 
                 if (searchRequest == null)
                 {
@@ -124,7 +125,7 @@ namespace GMS_UI.Pages.VLT.Volunteer
                     });
                 }
 
-                var result = await GenericAPI.CreateGeneric(_settings.ApiUrl(), "api/v1/VLT/searchvolunteersforstudy", "Search Volunteers", "", searchRequest);
+                var result = await GenericAPI.GetGeneric(_settings.ApiUrl(), "api/v1/VLT/searchvolunteersforstudy", "Search Volunteers", "", searchRequest);
 
                 _logger.LogInformation("API Result - Success: {Success}, Message: {Message}",
                     result?.Success, result?.Message);
@@ -132,33 +133,37 @@ namespace GMS_UI.Pages.VLT.Volunteer
                 if (result?.Success == true)
                 {
                     // Deserialize the Data if it's a string
-                    object volunteers = result.Data;
+                    //object volunteers = result.Data;
 
                     if (result.Data != null)
                     {
-                        var dataType = result.Data.GetType();
-                        _logger.LogInformation("Result.Data type: {Type}", dataType.FullName);
+                        //var dataType = result.Data.GetType();
+                        //_logger.LogInformation("Result.Data type: {Type}", dataType.FullName);
 
-                        // If Data is a string (JSON), deserialize it
-                        if (dataType == typeof(string))
+                        //// If Data is a string (JSON), deserialize it
+                        //if (dataType == typeof(string))
+                        //{
+                        //    volunteers = JsonConvert.DeserializeObject(result.Data.ToString());
+                        //    _logger.LogInformation("Deserialized string data");
+                        //}
+                        //// If Data is JArray or JToken, convert to object
+                        //else if (dataType.FullName.StartsWith("Newtonsoft.Json.Linq"))
+                        //{
+                        //    volunteers = JsonConvert.DeserializeObject(result.Data.ToString());
+                        //    _logger.LogInformation("Converted JToken/JArray data");
+                        //}
+
+                        var volunteers = JsonConvert.DeserializeObject<List<VLTVolunteerSearchResult>>(result.Data.ToString());
+
+                        return new JsonResult(new
                         {
-                            volunteers = JsonConvert.DeserializeObject(result.Data.ToString());
-                            _logger.LogInformation("Deserialized string data");
-                        }
-                        // If Data is JArray or JToken, convert to object
-                        else if (dataType.FullName.StartsWith("Newtonsoft.Json.Linq"))
-                        {
-                            volunteers = JsonConvert.DeserializeObject(result.Data.ToString());
-                            _logger.LogInformation("Converted JToken/JArray data");
-                        }
+                            success = true,
+                            message = result.Message,
+                            data = volunteers
+                        });
                     }
 
-                    return new JsonResult(new
-                    {
-                        success = true,
-                        message = result.Message,
-                        data = volunteers
-                    });
+                    
                 }
                 else
                 {
@@ -168,6 +173,12 @@ namespace GMS_UI.Pages.VLT.Volunteer
                         message = result?.Message ?? "Error searching volunteers"
                     });
                 }
+
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = result?.Message ?? "Error searching volunteers"
+                });
             }
             catch (Exception ex)
             {

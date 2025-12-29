@@ -34,6 +34,9 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public List<SelectListItem> AllergyList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> DiseaseList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> MedicationList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> VaccineList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> SurgicalList { get; set; } = new List<SelectListItem>();
+
         public List<SelectListItem> VLTStatusList { get; set; } = new List<SelectListItem>();
 
         public object? VolunteerData { get; set; }
@@ -101,6 +104,20 @@ namespace GMS_UI.Pages.VLT.Volunteer
             {
                 var medicationData = JsonConvert.DeserializeObject<List<MedicationBaseResponse>>(medicationResponse.Data.ToString());
                 MedicationList = medicationData?.Select(m => new SelectListItem { Value = m.MedicationId.ToString(), Text = m.MedicationName }).ToList() ?? new List<SelectListItem>();
+            }
+
+            var vaccineResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetVaccineList(), "Vaccine List", "", requestData);
+            if (vaccineResponse?.Success == true && vaccineResponse.Data != null)
+            {
+                var vaccineData = JsonConvert.DeserializeObject<List<VaccineBaseResponse>>(vaccineResponse.Data.ToString());
+                VaccineList = vaccineData?.Select(m => new SelectListItem { Value = m.VaccineId.ToString(), Text = m.VaccineName }).ToList() ?? new List<SelectListItem>();
+            }
+
+            var surgicalResponse = await GenericAPI.GetGeneric(_settings.ApiUrl(), _settings.Endpoint_GetSurgicalList(), "Surgical List", "", requestData);
+            if (surgicalResponse?.Success == true && surgicalResponse.Data != null)
+            {
+                var surgicalData = JsonConvert.DeserializeObject<List<SurgicalBaseResponse>>(surgicalResponse.Data.ToString());
+                SurgicalList = surgicalData?.Select(s => new SelectListItem { Value = s.SurgicalId.ToString(), Text = s.SurgicalName }).ToList() ?? new List<SelectListItem>();
             }
 
             // Load VLT Status List

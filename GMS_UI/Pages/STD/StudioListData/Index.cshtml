@@ -27,7 +27,7 @@
                     <h4><i class="bi bi-journal-medical me-2"></i>Clinical Studies</h4>
                 </div>
                 <div class="col text-end">
-                    <a class="btn btn-sm btn-add" href="./Create"><i class="bi bi-plus-circle me-1"></i> Add Study</a>
+                    <a class="btn btn-sm btn-add" href="/STD/StudioListData/Create"><i class="bi bi-plus-circle me-1"></i> Add Study</a>
                 </div>
             </div>
         </div>
@@ -67,9 +67,82 @@
     </div>
 </div>
 
+<!-- Staff Management Modal -->
+<div id="staffManagementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="staffManagementModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header page-card-header">
+                <h5 class="modal-title" id="staffManagementModalLabel">Manage Staff for <span id="studioNameHeader"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Assignment Form -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h6 id="staffAssignmentFormTitle" class="mb-0">Add Staff Assignment</h6>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" id="currentStudioId" />
+                        <input type="hidden" id="staffAssignmentAction" value="1" />
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label" for="staffSelectForStudio">Staff Member <span class="text-danger">*</span></label>
+                                <select class="form-select" id="staffSelectForStudio">
+                                    <option value="">Select Staff</option>
+                                </select>
+                                <span class="text-danger" id="validateStaffForStudio"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="staffStartDate">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="staffStartDate" />
+                                <span class="text-danger" id="validateStaffStartDate"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="staffEndDate">End Date</label>
+                                <input type="date" class="form-control" id="staffEndDate" />
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary" onclick="saveStaffForStudioAssignment()">
+                                    <i class="bi bi-save"></i> Save Assignment
+                                </button>
+                                <button type="button" class="btn btn-secondary ms-2" onclick="resetStaffAssignmentForm()">
+                                    <i class="bi bi-x-circle"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Assignments Grid -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Current Staff Assignments</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="staffForStudioGrid" class="ag-theme-balham" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script>
         window._csrfToken = $('@Html.AntiForgeryToken()').val();
         urlIndex = '/STD/StudioListData';
     </script>
     <script src="/js/std/studioListData/studioListData.js"></script>
+    <script>
+        // Refresh the page when staff management modal is closed
+        document.getElementById('staffManagementModal').addEventListener('hidden.bs.modal', function () {
+            location.reload();
+        });
+    </script>
 

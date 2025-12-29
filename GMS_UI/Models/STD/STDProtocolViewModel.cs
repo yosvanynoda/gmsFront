@@ -3,7 +3,7 @@
     public class STDProtocolViewModel
     {
 
-        public string Protocol { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public DateTime? DateCreated { get; set; } = DateTime.MinValue;
 
@@ -15,7 +15,7 @@
 
         public int SiteId { get; set; } = 0;
 
-        public string Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; } = string.Empty;
 
         public DateTime? StartDate { get; set; } = DateTime.MinValue;
 

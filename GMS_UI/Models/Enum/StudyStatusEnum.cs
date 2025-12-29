@@ -28,6 +28,9 @@
 
         Closing = 6,
 
-        NotAllocated = 7
+        NotAllocated = 7,
+
+       Awarded = 8
+
     }
 }

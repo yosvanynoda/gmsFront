@@ -13,6 +13,10 @@
 
         public string Endpoint_CreateMedication() => _config["Endpoint_CreateMedication"] ?? "";
 
+        public string Endpoint_CreateVaccine() => _config["Endpoint_CreateVaccine"] ?? "";
+
+        public string Endpoint_CreateSurgical() => _config["Endpoint_CreateSurgical"] ?? "";
+
         public string Endpoint_CreateDisease()=> _config["Endpoint_CreateDisease"] ?? "";
 
         public string Endpoint_CreateDeviation()=> _config["Endpoint_CreateDeviation"] ?? "";
@@ -34,6 +38,10 @@
         public string Endpoint_GetAllergyList() => _config["Endpoint_GetAllergyList"] ?? "";
 
         public string Endpoint_GetMedicationList() => _config["Endpoint_GetMedicationList"] ?? "";
+
+        public string Endpoint_GetVaccineList() => _config["Endpoint_GetVaccineList"] ?? "";
+
+        public string Endpoint_GetSurgicalList() => _config["Endpoint_GetSurgicalList"] ?? "";
 
         public string Endpoint_GetDiseaseList()=> _config["Endpoint_GetDiseaseList"] ?? "";
 

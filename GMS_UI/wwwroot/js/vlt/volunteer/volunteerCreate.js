@@ -1,5 +1,5 @@
 let currentStep = 1;
-const totalSteps = 8;
+const totalSteps = 10;
 
 // Counters for dynamic lists
 let emergencyContactCounter = 0;
@@ -8,7 +8,7 @@ let diseaseCounter = 0;
 let medicationCounter = 0;
 let documentCounter = 0;
 
-// Date formatting for DOB field
+// Date formatting for DOB field and Email validation
 $(document).ready(function() {
     // Set default values for Flag and Status
     setDefaultFlagAndStatus();
@@ -35,7 +35,52 @@ $(document).ready(function() {
             $(this).removeClass('is-invalid');
         }
     });
+
+    // Validate email on blur
+    $('#subjectEmail').on('blur', function() {
+        const email = $(this).val();
+        const emailField = $(this);
+
+        // Remove any existing error message
+        emailField.next('.invalid-feedback').remove();
+
+        if (email && !isValidEmail(email)) {
+            emailField.addClass('is-invalid');
+            emailField.after('<div class="invalid-feedback d-block">Please enter a valid email address (e.g., example@domain.com)</div>');
+        } else {
+            emailField.removeClass('is-invalid');
+        }
+    });
+
+    // Also validate on input to give immediate feedback
+    $('#subjectEmail').on('input', function() {
+        const email = $(this).val();
+        if (email && isValidEmail(email)) {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+
+    // Calculate BMI when weight or height changes
+    $('#weight, #height').on('input', function() {
+        calculateBMI();
+    });
 });
+
+// Calculate BMI from weight (kg) and height (cm)
+function calculateBMI() {
+    const weight = parseFloat($('#weight').val());
+    const height = parseFloat($('#height').val());
+
+    if (weight && height && weight > 0 && height > 0) {
+        // BMI = weight (kg) / (height (m))²
+        const heightInMeters = height / 100;
+        const bmi = weight / (heightInMeters * heightInMeters);
+        $('#bmi').val(bmi.toFixed(2));
+    } else {
+        $('#bmi').val('');
+    }
+}
 
 // Set default values for Flag and Status dropdowns
 function setDefaultFlagAndStatus() {
@@ -82,6 +127,19 @@ function isValidDate(dateStr) {
     return date.getFullYear() === year &&
            date.getMonth() === month - 1 &&
            date.getDate() === day;
+}
+
+// Validate email format
+function isValidEmail(email) {
+    if (!email) return true; // Allow empty (required validation is separate)
+
+    // Check for @ symbol
+    if (!email.includes('@')) return false;
+
+    // Email must contain @ and a dot after @, with a domain extension
+    // Format: username@domain.extension
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    return emailRegex.test(email);
 }
 
 // Convert MM/DD/YYYY to YYYY-MM-DD for backend
@@ -176,6 +234,14 @@ function changeStep(direction) {
         console.log('Loading medications for step 7');
         loadMedicationsDropdown();
         setupMedicationsGrid();
+    } else if (currentStep === 8) {
+        console.log('Loading vaccines for step 8');
+        loadVaccinesDropdown();
+        setupVaccinesGrid();
+    } else if (currentStep === 9) {
+        console.log('Loading surgical for step 9');
+        loadSurgicalDropdown();
+        setupSurgicalsGrid();
     }
 
     // Update review summary on last step
@@ -198,8 +264,23 @@ function validateStep(step) {
         }
     });
 
+    // Additional validation for Step 1 (email format)
+    if (step === 1) {
+        const emailField = document.getElementById('subjectEmail');
+        const email = emailField.value.trim();
+
+        // Remove any existing error message
+        $(emailField).next('.invalid-feedback').remove();
+
+        if (email && !isValidEmail(email)) {
+            emailField.classList.add('is-invalid');
+            $(emailField).after('<div class="invalid-feedback d-block">Please enter a valid email address (e.g., example@domain.com)</div>');
+            isValid = false;
+        }
+    }
+
     if (!isValid) {
-        alert('Please fill in all required fields before proceeding.');
+        alert('Please fill in all required fields correctly before proceeding.');
     }
 
     return isValid;
@@ -325,6 +406,14 @@ function jumpToStep(targetStep) {
         console.log('Loading medications for step 7');
         loadMedicationsDropdown();
         setupMedicationsGrid();
+    } else if (currentStep === 8) {
+        console.log('Loading vaccines for step 8');
+        loadVaccinesDropdown();
+        setupVaccinesGrid();
+    } else if (currentStep === 9) {
+        console.log('Loading surgical for step 9');
+        loadSurgicalDropdown();
+        setupSurgicalsGrid();
     }
 
     // Update review summary on last step
@@ -610,6 +699,8 @@ function updateReviewSummary() {
         <strong>Allergies:</strong> ${allergiesData.length}<br>
         <strong>Diseases:</strong> ${diseasesData.length}<br>
         <strong>Medications:</strong> ${medicationsData.length}<br>
+        <strong>Vaccines:</strong> ${vaccinesData.length}<br>
+        <strong>Surgical Procedures:</strong> ${surgicalsData.length}<br>
         <strong>Documents:</strong> ${documentCounter}
     `;
 }
@@ -640,6 +731,7 @@ function submitForm() {
             Race: parseInt(document.getElementById('race').value) || 0,
             Ethnicity: parseInt(document.getElementById('ethnicity').value) || 0,
             Language: parseInt(document.getElementById('language').value) || 0,
+            Smoker: parseInt(document.getElementById('smoker').value) || 0,
             CurrentStatus: document.getElementById('currentStatus').selectedOptions[0]?.text || '',
             Address1: document.getElementById('address1').value,
             Address2: document.getElementById('address2').value,
@@ -654,8 +746,10 @@ function submitForm() {
         }],
         VolunteerEmergencyContactData: [],
         VolunteerAllergyData: [],
-        VolunteerDeseaseData: [],
+        VolunteerDiseaseData: [],
         VolunteerMedicationData: [],
+        VolunteerVaccineData: [],
+        VolunteerSurgicalData: [],
         VolunteerDocumentationData: []
     };
 
@@ -681,6 +775,7 @@ function submitForm() {
                 AllergyId: allergy.id,
                 StartDate: formatDateForBackend(allergy.startDate),
                 EndDate: formatDateForBackend(allergy.endDate),
+                Anaphylaxis: allergy.anaphylaxis || false,
                 CompanyId: 1,
                 SiteId: 1,
                 Active: allergy.active !== false
@@ -691,7 +786,7 @@ function submitForm() {
     // Collect diseases from step data (send ALL items including inactive ones)
     if (diseasesData.length > 0) {
         diseasesData.forEach(disease => {
-            volunteerData.VolunteerDeseaseData.push({
+            volunteerData.VolunteerDiseaseData.push({
                 DiseaseId: disease.id,
                 StartDate: formatDateForBackend(disease.startDate),
                 EndDate: formatDateForBackend(disease.endDate),
@@ -714,6 +809,38 @@ function submitForm() {
                 CompanyId: 1,
                 SiteId: 1,
                 Active: medication.active !== false
+            });
+        });
+    }
+
+    // Collect vaccines from step data (send ALL items including inactive ones)
+    if (vaccinesData.length > 0) {
+        vaccinesData.forEach(vaccine => {
+            volunteerData.VolunteerVaccineData.push({
+                VaccineId: vaccine.id,
+                DrogName: vaccine.name,
+                DrogDose: vaccine.dose || '',
+                StartDate: formatDateForBackend(vaccine.adminDate),
+                EndDate: formatDateForBackend(vaccine.expDate),
+                CompanyId: 1,
+                SiteId: 1,
+                Active: vaccine.active !== false
+            });
+        });
+    }
+
+    // Collect surgical from step data (send ALL items including inactive ones)
+    if (surgicalsData.length > 0) {
+        surgicalsData.forEach(surgical => {
+            volunteerData.VolunteerSurgicalData.push({
+                SurgicalId: surgical.id,
+                DrogName: surgical.name,
+                DrogDose: surgical.dose || '',
+                StartDate: formatDateForBackend(surgical.startDate),
+                EndDate: formatDateForBackend(surgical.endDate),
+                CompanyId: 1,
+                SiteId: 1,
+                Active: surgical.active !== false
             });
         });
     }
@@ -743,7 +870,7 @@ function submitForm() {
     console.log('URL:', window.location.pathname + '?handler=Create');
     console.log('CSRF Token:', window._csrfToken);
     console.log('Allergies count:', volunteerData.VolunteerAllergyData.length);
-    console.log('Diseases count:', volunteerData.VolunteerDeseaseData.length);
+    console.log('Diseases count:', volunteerData.VolunteerDiseaseData.length);
     console.log('Medications count:', volunteerData.VolunteerMedicationData.length);
 
     $.ajax({
@@ -809,11 +936,15 @@ updateNavigationButtons();
 let allergiesData = [];
 let diseasesData = [];
 let medicationsData = [];
+let vaccinesData = [];
+let surgicalsData = [];
 
 // Grid APIs
 let allergiesGridApi;
 let diseasesGridApi;
 let medicationsGridApi;
+let vaccinesGridApi;
+let surgicalsGridApi;
 
 // Load Allergies Dropdown
 function loadAllergiesDropdown() {
@@ -856,6 +987,12 @@ function setupAllergiesGrid() {
                 valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
             },
             {
+                field: "anaphylaxis",
+                headerName: "Anaphylaxis",
+                flex: 1,
+                cellRenderer: params => params.value ? '<i class="bi bi-check-circle-fill text-success"></i>' : ''
+            },
+            {
                 headerName: "Actions",
                 flex: 1,
                 cellRenderer: function (params) {
@@ -880,6 +1017,7 @@ function saveAllergy() {
     const allergyId = $('#allergySelect').val();
     const startDate = $('#allergyStartDate').val();
     const endDate = $('#allergyEndDate').val();
+    const anaphylaxis = $('#allergyAnaphylaxis').is(':checked');
 
     if (!allergyId) {
         $('#validateAllergy').text('Please select an allergy');
@@ -894,6 +1032,7 @@ function saveAllergy() {
         name: allergyName,
         startDate: startDate || '0001-01-01',
         endDate: endDate || '0001-01-01',
+        anaphylaxis: anaphylaxis,
         active: true,
         recordId: 0
     };
@@ -912,6 +1051,7 @@ function saveAllergy() {
     $('#allergySelect').val('');
     $('#allergyStartDate').val('');
     $('#allergyEndDate').val('');
+    $('#allergyAnaphylaxis').prop('checked', false);
 }
 
 // Delete Allergy
@@ -1161,5 +1301,243 @@ function deleteMedication(index) {
         activeMedications[index].active = false;
     }
     setupMedicationsGrid();
+}
+
+// ========== Vaccines (Step 8) ==========
+
+// Load Vaccines Dropdown
+function loadVaccinesDropdown() {
+    console.log('loadVaccinesDropdown called');
+    console.log('window.vaccineList:', window.vaccineList);
+    const select = $('#vaccineSelect');
+    console.log('vaccineSelect element found:', select.length > 0);
+    select.empty();
+    select.append('<option value="">Select Vaccine</option>');
+    if (window.vaccineList && window.vaccineList.length > 0) {
+        window.vaccineList.forEach(vaccine => {
+            select.append($('<option>', {
+                value: vaccine.value,
+                text: vaccine.text
+            }));
+        });
+        console.log('Loaded', window.vaccineList.length, 'vaccines');
+    } else {
+        console.warn('window.vaccineList is empty or undefined');
+    }
+}
+
+// Setup Vaccines Grid (in Step 8)
+function setupVaccinesGrid() {
+    const gridOptions = {
+        rowData: vaccinesData.filter(item => item.active !== false),
+        columnDefs: [
+            { field: "id", hide: true },
+            { field: "name", headerName: "Vaccine", flex: 2 },
+            { field: "dose", headerName: "Dose", flex: 1 },
+            {
+                field: "adminDate",
+                headerName: "Administration Date",
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                field: "expDate",
+                headerName: "Expiration Date",
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: function (params) {
+                    return `
+                        <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteVaccine(${params.node.rowIndex})">
+                            <i class="bi bi-x-octagon-fill"></i>
+                        </a>
+                    `;
+                }
+            }
+        ],
+        domLayout: 'autoHeight'
+    };
+
+    const gridDiv = document.querySelector('#vaccinesGrid');
+    gridDiv.innerHTML = '';
+    vaccinesGridApi = agGrid.createGrid(gridDiv, gridOptions);
+}
+
+// Save Vaccine
+function saveVaccine() {
+    const vaccineId = $('#vaccineSelect').val();
+    const dose = $('#vaccineDose').val();
+    const adminDate = $('#vaccineAdminDate').val();
+    const expDate = $('#vaccineExpDate').val();
+
+    if (!vaccineId) {
+        $('#validateVaccine').text('Please select a vaccine');
+        return;
+    }
+
+    $('#validateVaccine').text('');
+
+    const vaccineName = $('#vaccineSelect option:selected').text();
+    const vaccineItem = {
+        id: parseInt(vaccineId),
+        name: vaccineName,
+        dose: dose || '',
+        adminDate: adminDate || '0001-01-01',
+        expDate: expDate || '0001-01-01',
+        active: true,
+        companyId: 1,
+        siteId: 1
+    };
+
+    // Check if already exists (only check active items)
+    if (vaccinesData.some(v => v.id === vaccineItem.id && v.active !== false)) {
+        $('#validateVaccine').text('This vaccine is already added');
+        return;
+    }
+
+    // Add new
+    vaccinesData.push(vaccineItem);
+    setupVaccinesGrid();
+
+    // Reset form
+    $('#vaccineSelect').val('');
+    $('#vaccineDose').val('');
+    $('#vaccineAdminDate').val('');
+    $('#vaccineExpDate').val('');
+}
+
+// Delete Vaccine
+function deleteVaccine(index) {
+    if (!confirm('Are you sure you want to remove this vaccine?')) {
+        return;
+    }
+    // Mark as inactive instead of removing from array
+    const activeVaccines = vaccinesData.filter(item => item.active !== false);
+    if (activeVaccines[index]) {
+        activeVaccines[index].active = false;
+    }
+    setupVaccinesGrid();
+}
+
+// ========== Surgical (Step 9) ==========
+
+// Load Surgical Dropdown
+function loadSurgicalDropdown() {
+    console.log('loadSurgicalDropdown called');
+    console.log('window.surgicalList:', window.surgicalList);
+    const select = $('#surgicalSelect');
+    console.log('surgicalSelect element found:', select.length > 0);
+    select.empty();
+    select.append('<option value="">Select Surgical Procedure</option>');
+    if (window.surgicalList && window.surgicalList.length > 0) {
+        window.surgicalList.forEach(surgical => {
+            select.append($('<option>', {
+                value: surgical.value,
+                text: surgical.text
+            }));
+        });
+        console.log('Loaded', window.surgicalList.length, 'surgical procedures');
+    } else {
+        console.warn('window.surgicalList is empty or undefined');
+    }
+}
+
+// Setup Surgical Grid (in Step 9)
+function setupSurgicalsGrid() {
+    const gridOptions = {
+        rowData: surgicalsData.filter(item => item.active !== false),
+        columnDefs: [
+            { field: "id", hide: true },
+            { field: "name", headerName: "Procedure", flex: 2 },
+            { field: "dose", headerName: "Notes", flex: 1 },
+            {
+                field: "startDate",
+                headerName: "Surgery Date",
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                field: "endDate",
+                headerName: "Recovery Date",
+                flex: 1,
+                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+            },
+            {
+                headerName: "Actions",
+                flex: 1,
+                cellRenderer: function (params) {
+                    return `
+                        <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteSurgical(${params.node.rowIndex})">
+                            <i class="bi bi-x-octagon-fill"></i>
+                        </a>
+                    `;
+                }
+            }
+        ],
+        domLayout: 'autoHeight'
+    };
+
+    const gridDiv = document.querySelector('#surgicalsGrid');
+    gridDiv.innerHTML = '';
+    surgicalsGridApi = agGrid.createGrid(gridDiv, gridOptions);
+}
+
+// Save Surgical
+function saveSurgical() {
+    const surgicalId = $('#surgicalSelect').val();
+    const dose = $('#surgicalDose').val();
+    const startDate = $('#surgicalStartDate').val();
+    const endDate = $('#surgicalEndDate').val();
+
+    if (!surgicalId) {
+        $('#validateSurgical').text('Please select a surgical procedure');
+        return;
+    }
+
+    $('#validateSurgical').text('');
+
+    const surgicalName = $('#surgicalSelect option:selected').text();
+    const surgicalItem = {
+        id: parseInt(surgicalId),
+        name: surgicalName,
+        dose: dose || '',
+        startDate: startDate || '0001-01-01',
+        endDate: endDate || '0001-01-01',
+        active: true,
+        companyId: 1,
+        siteId: 1
+    };
+
+    // Check if already exists (only check active items)
+    if (surgicalsData.some(s => s.id === surgicalItem.id && s.active !== false)) {
+        $('#validateSurgical').text('This surgical procedure is already added');
+        return;
+    }
+
+    // Add new
+    surgicalsData.push(surgicalItem);
+    setupSurgicalsGrid();
+
+    // Reset form
+    $('#surgicalSelect').val('');
+    $('#surgicalDose').val('');
+    $('#surgicalStartDate').val('');
+    $('#surgicalEndDate').val('');
+}
+
+// Delete Surgical
+function deleteSurgical(index) {
+    if (!confirm('Are you sure you want to remove this surgical procedure?')) {
+        return;
+    }
+    // Mark as inactive instead of removing from array
+    const activeSurgicals = surgicalsData.filter(item => item.active !== false);
+    if (activeSurgicals[index]) {
+        activeSurgicals[index].active = false;
+    }
+    setupSurgicalsGrid();
 }
 

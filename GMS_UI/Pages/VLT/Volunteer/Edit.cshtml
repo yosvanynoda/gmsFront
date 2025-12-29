@@ -44,7 +44,11 @@
             <div class="step-line" id="line6"></div>
             <div class="step-circle" id="step7-indicator" onclick="jumpToStep(7)" style="cursor: pointer;" title="Medications">7</div>
             <div class="step-line" id="line7"></div>
-            <div class="step-circle" id="step8-indicator" onclick="jumpToStep(8)" style="cursor: pointer;" title="Review & Submit">8</div>
+            <div class="step-circle" id="step8-indicator" onclick="jumpToStep(8)" style="cursor: pointer;" title="Vaccines">8</div>
+            <div class="step-line" id="line8"></div>
+            <div class="step-circle" id="step9-indicator" onclick="jumpToStep(9)" style="cursor: pointer;" title="Surgical">9</div>
+            <div class="step-line" id="line9"></div>
+            <div class="step-circle" id="step10-indicator" onclick="jumpToStep(10)" style="cursor: pointer;" title="Review & Submit">10</div>
         </div>
 
         <!-- Step 1: General Information -->
@@ -174,16 +178,22 @@
                 <h5><i class="bi bi-person-badge"></i> Physical & Demographics</h5>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">Weight</label>
-                            <input type="text" class="form-control" id="weight" placeholder="Enter weight (lbs/kg)">
+                            <label class="form-label">Weight (Kg)</label>
+                            <input type="text" class="form-control" id="weight" placeholder="Enter weight (kg)">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">Height</label>
-                            <input type="text" class="form-control" id="height" placeholder="Enter height (ft/cm)">
+                            <label class="form-label">Height (CM)</label>
+                            <input type="text" class="form-control" id="height" placeholder="Enter height (cm)">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">BMI</label>
+                            <input type="text" class="form-control" id="bmi" placeholder="Auto-calculated" readonly style="background-color: #e9ecef;">
                         </div>
                     </div>
                 </div>
@@ -251,6 +261,18 @@
                                 {
                                     <option value="@item.Value">@item.Text</option>
                                 }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Smoker Status</label>
+                            <select class="form-select" id="smoker">
+                                <option value="">Select Smoker Status</option>
+                                <option value="1">Non-Smoker</option>
+                                <option value="2">Current Smoker</option>
+                                <option value="3">Former Smoker</option>
+                                <option value="4">Occasional Smoker</option>
                             </select>
                         </div>
                     </div>
@@ -360,6 +382,16 @@
                             <div class="col-md-3">
                                 <label class="form-label">End Date</label>
                                 <input type="date" class="form-control" id="allergyEndDate" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="allergyAnaphylaxis">
+                                    <label class="form-check-label" for="allergyAnaphylaxis">
+                                        Anaphylaxis
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -488,20 +520,130 @@
             </div>
         </div>
 
-        <!-- Step 8: Documentation & Review -->
+        <!-- Step 8: Vaccines -->
         <div class="wizard-step wizard-body" id="step8">
+            <div class="form-section">
+                <h5><i class="bi bi-shield-fill-check"></i> Vaccines</h5>
+
+                <!-- Add Vaccine Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">Add Vaccine</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Select Vaccine *</label>
+                                <select class="form-select" id="vaccineSelect">
+                                    <option value="">Select Vaccine</option>
+                                </select>
+                                <span id="validateVaccine" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Dose</label>
+                                <input type="text" class="form-control" id="vaccineDose" placeholder="e.g., 1st dose" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Administration Date</label>
+                                <input type="date" class="form-control" id="vaccineAdminDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Expiration Date</label>
+                                <input type="date" class="form-control" id="vaccineExpDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" onclick="saveVaccine()">
+                                    <i class="bi bi-plus-circle"></i> Add Vaccine
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Vaccines Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Vaccines</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="vaccinesGrid" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 9: Surgical -->
+        <div class="wizard-step wizard-body" id="step9">
+            <div class="form-section">
+                <h5><i class="bi bi-scissors"></i> Surgical Procedures</h5>
+
+                <!-- Add Surgical Form -->
+                <div class="card mb-3">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0">Add Surgical Procedure</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Select Surgical Procedure *</label>
+                                <select class="form-select" id="surgicalSelect">
+                                    <option value="">Select Surgical Procedure</option>
+                                </select>
+                                <span id="validateSurgical" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Dose</label>
+                                <input type="text" class="form-control" id="surgicalDose" placeholder="e.g., 1" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="surgicalStartDate" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="surgicalEndDate" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-warning" onclick="saveSurgical()">
+                                    <i class="bi bi-plus-circle"></i> Add Surgical Procedure
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Surgical Procedures Grid -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Current Surgical Procedures</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="surgicalsGrid" class="ag-theme-balham"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 10: Documentation & Review -->
+        <div class="wizard-step wizard-body" id="step10">
             <div class="form-section">
                 <h5><i class="bi bi-file-earmark-text-fill"></i> Documentation & Review</h5>
 
-                <h6 class="mt-3">Documents</h6>
-                <div id="documentsContainer">
-                    <!-- Documents will be added here dynamically -->
+                <!-- Confirmation Checkbox at the top -->
+                <div class="mb-4 p-3 bg-light border rounded">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
+                        <label class="form-check-label fw-bold" for="confirmSubmission">
+                            <i class="bi bi-check-circle"></i> I confirm that all information provided is accurate and complete
+                        </label>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addDocument()">
-                    <i class="bi bi-plus-circle"></i> Add Document
-                </button>
 
-                <div class="alert alert-info mt-4">
+                <div class="alert alert-info">
                     <i class="bi bi-info-circle"></i>
                     Please review all information before submitting. You can go back to previous steps to make changes.
                 </div>
@@ -515,14 +657,13 @@
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
-                        <label class="form-check-label" for="confirmSubmission">
-                            I confirm that all information provided is accurate and complete
-                        </label>
-                    </div>
+                <h6 class="mt-4">Documents</h6>
+                <div id="documentsContainer">
+                    <!-- Documents will be added here dynamically -->
                 </div>
+                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addDocument()">
+                    <i class="bi bi-plus-circle"></i> Add Document
+                </button>
             </div>
         </div>
 
@@ -563,6 +704,11 @@
     window.allergyList = @Html.Raw(Json.Serialize(Model.AllergyList));
     window.diseaseList = @Html.Raw(Json.Serialize(Model.DiseaseList));
     window.medicationList = @Html.Raw(Json.Serialize(Model.MedicationList));
+    window.vaccineList = @Html.Raw(Json.Serialize(Model.VaccineList));
+    window.surgicalList = @Html.Raw(Json.Serialize(Model.SurgicalList));
+
+    console.log('Surgical List:', window.surgicalList);
+    console.log('Vaccine List:', window.vaccineList);
 
     // Pass volunteer data to JavaScript
     // Use Newtonsoft.Json serialization to match the API response format

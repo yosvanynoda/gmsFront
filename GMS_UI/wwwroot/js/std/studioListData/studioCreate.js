@@ -120,7 +120,14 @@ function goToStep(step) {
 
     prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
     nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+    if (submitBtn) {
+        submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+    }
+
+    // Update review summary when navigating to step 9
+    if (currentStep === totalSteps) {
+        updateReviewSummary();
+    }
 
 }
 
@@ -159,22 +166,198 @@ function updateNavigationButtons() {
 }
 
 function updateReviewSummary() {
-    //const summary = document.getElementById('reviewSummary');
-    //const studyTitle = document.querySelector('[name="StudyTitle"]').value;
-    //const studyPhase = document.querySelector('[name="StudyPhase"]').value;
-    //const studyType = document.querySelector('[name="StudyType"]').value;
-    //const principalInvestigator = document.querySelector('[name="PrincipalInvestigator"]').value;
-    //const targetEnrollment = document.querySelector('[name="TargetEnrollment"]').value;
-    //const sponsorName = document.querySelector('[name="SponsorName"]').value;
+    const reviewSummary = document.getElementById('reviewSummary');
+    if (!reviewSummary) return;
 
-    //summary.innerHTML = `
-    //        <strong>Study Title:</strong> ${studyTitle}<br>
-    //        <strong>Phase:</strong> ${studyPhase}<br>
-    //        <strong>Type:</strong> ${studyType}<br>
-    //        <strong>Principal Investigator:</strong> ${principalInvestigator}<br>
-    //        <strong>Target Enrollment:</strong> ${targetEnrollment} participants<br>
-    //        <strong>Sponsor:</strong> ${sponsorName}
-    //    `;
+    // Helper function to get select text
+    const getSelectText = (id) => {
+        const select = document.getElementById(id);
+        return select?.options[select.selectedIndex]?.text || 'Not selected';
+    };
+
+    // Helper function to get input value
+    const getInputValue = (id) => {
+        return document.getElementById(id)?.value || 'Not provided';
+    };
+
+    // Helper function to format date
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Not provided';
+        return new Date(dateString).toLocaleDateString();
+    };
+
+    // Build summary HTML
+    let summaryHTML = '';
+
+    // Step 1: Basic Study Information
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fa fa-info-circle"></i> Basic Study Information</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Sponsor:</strong> ${getSelectText('sponsorList')}</p>
+                    <p><strong>Site Number:</strong> ${getInputValue('studyCode')}</p>
+                    <p><strong>Name:</strong> ${getInputValue('studyName')}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date Created:</strong> ${formatDate(getInputValue('studyDateCreated'))}</p>
+                    <p><strong>Description:</strong> ${getInputValue('studyDescription')}</p>
+                    <p><strong>Notes:</strong> ${getInputValue('studyNotes')}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Step 2: Goal and Other Specifications
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fa fa-bullseye"></i> Goal and Specifications</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Goal Enrollment:</strong> ${getInputValue('studyGoal')}</p>
+                    <p><strong>Phase:</strong> ${getSelectText('phaseList')}</p>
+                    <p><strong>Indication:</strong> ${getInputValue('studyIndication')}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Therapeutic Area:</strong> ${getInputValue('studyTherapeuticArea')}</p>
+                    <p><strong>Blinding Type:</strong> ${getSelectText('blidingList')}</p>
+                    <p><strong>Study Design Type:</strong> ${getSelectText('studyDesignList')}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Step 3: Dates and Others
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fa fa-calendar"></i> Study Timeline & Status</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Start Date:</strong> ${formatDate(getInputValue('studyStartDate'))}</p>
+                    <p><strong>End Date:</strong> ${formatDate(getInputValue('studyEndDate'))}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Study Status:</strong> ${getSelectText('studystatusList')}</p>
+                    <p><strong>Disease:</strong> ${getSelectText('diseaseList')}</p>
+                    <p><strong>CRO:</strong> ${getSelectText('croList')}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Step 4: Protocols
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fas fa-file-alt"></i> Protocols (${protocolsData.length})</h6>
+    `;
+    if (protocolsData.length > 0) {
+        summaryHTML += '<ul class="list-group">';
+        protocolsData.forEach(protocol => {
+            summaryHTML += `
+                <li class="list-group-item">
+                    <strong>${protocol.name}</strong> - Version: ${protocol.version || 'N/A'}
+                    ${protocol.startDate ? '| Start: ' + formatDate(protocol.startDate) : ''}
+                    ${protocol.numVisit ? '| Visits: ' + protocol.numVisit : ''}
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+    } else {
+        summaryHTML += '<p class="text-muted">No protocols added</p>';
+    }
+    summaryHTML += '</div>';
+
+    // Step 5: Monitors
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fas fa-user-shield"></i> Monitors (${monitorsData.length})</h6>
+    `;
+    if (monitorsData.length > 0) {
+        summaryHTML += '<ul class="list-group">';
+        monitorsData.forEach(monitor => {
+            summaryHTML += `
+                <li class="list-group-item">
+                    <strong>${monitor.firstName} ${monitor.lastName}</strong>
+                    ${monitor.email ? '| ' + monitor.email : ''}
+                    ${monitor.phone ? '| ' + monitor.phone : ''}
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+    } else {
+        summaryHTML += '<p class="text-muted">No monitors added</p>';
+    }
+    summaryHTML += '</div>';
+
+    // Step 6: Documents
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fas fa-folder-open"></i> Documents (${documentsData.length})</h6>
+    `;
+    if (documentsData.length > 0) {
+        summaryHTML += '<ul class="list-group">';
+        documentsData.forEach(doc => {
+            summaryHTML += `
+                <li class="list-group-item">
+                    <strong>${doc.name}</strong> - ${doc.documentTypeName || 'N/A'}
+                    ${doc.version ? '| Version: ' + doc.version : ''}
+                    ${doc.documentDate ? '| Date: ' + formatDate(doc.documentDate) : ''}
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+    } else {
+        summaryHTML += '<p class="text-muted">No documents added</p>';
+    }
+    summaryHTML += '</div>';
+
+    // Step 7: Arms
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fas fa-project-diagram"></i> Arms (${armsData.length})</h6>
+    `;
+    if (armsData.length > 0) {
+        summaryHTML += '<ul class="list-group">';
+        armsData.forEach(arm => {
+            summaryHTML += `
+                <li class="list-group-item">
+                    <strong>${arm.name}</strong>
+                    ${arm.targetEnrollment ? '| Target: ' + arm.targetEnrollment : ''}
+                    ${arm.doseLevel ? '| Dose: ' + arm.doseLevel : ''}
+                    ${arm.description ? '<br><small class="text-muted">' + arm.description + '</small>' : ''}
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+    } else {
+        summaryHTML += '<p class="text-muted">No arms added</p>';
+    }
+    summaryHTML += '</div>';
+
+    // Step 8: Visits
+    summaryHTML += `
+        <div class="mb-4">
+            <h6 class="text-primary border-bottom pb-2"><i class="fas fa-calendar-check"></i> Visits (${visitsData.length})</h6>
+    `;
+    if (visitsData.length > 0) {
+        summaryHTML += '<ul class="list-group">';
+        visitsData.forEach(visit => {
+            summaryHTML += `
+                <li class="list-group-item">
+                    <strong>${visit.name}</strong>
+                    ${visit.armName ? '| Arm: ' + visit.armName : ''}
+                    ${visit.dayOffset !== undefined ? '| Day Offset: ' + visit.dayOffset : ''}
+                    ${visit.requiredFlag ? '<span class="badge bg-danger ms-2">Required</span>' : ''}
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+    } else {
+        summaryHTML += '<p class="text-muted">No visits added</p>';
+    }
+    summaryHTML += '</div>';
+
+    reviewSummary.innerHTML = summaryHTML;
 }
 
 

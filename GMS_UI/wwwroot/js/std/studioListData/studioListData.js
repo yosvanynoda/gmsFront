@@ -41,7 +41,7 @@ const gridOptions = {
     columnDefs: [
         { field: "id", filter: 'agTextColumnFilter', hide: true },
         { field: "sponsorName", filter: 'agTextColumnFilter' },
-        { field: "code", filter: 'agTextColumnFilter' },
+        { field: "code", headerName: "Site Number", filter: 'agTextColumnFilter' },
         { field: "name", filter: 'agTextColumnFilter' },
         { field: "description", filter: 'agTextColumnFilter' },
         { field: "protocolName", filter: 'agTextColumnFilter' },

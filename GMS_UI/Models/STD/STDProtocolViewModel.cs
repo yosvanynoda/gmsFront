@@ -28,5 +28,7 @@
         public int StudyId { get; set; } = 0;
 
         public int Id { get; set; } = 0;
+
+        public bool Active { get; set; } = false;
     }
 }

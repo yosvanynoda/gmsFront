@@ -14,6 +14,7 @@ let protocolsData = [];
 let editingProtocolIndex = -1; // -1 means adding new, >= 0 means editing existing
 let armsData = [];
 let visitsData = [];
+let editingVisitIndex = -1; // -1 means adding new, >= 0 means editing existing
 
 //general grid variables
 let documentGridApi;
@@ -516,6 +517,7 @@ function populateFormWithData(data) {
                 endDate: protocol.endDate || null,
                 numVisit: protocol.numVisit || 0,
                 approvedDate: protocol.approvedDate || null,
+                active: protocol.active !== false,
                 companyId: protocol.companyId || 0,
                 userName: protocol.userName || 0,
                 siteId: protocol.siteId || 0,
@@ -829,6 +831,7 @@ function submitForm() {
             EndDate: protocol.endDate || null,
             NumVisit: protocol.numVisit || 0,
             ApprovedDate: protocol.approvedDate || null,
+            Active: protocol.active !== false,
             StudyId: protocol.studyId || 0
         };
     });
@@ -1103,6 +1106,12 @@ function deleteDocument(index) {
 //#region Protocol...
 
 function initializeProtocolGrid() {
+    // Sort protocols: active first
+    protocolsData.sort((a, b) => {
+        if (a.active === b.active) return 0;
+        return a.active ? -1 : 1;
+    });
+
     const gridOptions = {
         rowData: protocolsData,
         columnDefs: [
@@ -1115,6 +1124,12 @@ function initializeProtocolGrid() {
                 valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
             },
             { field: "numVisit", headerName: "Visits", flex: 1 },
+            {
+                field: "active",
+                headerName: "Active",
+                flex: 1,
+                cellRenderer: params => params.value ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-dash-circle-fill text-secondary"></i>'
+            },
             {
                 headerName: "Actions",
                 flex: 1,
@@ -1165,13 +1180,13 @@ function addProtocol() {
         const existingProtocol = protocolsData[editingProtocolIndex];
         protocol = {
             ...existingProtocol,  // Preserve all existing fields including id
-            id: $('#protocolId').val(),
             name: $('#protocolName').val(),
             dateCreated: createdDate,
             version: $('#protocolVersion').val(),
             notes: $('textarea#protocolNotes').val() || '',
             numVisit: parseInt($('#protocolVisit').val()) || 0,
-            approvedDate: approvedDate
+            approvedDate: approvedDate,
+            active: $('#protocolActive').is(':checked')
         };
 
         // Update existing protocol
@@ -1189,6 +1204,7 @@ function addProtocol() {
             endDate: null,
             numVisit: parseInt($('#protocolVisit').val()) || 0,
             approvedDate: approvedDate,
+            active: $('#protocolActive').is(':checked'),
             companyId: 0,
             userName: 0,
             siteId: 0,
@@ -1205,6 +1221,7 @@ function addProtocol() {
     $('textarea#protocolNotes').val('');
     $('#protocolVisit').val('');
     $('#approvedDate').val('');
+    $('#protocolActive').prop('checked', true);
 
     // Close the modal
     $('#protocolModal').modal('hide');
@@ -1229,7 +1246,7 @@ function editProtocol(index) {
     $('textarea#protocolNotes').val(protocol.notes || '');
     $('#protocolVisit').val(protocol.numVisit || '');
     $('#approvedDate').val(formatDateForInput(protocol.approvedDate));
-    $('#protocolId').val(protocol.id || 0);
+    $('#protocolActive').prop('checked', protocol.active !== false);
 
     console.log('Form populated. Opening modal...');
 
@@ -1335,6 +1352,9 @@ function initializeVisitGrid() {
                 flex: 1,
                 cellRenderer: function (params) {
                     return `
+                        <a data-toggle='tooltip' data-placement='top' title='Edit' class="link-primary me-2" onclick="editVisit(${params.node.rowIndex})">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteVisit(${params.node.rowIndex})">
                             <i class="bi bi-x-octagon-fill"></i>
                         </a>
@@ -1351,23 +1371,51 @@ function initializeVisitGrid() {
 }
 
 function addVisit() {
-    let visit = {
-        visitID: 0,
-        studyID: 0,
-        armID: parseInt($('#armList').val()) || 0,
-        armName: $('#armList option:selected').text(),
-        name: $('#visitName').val(),
-        dayOffset: parseInt($('#dayOffSet').val()) || 0,
-        windowMinus: parseInt($('#windowsMinus').val()) || 0,
-        windowPlus: parseInt($('#windowsPlus').val()) || 0,
-        sortOrder: parseInt($('#sortOrder').val()) || 0,
-        comment: $('textarea#commentVisit').val() || '',
-        requiredFlag: $('#requiredFlag').is(':checked'),
-        dependencyOf: 0,
-        cost: 0,
-        visitType: 0
-    };
+    let visit;
 
+    // Check if we're editing or adding
+    if (editingVisitIndex >= 0) {
+        // Editing: Start with existing visit and update only form fields
+        const existingVisit = visitsData[editingVisitIndex];
+        visit = {
+            ...existingVisit,  // Preserve all existing fields
+            armID: parseInt($('#armList').val()) || 0,
+            armName: $('#armList option:selected').text(),
+            name: $('#visitName').val(),
+            dayOffset: parseInt($('#dayOffSet').val()) || 0,
+            windowMinus: parseInt($('#windowsMinus').val()) || 0,
+            windowPlus: parseInt($('#windowsPlus').val()) || 0,
+            sortOrder: parseInt($('#sortOrder').val()) || 0,
+            comment: $('textarea#commentVisit').val() || '',
+            requiredFlag: $('#requiredFlag').is(':checked')
+        };
+
+        // Update existing visit
+        visitsData[editingVisitIndex] = visit;
+        editingVisitIndex = -1; // Reset to add mode
+    } else {
+        // Adding new: Create visit from scratch
+        visit = {
+            visitID: 0,
+            studyID: 0,
+            armID: parseInt($('#armList').val()) || 0,
+            armName: $('#armList option:selected').text(),
+            name: $('#visitName').val(),
+            dayOffset: parseInt($('#dayOffSet').val()) || 0,
+            windowMinus: parseInt($('#windowsMinus').val()) || 0,
+            windowPlus: parseInt($('#windowsPlus').val()) || 0,
+            sortOrder: parseInt($('#sortOrder').val()) || 0,
+            comment: $('textarea#commentVisit').val() || '',
+            requiredFlag: $('#requiredFlag').is(':checked'),
+            dependencyOf: 0,
+            cost: 0,
+            visitType: 0
+        };
+
+        visitsData.push(visit);
+    }
+
+    // Clear form
     $('#armList').val(-1);
     $('#visitName').val('');
     $('#dayOffSet').val('');
@@ -1377,9 +1425,31 @@ function addVisit() {
     $('textarea#commentVisit').val('');
     $("#requiredFlag").prop('checked', false);
 
-    visitsData.push(visit);
+    // Close the modal
+    $('#visitModal').modal('hide');
 
     initializeVisitGrid();
+}
+
+function editVisit(index) {
+    // Set editing mode
+    editingVisitIndex = index;
+
+    // Get the visit data
+    const visit = visitsData[index];
+
+    // Populate form fields
+    $('#armList').val(visit.armID || -1);
+    $('#visitName').val(visit.name || '');
+    $('#dayOffSet').val(visit.dayOffset || '');
+    $('#windowsMinus').val(visit.windowMinus || '');
+    $('#windowsPlus').val(visit.windowPlus || '');
+    $('#sortOrder').val(visit.sortOrder || '');
+    $('textarea#commentVisit').val(visit.comment || '');
+    $('#requiredFlag').prop('checked', visit.requiredFlag || false);
+
+    // Open the modal
+    $('#visitModal').modal('show');
 }
 
 function deleteVisit(index) {

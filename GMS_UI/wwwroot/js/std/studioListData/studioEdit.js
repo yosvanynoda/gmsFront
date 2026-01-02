@@ -1165,6 +1165,7 @@ function addProtocol() {
         const existingProtocol = protocolsData[editingProtocolIndex];
         protocol = {
             ...existingProtocol,  // Preserve all existing fields including id
+            id: $('#protocolId').val(),
             name: $('#protocolName').val(),
             dateCreated: createdDate,
             version: $('#protocolVersion').val(),
@@ -1228,6 +1229,7 @@ function editProtocol(index) {
     $('textarea#protocolNotes').val(protocol.notes || '');
     $('#protocolVisit').val(protocol.numVisit || '');
     $('#approvedDate').val(formatDateForInput(protocol.approvedDate));
+    $('#protocolId').val(protocol.id || 0);
 
     console.log('Form populated. Opening modal...');
 

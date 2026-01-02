@@ -24,12 +24,8 @@ let monitorGridApi;
 
 
 function changeStep(direction) {
-    if (direction === 1) {
-        // Validate current step before proceeding
-        if (!validateStep(currentStep)) {
-            return;
-        }
-    }
+
+    const isValid = validateStep(currentStep);
 
     const currentStepElement = document.getElementById(`step${currentStep}`);
     currentStepElement.classList.remove('active');
@@ -64,7 +60,7 @@ function changeStep(direction) {
     }
 
     // Update navigation buttons
-    updateNavigationButtons();
+    //updateNavigationButtons();
 
     // Update review summary on last step
     if (currentStep === totalSteps) {
@@ -74,7 +70,7 @@ function changeStep(direction) {
 
 function goToStep(step) {
     const elements = document.querySelectorAll(".wizard-step");
-    let eStep
+    let eStep;
 
     elements.forEach((element) => {
         if (element.id == `step${step}`) {
@@ -114,15 +110,15 @@ function goToStep(step) {
 
     currentStep = step;
 
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
+    //const prevBtn = document.getElementById('prevBtn');
+    //const nextBtn = document.getElementById('nextBtn');
+    //const submitBtn = document.getElementById('submitBtn');
 
-    prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
-    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    if (submitBtn) {
-        submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
-    }
+    //prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+    //nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+    //if (submitBtn) {
+    //    submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+    //}
 
     // Update review summary when navigating to step 9
     if (currentStep === totalSteps) {
@@ -132,9 +128,36 @@ function goToStep(step) {
 }
 
 function validateStep(step) {
-    //const stepElement = document.getElementById(`step${step}`);
-    //const requiredFields = stepElement.querySelectorAll('[required]');
     let isValid = true;
+
+    switch (step) {
+        case 1:
+        // Validate Step 1 fields
+            break;
+        case 2:
+        // Validate Step 2 fields
+            break;
+        case 3:
+        // Validate Step 3 fields
+            break;
+        case 4:
+        // Validate Step 4 fields
+            break;
+        case 5:
+        // Validate Step 5 fields
+            break;
+        case 6:
+        // Validate Step 6 fields
+            break;
+        case 7:
+        // Validate Step 7 fields
+            break;
+        case 8:
+        // Validate Step 8 fields
+            break;
+        default:
+            break;
+    }
 
     //requiredFields.forEach(field => {
     //    if (!field.value.trim()) {
@@ -155,15 +178,15 @@ function validateStep(step) {
     return isValid;
 }
 
-function updateNavigationButtons() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+//function updateNavigationButtons() {
+//    const prevBtn = document.getElementById('prevBtn');
+//    const nextBtn = document.getElementById('nextBtn');
 
-    prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
-    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
+//    prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+//    nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
 
-    // Note: Submit button is now in the sticky top action bar, not in wizard navigation
-}
+//    // Note: Submit button is now in the sticky top action bar, not in wizard navigation
+//}
 
 function updateReviewSummary() {
     const reviewSummary = document.getElementById('reviewSummary');
@@ -362,7 +385,7 @@ function updateReviewSummary() {
 
 
 // Initialize navigation buttons
-updateNavigationButtons();
+//updateNavigationButtons();
 
 //#endregion
 
@@ -1069,9 +1092,9 @@ function deleteVisit(index) {
 
 // Cancel from top sticky action bar
 function cancelWizardTop() {
-    if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-        window.location.href = '/STD/StudioListData';
-    }
+    //if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+    //    window.location.href = '/STD/StudioListData';
+    //}
 }
 
 // Submit form from top sticky action bar - validates all steps first

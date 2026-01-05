@@ -576,15 +576,14 @@ namespace GMS_UI.Pages.CMN.ReferenceData
 
         }
 
-        public async Task<JsonResult> OnPostCrudMedication(string medication, string dose, int action, int id)
+        public async Task<JsonResult> OnPostCrudMedication(string medication, int action, int id)
         {
             try
             {
                 var createRequest = new CreateMedicationRequest
                 {
                     CompanyId = 1, // Assuming CompanyId is always 1
-                    MedicationName = medication,
-                    MedicationDose = dose,
+                    MedicationName = medication,                   
                     Username = 1, // Assuming a default user name for the system
                     Action = action,
                     MedicationId = id

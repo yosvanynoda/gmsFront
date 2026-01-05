@@ -502,21 +502,29 @@ function populateFormWithData(data) {
 
     // Populate protocols data
     if (data.protocol && data.protocol.length > 0) {
-        protocolsData = data.protocol.map(protocol => ({
-            id: protocol.id || 0,
-            name: protocol.protocol || '',
-            dateCreated: protocol.dateCreated || null,
-            version: protocol.version || '',
-            notes: protocol.notes || '',
-            startDate: protocol.startDate || null,
-            endDate: protocol.endDate || null,
-            numVisit: protocol.numVisit || 0,
-            approvedDate: protocol.approvedDate || null,
-            companyId: protocol.companyId || 0,
-            userName: protocol.userName || 0,
-            siteId: protocol.siteId || 0,
-            studyId: protocol.studyId || 0
-        }));
+        console.log('Raw protocol data from API:', data.protocol);
+        protocolsData = data.protocol.map(protocol => {
+            console.log('Mapping protocol - Original:', protocol);
+            console.log('Protocol ID from API:', protocol.id);
+            const mapped = {
+                id: protocol.id || 0,
+                name: protocol.protocol || '',
+                dateCreated: protocol.dateCreated || null,
+                version: protocol.version || '',
+                notes: protocol.notes || '',
+                startDate: protocol.startDate || null,
+                endDate: protocol.endDate || null,
+                numVisit: protocol.numVisit || 0,
+                approvedDate: protocol.approvedDate || null,
+                companyId: protocol.companyId || 0,
+                userName: protocol.userName || 0,
+                siteId: protocol.siteId || 0,
+                studyId: protocol.studyId || 0
+            };
+            console.log('Mapped protocol:', mapped);
+            return mapped;
+        });
+        console.log('Final protocolsData array:', protocolsData);
         initializeProtocolGrid();
     }
 
@@ -803,14 +811,28 @@ function submitForm() {
     let studioGData = [];
     studioGData.push(generalData);
 
-    // Clean up date fields - convert empty strings to null
-    const cleanedProtocolsData = protocolsData.map(protocol => ({
-        ...protocol,
-        dateCreated: protocol.dateCreated || null,
-        startDate: protocol.startDate || null,
-        endDate: protocol.endDate || null,
-        approvedDate: protocol.approvedDate || null
-    }));
+    // Clean up date fields - convert empty strings to null and map to PascalCase for C# backend
+    console.log('Protocol data before cleaning:', protocolsData);
+    const cleanedProtocolsData = protocolsData.map(protocol => {
+        console.log('Processing protocol:', protocol);
+        console.log('Protocol ID:', protocol.id);
+        return {
+            Id: protocol.id || 0,
+            Name: protocol.name || '',
+            DateCreated: protocol.dateCreated || null,
+            Version: protocol.version || '',
+            CompanyId: protocol.companyId || 0,
+            UserName: protocol.userName || 0,
+            SiteId: protocol.siteId || 0,
+            Notes: protocol.notes || '',
+            StartDate: protocol.startDate || null,
+            EndDate: protocol.endDate || null,
+            NumVisit: protocol.numVisit || 0,
+            ApprovedDate: protocol.approvedDate || null,
+            StudyId: protocol.studyId || 0
+        };
+    });
+    console.log('Cleaned protocol data:', cleanedProtocolsData);
 
     const cleanedDocumentsData = documentsData.map(doc => ({
         ...doc,
@@ -1120,13 +1142,9 @@ function addProtocol() {
     // Clear previous validation messages
     $('#validateCreatedDate').text('');
     $('#validateApprovedDate').text('');
-    $('#validateStartDate').text('');
-    $('#validateEndDate').text('');
 
     const createdDate = $('#createdDate').val();
     const approvedDate = $('#approvedDate').val();
-    const startDate = $('#startDate').val();
-    const endDate = $('#endDate').val();
 
     // Validate: Approved Date must be >= Created Date
     if (createdDate && approvedDate) {
@@ -1139,39 +1157,44 @@ function addProtocol() {
         }
     }
 
-    // Validate: End Date must be >= Start Date
-    if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        if (end < start) {
-            $('#validateEndDate').text('End Date must be greater than or equal to Start Date');
-            return;
-        }
-    }
-
-    let protocol = {
-        name: $('#protocolName').val(),
-        dateCreated: createdDate,
-        version: $('#protocolVersion').val(),
-        notes: $('textarea#protocolNotes').val() || '',
-        startDate: startDate,
-        endDate: endDate,
-        numVisit: parseInt($('#protocolVisit').val()) || 0,
-        approvedDate: approvedDate,
-        companyId: 0,
-        userName: 0,
-        siteId: 0,
-        studyId: 0
-    };
+    let protocol;
 
     // Check if we're editing or adding
     if (editingProtocolIndex >= 0) {
+        // Editing: Start with existing protocol and update only form fields
+        const existingProtocol = protocolsData[editingProtocolIndex];
+        protocol = {
+            ...existingProtocol,  // Preserve all existing fields including id
+            id: $('#protocolId').val(),
+            name: $('#protocolName').val(),
+            dateCreated: createdDate,
+            version: $('#protocolVersion').val(),
+            notes: $('textarea#protocolNotes').val() || '',
+            numVisit: parseInt($('#protocolVisit').val()) || 0,
+            approvedDate: approvedDate
+        };
+
         // Update existing protocol
         protocolsData[editingProtocolIndex] = protocol;
         editingProtocolIndex = -1; // Reset to add mode
     } else {
-        // Add new protocol
+        // Adding new: Create protocol from scratch
+        protocol = {
+            id: 0,
+            name: $('#protocolName').val(),
+            dateCreated: createdDate,
+            version: $('#protocolVersion').val(),
+            notes: $('textarea#protocolNotes').val() || '',
+            startDate: null,
+            endDate: null,
+            numVisit: parseInt($('#protocolVisit').val()) || 0,
+            approvedDate: approvedDate,
+            companyId: 0,
+            userName: 0,
+            siteId: 0,
+            studyId: 0
+        };
+
         protocolsData.push(protocol);
     }
 
@@ -1180,10 +1203,11 @@ function addProtocol() {
     $('#createdDate').val('');
     $('#protocolVersion').val('');
     $('textarea#protocolNotes').val('');
-    $('#startDate').val('');
-    $('#endDate').val('');
     $('#protocolVisit').val('');
     $('#approvedDate').val('');
+
+    // Close the modal
+    $('#protocolModal').modal('hide');
 
     initializeProtocolGrid();
 }
@@ -1203,15 +1227,14 @@ function editProtocol(index) {
     $('#createdDate').val(formatDateForInput(protocol.dateCreated));
     $('#protocolVersion').val(protocol.version || '');
     $('textarea#protocolNotes').val(protocol.notes || '');
-    $('#startDate').val(formatDateForInput(protocol.startDate));
-    $('#endDate').val(formatDateForInput(protocol.endDate));
     $('#protocolVisit').val(protocol.numVisit || '');
     $('#approvedDate').val(formatDateForInput(protocol.approvedDate));
+    $('#protocolId').val(protocol.id || 0);
 
-    console.log('Form populated. Scrolling to form...');
+    console.log('Form populated. Opening modal...');
 
-    // Scroll to the form (optional)
-    document.getElementById('protocolName')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Open the modal
+    $('#protocolModal').modal('show');
 }
 
 function deleteProtocol(index) {

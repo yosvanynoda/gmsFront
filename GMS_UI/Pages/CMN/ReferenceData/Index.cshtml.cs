@@ -584,7 +584,7 @@ namespace GMS_UI.Pages.CMN.ReferenceData
                 {
                     CompanyId = 1, // Assuming CompanyId is always 1
                     MedicationName = medication,
-                    MedicationDose = dose,
+                    //MedicationDose = dose,
                     Username = 1, // Assuming a default user name for the system
                     Action = action,
                     MedicationId = id

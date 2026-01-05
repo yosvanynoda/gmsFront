@@ -134,10 +134,21 @@ function goToStep(step) {
         updateReviewSummary();
     }
 
+    // Update generate visits button state when navigating to step 8
+    if (currentStep === 8) {
+        updateGenerateVisitsButtonState();
+    }
+
 }
 
 function validateStep(step) {
     let isValid = true;
+
+    // Validate visits on step 8
+    if (step === 8) {
+        isValid = validateVisitsData();
+    }
+
     return isValid;
 }
 
@@ -528,6 +539,8 @@ function populateFormWithData(data) {
         });
         console.log('Final protocolsData array:', protocolsData);
         initializeProtocolGrid();
+        // Update button state after loading protocols
+        updateGenerateVisitsButtonState();
     }
 
     // Populate arms data
@@ -1227,6 +1240,9 @@ function addProtocol() {
     $('#protocolModal').modal('hide');
 
     initializeProtocolGrid();
+
+    // Update generate visits button state
+    updateGenerateVisitsButtonState();
 }
 
 function editProtocol(index) {
@@ -1337,32 +1353,163 @@ myVisitModal.addEventListener('show.bs.modal', function (event) {
 });
 
 function initializeVisitGrid() {
+    // Prepare arms dropdown options for cell editor
+    const armsOptions = armsData.map(arm => ({
+        value: arm.armID,
+        label: arm.name
+    }));
+
     const gridOptions = {
         rowData: visitsData,
         columnDefs: [
-            { field: "armName", headerName: "Arm", flex: 1 },
-            { field: "name", headerName: "Name", flex: 1 },
-            { field: "dayOffset", headerName: "Off Set", flex: 1 },
-            { field: "windowMinus", headerName: "Minus", flex: 1 },
-            { field: "windowPlus", headerName: "Plus", flex: 1 },
-            { field: "sortOrder", headerName: "Order", flex: 1 },
-            { field: "requiredFlag", headerName: "Flag", flex: 1 },
+            {
+                field: "sortOrder",
+                headerName: "No.",
+                flex: 1,
+                editable: true,
+                type: 'numericColumn',
+                cellEditor: 'agNumberCellEditor',
+                cellEditorParams: {
+                    min: 1,
+                    precision: 0
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "name",
+                headerName: "Name\n*",
+                flex: 1.5,
+                editable: true,
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "armID",
+                headerName: "Arm\n*",
+                flex: 1.5,
+                editable: true,
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: armsData.map(arm => arm.armID)
+                },
+                valueFormatter: function (params) {
+                    if (!params.value) return '';
+                    const arm = armsData.find(a => a.armID === params.value);
+                    return arm ? arm.name : '';
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "dayOffset",
+                headerName: "Day\nOffset *",
+                flex: 1,
+                editable: true,
+                type: 'numericColumn',
+                cellEditor: 'agNumberCellEditor',
+                cellEditorParams: {
+                    min: 0,
+                    precision: 0
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "windowMinus",
+                headerName: "Window\nMinus",
+                flex: 1,
+                editable: true,
+                type: 'numericColumn',
+                cellEditor: 'agNumberCellEditor',
+                cellEditorParams: {
+                    min: 0,
+                    precision: 0
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "windowPlus",
+                headerName: "Window\nPlus",
+                flex: 1,
+                editable: true,
+                type: 'numericColumn',
+                cellEditor: 'agNumberCellEditor',
+                cellEditorParams: {
+                    min: 0,
+                    precision: 0
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "comment",
+                headerName: "Comment",
+                flex: 1.5,
+                editable: true,
+                cellEditor: 'agLargeTextCellEditor',
+                cellEditorPopup: true,
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
+            {
+                field: "dependencyOf",
+                headerName: "Reference\nVisit",
+                flex: 0.8,
+                editable: true,
+                type: 'numericColumn',
+                cellEditor: 'agNumberCellEditor',
+                cellEditorParams: {
+                    min: 0,
+                    precision: 0
+                },
+                valueFormatter: function (params) {
+                    return params.value === 0 ? '' : params.value;
+                },
+                cellStyle: { 'background-color': '#f8f9fa' },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
+            },
             {
                 headerName: "Actions",
-                flex: 1,
+                flex: 0.8,
                 cellRenderer: function (params) {
                     return `
-                        <a data-toggle='tooltip' data-placement='top' title='Edit' class="link-primary me-2" onclick="editVisit(${params.node.rowIndex})">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
                         <a data-toggle='tooltip' data-placement='top' title='Delete' class="link-danger" onclick="deleteVisit(${params.node.rowIndex})">
                             <i class="bi bi-x-octagon-fill"></i>
                         </a>
                     `;
-                }
+                },
+                wrapHeaderText: true,
+                autoHeaderHeight: true
             }
         ],
-        domLayout: 'normal'
+        domLayout: 'normal',
+        singleClickEdit: true,
+        stopEditingWhenCellsLoseFocus: true,
+        onCellValueChanged: function (event) {
+            // Sync changes back to visitsData array
+            const rowIndex = event.node.rowIndex;
+
+            // Update armName when armID changes
+            if (event.colDef.field === 'armID') {
+                const arm = armsData.find(a => a.armID === event.newValue);
+                event.data.armName = arm ? arm.name : '';
+            }
+
+            // Update the visitsData array
+            visitsData[rowIndex] = event.data;
+
+            console.log('Visit updated:', event.data);
+        }
     };
 
     const gridDiv = document.querySelector('#visitsGrid');
@@ -1455,6 +1602,290 @@ function editVisit(index) {
 function deleteVisit(index) {
     visitsData.splice(index, 1);
     initializeVisitGrid();
+}
+
+// Add a single blank visit row to the grid
+function addVisitRow() {
+    // Calculate next sort order
+    const nextSortOrder = visitsData.length > 0
+        ? Math.max(...visitsData.map(v => v.sortOrder || 0)) + 1
+        : 1;
+
+    // Add blank visit row
+    const newVisit = {
+        visitID: 0,
+        studyID: 0,
+        armID: 0,
+        armName: '',
+        name: '',
+        dayOffset: 0,
+        windowMinus: 0,
+        windowPlus: 0,
+        sortOrder: nextSortOrder,
+        comment: '',
+        requiredFlag: false,
+        dependencyOf: 0,
+        cost: 0,
+        visitType: 0
+    };
+
+    visitsData.push(newVisit);
+
+    // Refresh grid
+    initializeVisitGrid();
+
+    console.log('Added new blank visit row');
+}
+
+// Generate visits from protocol
+function generateVisitsFromProtocol() {
+    // 1. Get active protocol
+    const activeProtocol = protocolsData.find(p => p.active);
+
+    if (!activeProtocol || activeProtocol.numVisit === 0) {
+        alert('Please add a protocol with visits first');
+        return;
+    }
+
+    // 2. Check if visits already exist
+    if (visitsData.length > 0) {
+        if (!confirm(`This will replace ${visitsData.length} existing visit(s) with ${activeProtocol.numVisit} new rows. Continue?`)) {
+            return;
+        }
+    }
+
+    // 3. Clear existing visits
+    visitsData = [];
+
+    // 4. Generate empty visit rows
+    for (let i = 1; i <= activeProtocol.numVisit; i++) {
+        visitsData.push({
+            visitID: 0,
+            studyID: 0,
+            armID: 0,  // User will select from dropdown
+            armName: '',
+            name: `Visit ${i}`,  // Pre-fill with default name
+            dayOffset: 0,  // User enters manually
+            windowMinus: 0,
+            windowPlus: 0,
+            sortOrder: i,  // Auto-increment
+            comment: '',
+            requiredFlag: false,
+            dependencyOf: 0,
+            cost: 0,
+            visitType: 0
+        });
+    }
+
+    // 5. Refresh grid with editable cells
+    initializeVisitGrid();
+
+    console.log(`Generated ${activeProtocol.numVisit} visits from protocol`);
+}
+
+// Update the generate button state based on protocol availability
+function updateGenerateVisitsButtonState() {
+    const generateBtn = document.getElementById('generateVisitsBtn');
+    if (!generateBtn) return;
+
+    const activeProtocol = protocolsData.find(p => p.active);
+
+    if (activeProtocol && activeProtocol.numVisit > 0) {
+        generateBtn.disabled = false;
+        generateBtn.title = `Generate ${activeProtocol.numVisit} visit rows from active protocol`;
+    } else {
+        generateBtn.disabled = true;
+        if (!protocolsData || protocolsData.length === 0) {
+            generateBtn.title = 'Please add a protocol first (Step 4)';
+        } else if (!activeProtocol) {
+            generateBtn.title = 'No active protocol found';
+        } else {
+            generateBtn.title = 'Please set Number of Visits in protocol';
+        }
+    }
+}
+
+// Calculate visit schedule based on baseline date
+function calculateVisitSchedule() {
+    const baselineDate = document.getElementById('baselineDate').value;
+
+    if (!baselineDate) {
+        alert('Please select a baseline date');
+        return;
+    }
+
+    if (visitsData.length === 0) {
+        alert('Please add visits first');
+        return;
+    }
+
+    // Create schedule data
+    const scheduleData = visitsData.map(visit => {
+        const baseline = new Date(baselineDate);
+
+        // Calculate visit date (baseline + dayOffset)
+        const visitDate = new Date(baseline);
+        visitDate.setDate(visitDate.getDate() + (visit.dayOffset || 0));
+
+        // Calculate window start (visit date - windowMinus)
+        const windowStart = new Date(visitDate);
+        windowStart.setDate(windowStart.getDate() - (visit.windowMinus || 0));
+
+        // Calculate window end (visit date + windowPlus)
+        const windowEnd = new Date(visitDate);
+        windowEnd.setDate(windowEnd.getDate() + (visit.windowPlus || 0));
+
+        return {
+            sortOrder: visit.sortOrder,
+            visitName: visit.name,
+            armName: visit.armName,
+            dayOffset: visit.dayOffset,
+            visitDate: visitDate.toISOString().split('T')[0],
+            windowStart: windowStart.toISOString().split('T')[0],
+            windowEnd: windowEnd.toISOString().split('T')[0],
+            windowMinus: visit.windowMinus,
+            windowPlus: visit.windowPlus
+        };
+    });
+
+    // Initialize schedule grid
+    initializeScheduleGrid(scheduleData);
+}
+
+// Initialize schedule grid
+let scheduleGridApi = null;
+function initializeScheduleGrid(scheduleData) {
+    const gridDiv = document.getElementById('scheduleGrid');
+    if (!gridDiv) return;
+
+    const columnDefs = [
+        {
+            field: "sortOrder",
+            headerName: "No.",
+            flex: 0.8,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        },
+        {
+            field: "visitName",
+            headerName: "Visit Name",
+            flex: 1.5,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        },
+        {
+            field: "armName",
+            headerName: "Arm",
+            flex: 1.2,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        },
+        {
+            field: "dayOffset",
+            headerName: "Day\nOffset",
+            flex: 0.8,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        },
+        {
+            field: "visitDate",
+            headerName: "Visit\nDate",
+            flex: 1.2,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#e3f2fd', 'font-weight': 'bold' }
+        },
+        {
+            field: "windowStart",
+            headerName: "Window\nStart",
+            flex: 1.2,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#fff3e0' }
+        },
+        {
+            field: "windowEnd",
+            headerName: "Window\nEnd",
+            flex: 1.2,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#fff3e0' }
+        },
+        {
+            field: "windowMinus",
+            headerName: "Window\nMinus",
+            flex: 0.8,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        },
+        {
+            field: "windowPlus",
+            headerName: "Window\nPlus",
+            flex: 0.8,
+            wrapHeaderText: true,
+            autoHeaderHeight: true,
+            cellStyle: { 'background-color': '#f8f9fa' }
+        }
+    ];
+
+    const gridOptions = {
+        columnDefs: columnDefs,
+        rowData: scheduleData,
+        defaultColDef: {
+            resizable: true,
+            sortable: true,
+            filter: true
+        },
+        domLayout: 'autoHeight',
+        onGridReady: function(params) {
+            params.api.sizeColumnsToFit();
+        }
+    };
+
+    // Clear existing grid
+    gridDiv.innerHTML = '';
+
+    // Create new grid
+    scheduleGridApi = agGrid.createGrid(gridDiv, gridOptions);
+}
+
+// Validate visit data before saving
+function validateVisitsData() {
+    if (visitsData.length === 0) {
+        return true; // No visits to validate
+    }
+
+    const errors = [];
+
+    visitsData.forEach((visit, index) => {
+        const rowErrors = [];
+
+        if (!visit.name || visit.name.trim() === '') {
+            rowErrors.push('Visit Name is required');
+        }
+
+        if (!visit.armID || visit.armID === 0) {
+            rowErrors.push('Arm is required');
+        }
+
+        if (visit.dayOffset === null || visit.dayOffset === undefined) {
+            rowErrors.push('Day Offset is required');
+        }
+
+        if (!visit.sortOrder || visit.sortOrder === 0) {
+            rowErrors.push('Sort Order is required');
+        }
+
+        if (rowErrors.length > 0) {
+            errors.push(`Visit ${index + 1}: ${rowErrors.join(', ')}`);
+        }
+    });
+
+    if (errors.length > 0) {
+        alert('Please fix the following errors in Visits:\n\n' + errors.join('\n'));
+        return false;
+    }
+
+    return true;
 }
 
 //#endregion

@@ -33,7 +33,7 @@
 
         <!-- Progress Indicator -->
         <div class="step-indicator">
-            <div class="step-circle active" id="step1-indicator" onclick="goToPrevious"><i class="fa fa-arrow-left"></i></div>
+            <div class="move-circleB" id="previousBtn" onclick="changeStep(-1)"><i class="fa fa-arrow-left"></i></div>
             <div class="step-line" id="lineprevious"></div>
             <div class="step-circle active" id="step1-indicator" onclick="goToStep(1)">1</div>
             <div class="step-line" id="line1"></div>
@@ -53,7 +53,7 @@
             <div class="step-line" id="line8"></div>
             <div class="step-circle" id="step9-indicator" onclick="goToStep(9)">9</div>
             <div class="step-line" id="linenext"></div>
-            <div class="step-circle active" id="step1-indicator" onclick="goToPrevious"><i class="fa fa-arrow-right"></i></div>
+            <div class="move-circleF" id="nextBtn" onclick="changeStep(1)"><i class="fa fa-arrow-right"></i></div>
         </div>
 
         <!-- Step 1: Studio Data -->

@@ -25,42 +25,77 @@ let monitorGridApi;
 
 function changeStep(direction) {
 
+    if (direction === -1 && currentStep == 1) {
+        return; // Prevent going back from the first step
+    }
+
+    if (direction === 1 && currentStep == totalSteps) {
+        return; // Prevent going forward from the last step
+    }
+
     const isValid = validateStep(currentStep);
 
-    const currentStepElement = document.getElementById(`step${currentStep}`);
+    const currentStepElement = document.getElementById(`step${currentStep}-indicator`);
     currentStepElement.classList.remove('active');
+    currentStepElement.classList.remove('completed');
+    currentStepElement.classList.remove('fail');
+    currentStepElement.innerHTML = currentStep;
 
-    // Update step indicator
-    const currentIndicator = document.getElementById(`step${currentStep}-indicator`);
-    if (direction === 1) {
-        currentIndicator.classList.remove('active');
-        currentIndicator.classList.add('completed');
-        currentIndicator.innerHTML = '<i class="fas fa-check"></i>';
-
-        if (currentStep < totalSteps) {
-            const line = document.getElementById(`line${currentStep}`);
-            line.classList.add('completed');
-        }
-    } else {
-        currentIndicator.classList.remove('completed');
-        currentIndicator.classList.add('active');
-        currentIndicator.innerHTML = currentStep;
+    if (!isValid) {
+        // Mark current step as failed
+        currentStepElement.classList.add('fail');
     }
+    else {
+        // Mark current step not failed
+        currentStepElement.classList.add('completed');
+        //currentStepElement.innerHTML = '<i class="fas fa-check"></i>';
+    }
+
+    // hide current step
+    const currentStepScreen = document.getElementById(`step${currentStep}`);
+    currentStepScreen.classList.remove('active');
+    currentStepScreen.classList.add('completed');
 
     currentStep += direction;
+    const newStepElement = document.getElementById(`step${currentStep}-indicator`);
+    newStepElement.classList.add('active');
+    newStepElement.classList.remove('completed');
+    newStepElement.classList.remove('fail');
+    newStepElement.innerHTML = currentStep;
 
     // Show new step
-    const newStepElement = document.getElementById(`step${currentStep}`);
-    newStepElement.classList.add('active');
+    const newStepScreen = document.getElementById(`step${currentStep}`);
+    newStepScreen.classList.add('active');
+    newStepScreen.classList.remove('completed');
 
-    // Update new step indicator
-    const newIndicator = document.getElementById(`step${currentStep}-indicator`);
-    if (direction === 1) {
-        newIndicator.classList.add('active');
-    }
 
-    // Update navigation buttons
-    //updateNavigationButtons();
+    //// Update step indicator
+    //const currentIndicator = document.getElementById(`step${currentStep}-indicator`);
+    //if (direction === 1) {
+    //    currentIndicator.classList.remove('active');
+    //    currentIndicator.classList.add('completed');
+    //    currentIndicator.innerHTML = '<i class="fas fa-check"></i>';
+
+    //    if (currentStep < totalSteps) {
+    //        const line = document.getElementById(`line${currentStep}`);
+    //        line.classList.add('completed');
+    //    }
+    //} else {
+    //    currentIndicator.classList.remove('completed');
+    //    currentIndicator.classList.remove('active');
+    //    currentIndicator.innerHTML = currentStep;
+    //}
+
+    //currentStep += direction;
+
+    
+
+    //// Update new step indicator
+    //const newIndicator = document.getElementById(`step${currentStep}-indicator`);
+    //newIndicator.classList.add('active');
+    //newStepElement.classList.remove('completed');
+    //newStepElement.classList.remove('fail');
+
 
     // Update review summary on last step
     if (currentStep === totalSteps) {
@@ -132,13 +167,15 @@ function validateStep(step) {
 
     switch (step) {
         case 1:
-        // Validate Step 1 fields
+            // Validate Step 1 fields
+            
             break;
         case 2:
         // Validate Step 2 fields
             break;
         case 3:
-        // Validate Step 3 fields
+            // Validate Step 3 fields
+            isValid = false;
             break;
         case 4:
         // Validate Step 4 fields
@@ -1092,9 +1129,9 @@ function deleteVisit(index) {
 
 // Cancel from top sticky action bar
 function cancelWizardTop() {
-    //if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-    //    window.location.href = '/STD/StudioListData';
-    //}
+    if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+        window.location.href = '/STD/StudioListData';
+    }
 }
 
 // Submit form from top sticky action bar - validates all steps first

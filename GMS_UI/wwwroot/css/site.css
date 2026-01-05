@@ -133,6 +133,34 @@ html, body {
     position: relative;
 }
 
+.move-circleF {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4e3cfa;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    position: relative;
+}
+
+.move-circleB {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #a41748;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    position: relative;
+}
+
 .step-circle.completed {
     background-color: #198754;
     border-color: #198754;
@@ -173,7 +201,7 @@ step-line.fail {
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
-    height:stretch !important;
+    height: stretch !important; 
 }
 
 .form-section h5 {
@@ -201,7 +229,7 @@ step-line.fail {
     /*height: 550px !important;*/
     /* height: 85vh !important*/
     /*height: stretch !important;*/
-    height: 77% !important;
+    height: 90% !important;
 }
 
 .inputsmmodal {

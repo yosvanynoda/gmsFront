@@ -51,14 +51,12 @@ function createActionLink(title, href, linkClass, iconClass, mainvalue, secondVa
         }
 
         if (href == "#editMedication") {
-            $('#medicationEdit').val(mainvalue);          
-            $('#doseEdit').val(secondValue);
+            $('#medicationEdit').val(mainvalue);
             $('#medicationidEdit').val(id);
         }
 
         if (href == "#deleteMedication") {
             $('#medicationD').html(mainvalue);
-            $('#doseD').html(secondValue);
             $('#medicationidDelete').val(id);
         }
 
@@ -1031,8 +1029,8 @@ function crudDeviation(action) {
 class MedicationButtonRenderer {
     init(params) {
         this.eGui = document.createElement('div')
-        const editLink = createActionLink('Edit', '#editMedication', 'link-success', 'bi bi-pencil-fill', params.data.medicationName, params.data.medicationDose, params.data.medicationId);
-        const deleteLink = createActionLink('Delete', '#deleteMedication', 'link-danger', 'bi bi-x-octagon-fill', params.data.medicationName, params.data.medicationDose, params.data.medicationId);
+        const editLink = createActionLink('Edit', '#editMedication', 'link-success', 'bi bi-pencil-fill', params.data.medicationName, '', params.data.medicationId);
+        const deleteLink = createActionLink('Delete', '#deleteMedication', 'link-danger', 'bi bi-x-octagon-fill', params.data.medicationName, '', params.data.medicationId);
         this.eGui.appendChild(editLink);
         this.eGui.appendChild(document.createTextNode(' | '));
         this.eGui.appendChild(deleteLink);
@@ -1064,7 +1062,6 @@ const gridMedicationOptions = {
     columnDefs: [
         { field: "medicationId", filter: 'agTextColumnFilter', hide: true },
         { field: "medicationName", filter: 'agTextColumnFilter' },
-        { field: "medicationDose", filter: 'agTextColumnFilter' },
         { field: "companyId", filter: true, hide: true },
         { field: "userName", filter: true, hide: true },
         { field: "actionDateTime", filter: true, hide: true },
@@ -1121,7 +1118,6 @@ function crudMedication(action) {
     $('#validateMedication').html('');
     $('#validateMedicationEdit').html('');
     let medication = '';
-    let dose = '';
     let id = 0;
     switch (action) {
         case 1: // Add
@@ -1129,12 +1125,6 @@ function crudMedication(action) {
             if (medication === "") {
                 $('#validateMedication').html('Please enter a medication');
                 $('#validateMedication').show();
-                return;
-            }
-            dose = $('#dose').val();
-            if (dose === "") {
-                $('#validateDose').html('Please enter a dose');
-                $('#validateDose').show();
                 return;
             }
             id = 0; // New medication, so id is 0
@@ -1148,12 +1138,6 @@ function crudMedication(action) {
                 $('#validateMedicationEdit').show();
                 return;
             }
-            dose = $("#doseEdit").val();
-            if (dose === "") {
-                $('#validateDoseEdit').html('Please enter a dose');
-                $('#validateDoseEdit').show();
-                return;
-            }
             id = $("#medicationidEdit").val(); // Get the id from the hidden input
             $('#medicationEdit').val('');
             $('#medicationidEdit').val('');
@@ -1161,7 +1145,6 @@ function crudMedication(action) {
             break;
         case 3: // Delete
             medication = 'N/A';
-            dose = 'N/A';
             id = $("#medicationidDelete").val(); // Get the id from the hidden input
             $('#medicationidDelete').val('');
             $('#deleteMedication').modal('hide');
@@ -1172,7 +1155,7 @@ function crudMedication(action) {
         type: "POST",
         url: urlIndex + '?handler=CrudMedication',
         headers: { 'RequestVerificationToken': window._csrfToken },
-        data: {"medication": medication, "dose": dose, "action": action, "id": id },
+        data: {"medication": medication, "action": action, "id": id },
         success: function (data) {
             if (data.success === false) {
                 $('#failedTitle').html('Medication');

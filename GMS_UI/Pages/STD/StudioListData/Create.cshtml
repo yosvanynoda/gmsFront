@@ -333,6 +333,9 @@
                             <div class="col float-start">
                                 <a id="generateVisitsBtn" class="btn btn-sm btn-success float-start buttonReference" onclick="generateVisitsFromProtocol()" disabled><i class="bi bi-plus-circle"></i> Generate Visits</a>
                             </div>
+                            <div class="col">
+                                <a class="btn btn-primary btn-sm" onclick="calculateVisitSchedule()"><i class="bi bi-calculator"></i> Calculate Schedule</a>
+                            </div>
                             <div class="col float-end">
                                 <a class="btn btn-sm btn-success float-end buttonReference" onclick="addVisitRow()"><i class="bi bi-plus-circle"></i> Add</a>
                             </div>
@@ -344,7 +347,7 @@
                 </div>
 
                 <!-- Visit Schedule Calculator -->
-                <div class="card shadow border rounded-3 bg-light cardcreate mt-3">
+                @* <div class="card shadow border rounded-3 bg-light cardcreate mt-3">
                     <div class="card-header headerReference">
                         <h6 class="mb-0"><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h6>
                     </div>
@@ -362,7 +365,7 @@
                         </div>
                         <div id="scheduleGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
-                </div>
+                </div> *@
 
             </div>
         </div>

@@ -91,7 +91,7 @@ html, body {
     /*padding: 0;*/
     /*max-height: 75vh;*/
     /*overflow-y: auto;*/
-    width: 73vw;
+    width: 95vw;
     height: 95vh;
     padding-left:20vw !important;
 }
@@ -230,6 +230,17 @@ step-line.fail {
     /* height: 85vh !important*/
     /*height: stretch !important;*/
     height: 90% !important;
+    margin-left: -20px;
+    margin-right: -20px;
+    width: 100% !important;
+}
+
+.wizard-top {
+   z-index: 1000; 
+   margin-left: -20px; 
+   margin-right: -20px; 
+   padding: 15px 20px;
+   width:75vw !important;
 }
 
 .inputsmmodal {
@@ -245,8 +256,12 @@ step-line.fail {
 }
 
 #wizardForm {
+    margin-left: -20px;
+    margin-right: -20px;
+    max-width:100% !important;
     width: 100% !important;
-    height: 85vh !important
+    height: 85vh !important;
+    padding: 15px 20px;
 }
 
 

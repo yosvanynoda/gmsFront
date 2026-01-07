@@ -7,19 +7,19 @@
 
 <div class="wizard-container">
     <!-- Sticky Action Bar -->
-    <div class="sticky-top bg-white border-bottom shadow-sm mb-3" style="z-index: 1000; margin-left: -20px; margin-right: -20px; padding: 15px 20px;">
+    <div class="sticky-top bg-white border-bottom shadow-sm mb-3 wizard-top rounded-3">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="mb-0">
                 <i class="fas fa-flask text-primary"></i>
                 Edit Study Research
             </h4>
             <div>
-                <button type="button" class="btn btn-secondary me-2" onclick="cancelWizardTop()">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </button>
-                <button type="button" class="btn btn-success" onclick="submitFormTop()">
-                    <i class="bi bi-check-circle"></i> Save Changes
-                </button>
+                <a class="btn btn-secondary me-2" onclick="cancelWizardTop()">
+                    <i class="bi bi-x-circle"></i> Back
+                </a>
+                <a class="btn btn-success" onclick="submitFormTop()">
+                    <i class="bi bi-check-circle"></i> Save Study
+                </a>
             </div>
         </div>
     </div>
@@ -34,6 +34,8 @@
 
         <!-- Progress Indicator -->
         <div class="step-indicator">
+            <div class="move-circleB" id="previousBtn" onclick="changeStep(-1)"><i class="fa fa-arrow-left"></i></div>
+            <div class="step-line" id="lineprevious"></div>
             <div class="step-circle active" id="step1-indicator" onclick="goToStep(1)">1</div>
             <div class="step-line" id="line1"></div>
             <div class="step-circle" id="step2-indicator" onclick="goToStep(2)">2</div>
@@ -51,6 +53,8 @@
             <div class="step-circle" id="step8-indicator" onclick="goToStep(8)">8</div>
             <div class="step-line" id="line8"></div>
             <div class="step-circle" id="step9-indicator" onclick="goToStep(9)">9</div>
+            <div class="step-line" id="linenext"></div>
+            <div class="move-circleF" id="nextBtn" onclick="changeStep(1)"><i class="fa fa-arrow-right"></i></div>
         </div>
 
         <!-- Step 1: Studio Data -->
@@ -325,13 +329,16 @@
 
                 <div class="card shadow border rounded-3 bg-light cardcreate">
                     <div class="card-header headerReference">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <button type="button" id="generateVisitsBtn" class="btn btn-sm btn-success" onclick="generateVisitsFromProtocol()" disabled>
-                                <i class="bi bi-plus-circle"></i> Generate Visits
-                            </button>
-                            <button type="button" class="btn btn-sm btn-success buttonReference" onclick="addVisitRow()">
-                                <i class="bi bi-plus-circle"></i> Add
-                            </button>
+                        <div class="row">
+                            <div class="col float-start">
+                                <a id="generateVisitsBtn" class="btn btn-sm btn-success float-start buttonReference" onclick="generateVisitsFromProtocol()" disabled><i class="bi bi-plus-circle"></i> Generate Visits</a>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-primary btn-sm" onclick="calculateVisitSchedule()"><i class="bi bi-calculator"></i> Calculate Schedule</a>
+                            </div>
+                            <div class="col float-end">
+                                <a class="btn btn-sm btn-success float-end buttonReference" onclick="addVisitRow()"><i class="bi bi-plus-circle"></i> Add</a>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -340,7 +347,7 @@
                 </div>
 
                 <!-- Visit Schedule Calculator -->
-                <div class="card shadow border rounded-3 bg-light cardcreate mt-3">
+                @* <div class="card shadow border rounded-3 bg-light cardcreate mt-3">
                     <div class="card-header headerReference">
                         <h6 class="mb-0"><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h6>
                     </div>
@@ -358,7 +365,7 @@
                         </div>
                         <div id="scheduleGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
-                </div>
+                </div> *@
 
             </div>
         </div>

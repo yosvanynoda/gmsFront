@@ -41,7 +41,7 @@ namespace GMS_UI.Pages.SUB.Subject
         public async Task<JsonResult> OnPostGetVisitPlanDataAsync([FromBody] VisitPlanRequest request)
         {
             try
-            {
+             {
                 _logger.LogInformation("OnPostGetVisitPlanDataAsync called for SubjectId: {SubjectId}, StudyId: {StudyId}",
                     request.SubjectId, request.StudyId);
 

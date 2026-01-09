@@ -22,8 +22,6 @@ function loadVisitPlanData() {
         StudyId: parseInt(studyId)
     };
 
-    console.log('Loading visit plan data with:', requestData);
-
     $.ajax({
         type: "POST",
         url: window.location.pathname + '?handler=GetVisitPlanData',
@@ -31,39 +29,21 @@ function loadVisitPlanData() {
         data: JSON.stringify(requestData),
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function(response) {
-            console.log('Visit Plan Response:', response);
-            console.log('Response success:', response.success);
-            console.log('Response data:', response.data);
-            console.log('Response data type:', typeof response.data);
-
-            if (response.data) {
-                console.log('Data stringified:', JSON.stringify(response.data, null, 2));
-            }
-
             if (response.success && response.data) {
                 displayVisitPlanData(response.data);
             } else {
                 console.error('Visit plan response not successful:', response);
-                console.error('Error message:', response.errorMessage);
                 $('#visitPlanGrid').html('<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>' + (response.errorMessage || 'No visit plan data available.') + '</div>');
             }
         },
         error: function(xhr, status, error) {
             console.error('Visit Plan Error:', error);
-            console.error('XHR Status:', xhr.status);
-            console.error('XHR Response:', xhr.responseText);
-
             $('#visitPlanGrid').html('<div class="alert alert-danger">Error loading visit plan data.</div>');
         }
     });
 }
 
 function displayVisitPlanData(data) {
-    console.log('Displaying visit plan data:', data);
-    console.log('Data type:', typeof data);
-    console.log('Is array:', Array.isArray(data));
-    console.log('Data stringified:', JSON.stringify(data, null, 2));
-
     // Ensure data is an array
     let visitData = [];
 
@@ -74,12 +54,7 @@ function displayVisitPlanData(data) {
         visitData = Object.values(data);
     }
 
-    console.log('Final visitData for grid:', visitData);
-    console.log('Visit data count:', visitData.length);
-
     if (visitData.length > 0) {
-        console.log('First item:', JSON.stringify(visitData[0], null, 2));
-
         // Extract and display subject name
         const firstRecord = visitData[0];
         const subjectName = firstRecord.subjectName || firstRecord.SubjectName || 'Subject';
@@ -166,13 +141,60 @@ function displayVisitPlanData(data) {
                 valueFormatter: params => params.value ? `${params.value} days` : '-'
             },
             {
-                field: "requiredFlag",
-                headerName: "Required",
-                width: 100,
-                valueGetter: params => params.data.requiredFlag || params.data.RequiredFlag,
-                cellRenderer: params => {
-                    return params.value ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-dash-circle text-secondary"></i>';
+                field: "windowStart",
+                headerName: "Window Start",
+                filter: 'agDateColumnFilter',
+                width: 180,
+                valueGetter: params => params.data.windowStart || params.data.WindowStart,
+                valueFormatter: params => {
+                    if (!params.value) return '-';
+                    const date = new Date(params.value);
+                    // Check if it's a valid date (not 0001-01-01)
+                    if (date.getFullYear() < 1900) return '-';
+
+                    // Format as M/D/YY h:mm AM/PM
+                    const month = date.getMonth() + 1;
+                    const day = date.getDate();
+                    const year = String(date.getFullYear()).slice(-2);
+                    let hours = date.getHours();
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12 || 12;
+
+                    return `${month}/${day}/${year} ${hours}:${minutes} ${ampm}`;
                 }
+            },
+            {
+                field: "windowEnd",
+                headerName: "Window End",
+                filter: 'agDateColumnFilter',
+                width: 180,
+                valueGetter: params => params.data.windowEnd || params.data.WindowEnd,
+                valueFormatter: params => {
+                    if (!params.value) return '-';
+                    const date = new Date(params.value);
+                    // Check if it's a valid date (not 0001-01-01)
+                    if (date.getFullYear() < 1900) return '-';
+
+                    // Format as M/D/YY h:mm AM/PM
+                    const month = date.getMonth() + 1;
+                    const day = date.getDate();
+                    const year = String(date.getFullYear()).slice(-2);
+                    let hours = date.getHours();
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12 || 12;
+
+                    return `${month}/${day}/${year} ${hours}:${minutes} ${ampm}`;
+                }
+            },
+            {
+                field: "dependencyOf",
+                headerName: "Dependency Of",
+                filter: 'agNumberColumnFilter',
+                width: 130,
+                valueGetter: params => params.data.dependencyOf || params.data.DependencyOf,
+                valueFormatter: params => params.value ? params.value : '-'
             },
             {
                 field: "notes",
@@ -196,6 +218,8 @@ function displayVisitPlanData(data) {
                     const staffId = params.data.staffId || params.data.StaffId;
                     const scheduledDate = params.data.scheduledDate || params.data.ScheduledDate;
                     const notes = params.data.notes || params.data.Notes || '';
+                    const windowStart = params.data.windowStart || params.data.WindowStart;
+                    const windowEnd = params.data.windowEnd || params.data.WindowEnd;
 
                     let actions = '';
 
@@ -221,6 +245,8 @@ function displayVisitPlanData(data) {
                                        data-visit-name="${visitName}"
                                        data-staff-id="${staffId}"
                                        data-scheduled-date="${scheduledDate}"
+                                       data-window-start="${windowStart}"
+                                       data-window-end="${windowEnd}"
                                        data-notes="${notes}"></i>`;
                         actions += `<i class="bi bi-calendar-x text-danger cancel-visit-icon"
                                        style="cursor: pointer; font-size: 1.2rem;"
@@ -281,21 +307,18 @@ function displayVisitPlanData(data) {
                     }
                 }
 
-                console.log('Actions icon clicked:', target);
-                console.log('Icon classes:', target.className);
-
                 // Check if schedule icon was clicked
                 if (target.classList.contains('schedule-visit-icon')) {
                     const visitId = event.data.visitID || event.data.VisitID;
                     const subjectId = event.data.subjectId || event.data.SubjectId;
                     const studyId = event.data.studyId || event.data.StudyId;
                     const visitName = event.data.visitName || event.data.VisitName || '';
+                    const scheduledDate = event.data.scheduledDate || event.data.ScheduledDate;
                     const dayOffset = event.data.dayOffset || event.data.DayOffset || 0;
                     const windowMinus = event.data.windowMinus || event.data.WindowMinus || 0;
                     const windowPlus = event.data.windowPlus || event.data.WindowPlus || 0;
 
-                    console.log('Schedule icon clicked:', { visitId, subjectId, studyId, visitName, dayOffset, windowMinus, windowPlus });
-                    openScheduleModal(visitId, subjectId, studyId, visitName, null, null, null, dayOffset, windowMinus, windowPlus);
+                    openScheduleModal(visitId, subjectId, studyId, visitName, null, scheduledDate, null, dayOffset, windowMinus, windowPlus);
                 }
                 // Check if re-schedule icon was clicked
                 else if (target.classList.contains('reschedule-visit-icon')) {
@@ -309,9 +332,10 @@ function displayVisitPlanData(data) {
                     const dayOffset = event.data.dayOffset || event.data.DayOffset || 0;
                     const windowMinus = event.data.windowMinus || event.data.WindowMinus || 0;
                     const windowPlus = event.data.windowPlus || event.data.WindowPlus || 0;
+                    const windowStart = event.data.windowStart || event.data.WindowStart;
+                    const windowEnd = event.data.windowEnd || event.data.WindowEnd;
 
-                    console.log('Re-schedule icon clicked:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus });
-                    openScheduleModal(visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus);
+                    openScheduleModal(visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus, windowStart, windowEnd);
                 }
                 // Check if cancel icon was clicked
                 else if (target.classList.contains('cancel-visit-icon')) {
@@ -336,7 +360,6 @@ function displayVisitPlanData(data) {
             gridDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-info-circle me-2"></i>No visit plan data available for this subject.</div>';
         } else {
             visitPlanGridApi = agGrid.createGrid(gridDiv, gridOptions);
-            console.log('Grid created successfully with', visitData.length, 'rows');
         }
     } else {
         console.error('Grid container not found!');
@@ -359,8 +382,6 @@ let scheduleDateRange = {
 };
 
 function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = null, scheduledDate = null, notes = null, dayOffset = 0, windowMinus = 0, windowPlus = 0) {
-    console.log('Opening schedule modal:', { visitId, subjectId, studyId, visitName, staffId, scheduledDate, notes, dayOffset, windowMinus, windowPlus });
-
     // Set hidden field values
     $('#scheduleVisitId').val(visitId);
     $('#scheduleSubjectId').val(subjectId);
@@ -382,13 +403,16 @@ function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = nul
     // Load staff dropdown
     loadStaffDropdown(studyId);
 
-    // Pre-fill form if re-scheduling
-    if (staffId && scheduledDate) {
-        // Wait a bit for staff dropdown to load, then set the value
-        setTimeout(() => {
+    // Pre-fill form data
+    // Wait a bit for staff dropdown to load, then set the values
+    setTimeout(() => {
+        // Pre-fill staff if re-scheduling
+        if (staffId) {
             $('#scheduleStaffId').val(staffId);
+        }
 
-            // Format the date for datetime-local input (using local time, not UTC)
+        // Pre-fill scheduled date if available
+        if (scheduledDate) {
             const date = new Date(scheduledDate);
             if (date.getFullYear() > 1900) {
                 const year = date.getFullYear();
@@ -399,12 +423,13 @@ function openScheduleModal(visitId, subjectId, studyId, visitName, staffId = nul
                 const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
                 $('#scheduleVisitDate').val(formattedDate);
             }
+        }
 
-            if (notes) {
-                $('#scheduleNotes').val(notes);
-            }
-        }, 500);
-    }
+        // Pre-fill notes if available
+        if (notes) {
+            $('#scheduleNotes').val(notes);
+        }
+    }, 500);
 
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('scheduleVisitModal'));
@@ -426,7 +451,6 @@ function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
 
     // Get all visits from the grid to find the last completed one
     if (!visitPlanGridApi) {
-        console.log('Grid API not available');
         return;
     }
 
@@ -441,11 +465,8 @@ function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
         return status === 'Completed';
     });
 
-    console.log('Completed visits:', completedVisits);
-
     if (completedVisits.length === 0) {
         // No completed visits - allow any date (first visit scenario)
-        console.log('No completed visits found - allowing any date');
         return;
     }
 
@@ -458,9 +479,6 @@ function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
 
     const lastCompletedVisit = completedVisits[0];
     const lastVisitDate = new Date(lastCompletedVisit.scheduledDate || lastCompletedVisit.ScheduledDate);
-
-    console.log('Last completed visit:', lastCompletedVisit);
-    console.log('Last visit date:', lastVisitDate);
 
     // Calculate ideal date (last visit + day offset)
     const idealDate = new Date(lastVisitDate);
@@ -482,8 +500,6 @@ function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
         hasRange: true
     };
 
-    console.log('Date range calculated:', scheduleDateRange);
-
     // Format dates for display
     const formatDate = (date) => {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -503,8 +519,6 @@ function calculateAndDisplayDateRange(dayOffset, windowMinus, windowPlus) {
 }
 
 function loadStaffDropdown(studyId) {
-    console.log('Loading staff for study:', studyId);
-
     $.ajax({
         type: "POST",
         url: window.location.pathname + '?handler=GetStaffList',
@@ -516,33 +530,16 @@ function loadStaffDropdown(studyId) {
         }),
         headers: { 'RequestVerificationToken': window._csrfToken },
         success: function(response) {
-            console.log('Staff dropdown response:', response);
-            console.log('Staff data:', response.data);
-
             const select = $('#scheduleStaffId');
             select.empty();
             select.append('<option value="">Select Staff</option>');
 
             if (response.success && response.data && response.data.length > 0) {
                 $.each(response.data, function(index, staff) {
-                    console.log('Staff item:', staff);
-                    console.log('Staff item keys:', Object.keys(staff));
-                    console.log('Staff item JSON:', JSON.stringify(staff, null, 2));
-
                     // Handle both camelCase and PascalCase property names
                     const firstName = staff.firstName || staff.FirstName || '';
                     const lastName = staff.lastName || staff.LastName || '';
                     const staffId = staff.staffId || staff.StaffId;
-
-                    console.log('Extracted values:', {
-                        firstName,
-                        lastName,
-                        staffId,
-                        'staff.firstName': staff.firstName,
-                        'staff.FirstName': staff.FirstName,
-                        'staff.lastName': staff.lastName,
-                        'staff.LastName': staff.LastName
-                    });
 
                     // Build staff name
                     let staffName = `${firstName} ${lastName}`.trim();
@@ -552,22 +549,17 @@ function loadStaffDropdown(studyId) {
                         staffName = staff.name || staff.Name || `Staff ${staffId}` || 'Unknown';
                     }
 
-                    console.log('Final staff name:', staffName);
-
                     select.append($('<option>', {
                         value: staffId,
                         text: staffName
                     }));
                 });
-                console.log('Total staff options added:', response.data.length);
             } else {
-                console.log('No staff data available');
                 select.append('<option value="">No staff available</option>');
             }
         },
         error: function(xhr, status, error) {
             console.error('Error loading staff dropdown:', error);
-            console.error('XHR Response:', xhr.responseText);
             alert('Failed to load staff list. Please try again.');
         }
     });
@@ -597,8 +589,6 @@ function validateScheduleForm() {
 }
 
 function scheduleVisit() {
-    console.log('Schedule visit button clicked');
-
     if (!validateScheduleForm()) {
         return;
     }
@@ -635,13 +625,14 @@ function scheduleVisit() {
         url: `${urlVisit}?handler=CreateVisit`,
         headers: { 'RequestVerificationToken': window._csrfToken },
         data: {
-            "staffId": parseInt(staffId), "notes": notes, "studioId": parseInt(studyId),
-            "subjectId": parseInt(subjectId), "visitDate": visitDateInput, 
-            "visitId": parseInt(visitId) 
+            "StaffId": parseInt(staffId),
+            "Notes": notes || '',
+            "StudioId": parseInt(studyId),
+            "SubjectId": parseInt(subjectId),
+            "VisitDate": visitDateInput,
+            "VisitId": parseInt(visitId)
         },
         success: function(response) {
-            console.log('Schedule visit response:', response);
-
             if (response.success) {
                 // Close modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleVisitModal'));
@@ -658,7 +649,6 @@ function scheduleVisit() {
         },
         error: function(xhr, status, error) {
             console.error('Error scheduling visit:', error);
-            console.error('XHR Response:', xhr.responseText);
             alert('Error scheduling visit. Please try again.');
         }
     });
@@ -687,14 +677,12 @@ function cancelVisit(notes, studyId, subjectId, visitId, visitName) {
         url: `${urlVisit}?handler=CancelVisit`,
         headers: { 'RequestVerificationToken': window._csrfToken },
         data: {
-            "notes": parseInt(notes),
-            "studioId": parseInt(studyId),
-            "subjectId": parseInt(subjectId),
-            "visitId": parseInt(visitId)
+            "Notes": notes || '',
+            "StudioId": parseInt(studyId),
+            "SubjectId": parseInt(subjectId),
+            "VisitId": parseInt(visitId)
         },
         success: function(response) {
-            console.log('Cancel visit response:', response);
-
             if (response.success) {
                 alert('Visit cancelled successfully!');
                 // Reload grid data
@@ -705,7 +693,6 @@ function cancelVisit(notes, studyId, subjectId, visitId, visitName) {
         },
         error: function(xhr, status, error) {
             console.error('Error cancelling visit:', error);
-            console.error('XHR Response:', xhr.responseText);
             alert('Error cancelling visit. Please try again.');
         }
     });

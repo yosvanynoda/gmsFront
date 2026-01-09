@@ -334,7 +334,7 @@
                                 <a id="generateVisitsBtn" class="btn btn-sm btn-success float-start buttonReference" onclick="generateVisitsFromProtocol()" disabled><i class="bi bi-plus-circle"></i> Generate Visits</a>
                             </div>
                             <div class="col">
-                                <a class="btn btn-primary btn-sm" onclick="calculateVisitSchedule()"><i class="bi bi-calculator"></i> Calculate Schedule</a>
+                                <a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleCalculatorModal"><i class="bi bi-calculator"></i> Calculate Schedule</a>
                             </div>
                             <div class="col float-end">
                                 <a class="btn btn-sm btn-success float-end buttonReference" onclick="addVisitRow()"><i class="bi bi-plus-circle"></i> Add</a>
@@ -345,27 +345,6 @@
                         <div id="visitsGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
                 </div>
-
-                <!-- Visit Schedule Calculator -->
-                @* <div class="card shadow border rounded-3 bg-light cardcreate mt-3">
-                    <div class="card-header headerReference">
-                        <h6 class="mb-0"><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="baselineDate" class="form-label">Baseline Date *</label>
-                                <input type="date" class="form-control" id="baselineDate" />
-                            </div>
-                            <div class="col-md-4 d-flex align-items-end">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="calculateVisitSchedule()">
-                                    <i class="bi bi-calculator"></i> Calculate Schedule
-                                </button>
-                            </div>
-                        </div>
-                        <div id="scheduleGrid" class="ag-theme-balham gridCreateEdit"></div>
-                    </div>
-                </div> *@
 
             </div>
         </div>
@@ -877,6 +856,38 @@
 
 </div>
 @*End Visits*@
+
+@*Visit Schedule Calculator Modal*@
+<div id="scheduleCalculatorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleCalculatorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl" style="max-width: 95%; width: 95%;">
+        <div class="modal-content" role="document">
+            <div class="modal-header page-card-header">
+                <h2><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h2>
+                <span class="close" data-bs-dismiss="modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="baselineDate" class="form-label">Baseline Date *</label>
+                            <input type="date" class="form-control" id="baselineDate" />
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="calculateVisitSchedule()">
+                                <i class="bi bi-calculator"></i> Calculate
+                            </button>
+                        </div>
+                    </div>
+                    <div id="scheduleGrid" class="ag-theme-balham" style="height: 400px; width: 100%;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Visit Schedule Calculator Modal*@
 
 @*End Modals.....*@
 

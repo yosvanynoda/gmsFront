@@ -334,7 +334,7 @@
                                 <a id="generateVisitsBtn" class="btn btn-sm btn-success float-start buttonReference" onclick="generateVisitsFromProtocol()" disabled><i class="bi bi-plus-circle"></i> Generate Visits</a>
                             </div>
                             <div class="col">
-                                <a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleCalculatorModal"><i class="bi bi-calculator"></i> Calculate Schedule</a>
+                                <a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleCalculatorModalEdit"><i class="bi bi-calculator"></i> Calculate Schedule</a>
                             </div>
                             <div class="col float-end">
                                 <a class="btn btn-sm btn-success float-end buttonReference" onclick="addVisitRow()"><i class="bi bi-plus-circle"></i> Add</a>
@@ -344,7 +344,7 @@
                     <div class="card-body">
                         <div id="visitsGrid" class="ag-theme-balham gridCreateEdit"></div>
                     </div>
-                </div> *@
+                </div> 
 
             </div>
         </div>
@@ -800,8 +800,8 @@
 @*End Visits*@
 
 @*Visit Schedule Calculator Modal*@
-<div id="scheduleCalculatorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleCalculatorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog modal-xl" style="max-width: 95%; width: 95%;">
+<div id="scheduleCalculatorModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleCalculatorModalEditLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl" >
         <div class="modal-content" role="document">
             <div class="modal-header page-card-header">
                 <h2><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h2>

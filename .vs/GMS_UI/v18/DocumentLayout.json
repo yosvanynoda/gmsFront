@@ -1,0 +1,344 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\source\\repos\\GMS\\GMS_UI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\vlt\\volunteer\\volunteeredit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\vlt\\volunteer\\volunteeredit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 299,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAOEAAAAAAAAAAAAuwPIAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-02T20:23:36.221Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
+              "ViewState": "AgIAAFABAAAAAAAAAADwv3IBAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-02T16:29:22.959Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:147:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:148:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:149:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:150:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:151:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-16T16:26:31.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "ViewState": "AgIAAD4BAAAAAAAAAADgv0QBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-07T02:04:24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
+              "RelativeDocumentMoniker": "GMS_UI\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
+              "RelativeToolTip": "GMS_UI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-05T23:02:37.169Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "studioEdit.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
+              "ViewState": "AgIAAJoGAAAAAAAAAAAqwLAGAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-05T22:45:13.776Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "studioListData.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-05T22:45:12.883Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "visitPlan.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
+              "ViewState": "AgIAAGgBAAAAAAAAAIA2wHgBAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-05T22:44:35.51Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "volunteerEdit.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAjwG4AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-05T22:44:26.708Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
+              "ViewState": "AgIAACcKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-05T22:41:32.425Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "studioCreate.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-02T20:16:54.658Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 351,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{ca8cc5c7-0231-406a-95cd-aa5ed6ac0190}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

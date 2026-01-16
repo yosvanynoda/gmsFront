@@ -368,28 +368,11 @@
                     </div>
                 </div>
 
-                @* <div class="mt-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="confirmSubmission" required>
-                        <label class="form-check-label" for="confirmSubmission">
-                            I confirm that all information provided is accurate and complete
-                        </label>
-                    </div>
-                </div> *@
+               
             </div>
         </div>
 
-        @* <!-- Sticky Navigation Buttons -->
-        <div class="wizard-navigation bg-white border-top shadow-sm" style="position: sticky; bottom: 0; z-index: 999; margin: 0 -20px; padding: 15px 20px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn btn-outline-secondary btn-wizard" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
-                    <i class="fas fa-arrow-left"></i> Previous
-                </button>
-                <button type="button" class="btn btn-primary btn-wizard ms-auto" id="nextBtn" onclick="changeStep(1)">
-                    Next <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </div> *@
+        
 
     </form>
 
@@ -858,8 +841,8 @@
 @*End Visits*@
 
 @*Visit Schedule Calculator Modal*@
-<div id="scheduleCalculatorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleCalculatorModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog modal-xl" style="max-width: 95%; width: 95%;">
+<div id="scheduleCalculatorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="scheduleCalculatorModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content" role="document">
             <div class="modal-header page-card-header">
                 <h2><i class="bi bi-calendar-check"></i> Visit Schedule Calculator</h2>

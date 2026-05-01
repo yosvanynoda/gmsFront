@@ -180,7 +180,51 @@ function validateStep(step) {
             break;
         case 3:
             // Validate Step 3 fields
-            isValid = false;
+            isValid = true;
+
+            // Clear previous error messages
+            $('#startDateValidate').text('');
+            $('#endDateValidate').text('');
+            $('#studyStatusValidate').text('');
+            $('#diseaseValidate').text('');
+
+            // Validate Start Date
+            const startDate = $('#studyStartDate').val();
+            console.log('Step 3 Validation - Start Date:', startDate);
+            if (!startDate || startDate.trim() === '') {
+                $('#startDateValidate').text('Start Date is required');
+                console.log('❌ Start Date validation FAILED');
+                isValid = false;
+            }
+
+            // Validate End Date (if provided, must be after Start Date)
+            const endDate = $('#studyEndDate').val();
+            console.log('Step 3 Validation - End Date:', endDate);
+            if (startDate && endDate && endDate < startDate) {
+                $('#endDateValidate').text('End Date must be after Start Date');
+                console.log('❌ End Date validation FAILED - End date is before start date');
+                isValid = false;
+            }
+
+            // Validate Study Status
+            const studyStatus = $('#studystatusList').val();
+            console.log('Step 3 Validation - Study Status:', studyStatus);
+            if (!studyStatus || studyStatus == '-1') {
+                $('#studyStatusValidate').text('Study Status is required');
+                console.log('❌ Study Status validation FAILED');
+                isValid = false;
+            }
+
+            // Validate Disease
+            const disease = $('#diseaseList').val();
+            console.log('Step 3 Validation - Disease:', disease);
+            if (!disease || disease == '-1') {
+                $('#diseaseValidate').text('Disease is required');
+                console.log('❌ Disease validation FAILED');
+                isValid = false;
+            }
+
+            console.log('Step 3 Overall Validation Result:', isValid);
             break;
         case 4:
         // Validate Step 4 fields

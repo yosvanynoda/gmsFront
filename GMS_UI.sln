@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS_UI", "GMS_UI\GMS_UI.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS.BL", "GMS.BL\GMS.BL.csproj", "{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS.Objects", "..\BK\GMS.Objects\GMS.Objects.csproj", "{04E53883-6BF0-0982-B6F3-81E3C3FC1C6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS.Objects", "..\GMS.BackEnd\GMS.Objects\GMS.Objects.csproj", "{04E53883-6BF0-0982-B6F3-81E3C3FC1C6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -701,12 +701,12 @@ function submitForm() {
     $.ajax({
         type: "POST",
         url: urlIndex + '?handler=SaveStudy',
-        headers: { 'RequestVerificationToken': window._csrfToken },
-        data: { "studioData": studioData },
+        headers: {
+            'RequestVerificationToken': window._csrfToken,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(studioData),
         success: function (data) {
-            // Clear existing options (optional)
-            //redirect to index
-
             window.location.href = "/STD/StudioListData";
         },
         failure: function (response) {
@@ -714,7 +714,7 @@ function submitForm() {
             $('#failedMsg').html('Save Study failed. Please try again');
             $('#failedAlert').show();
         },
-        error: function (response) {
+        error: function (xhr, status, error) {
             $('#failedTitle').html('Save Study');
             $('#failedMsg').html('Save Study failed. Please try again');
             $('#failedAlert').show();
@@ -1063,8 +1063,18 @@ function initializeArmGrid() {
 }
 
 function addArm() {
+    // Generate a temporary negative ID for new arms to distinguish from database arms
+    // Find the minimum armID (most negative) and decrement it
+    let nextArmID = -1;
+    if (armsData.length > 0) {
+        const existingIDs = armsData.map(a => a.armID).filter(id => id < 0);
+        if (existingIDs.length > 0) {
+            nextArmID = Math.min(...existingIDs) - 1;
+        }
+    }
+
     let arm = {
-        armID: 0,
+        armID: nextArmID,
         studyID: 0,
         name: $('#armName').val(),
         description: $('textarea#armDescription').val() || '',
@@ -1080,6 +1090,14 @@ function addArm() {
     armsData.push(arm);
 
     initializeArmGrid();
+
+    // Refresh visit grid to update arm dropdown options
+    if (currentStep >= 8 || visitsData.length > 0) {
+        initializeVisitGrid();
+    }
+
+    // Update generate visits button state when arms change
+    updateGenerateVisitsButtonState();
 }
 
 function deleteArm(index) {
@@ -1087,6 +1105,14 @@ function deleteArm(index) {
     armsData.splice(index, 1);
 
     initializeArmGrid();
+
+    // Refresh visit grid to update arm dropdown options
+    if (currentStep >= 8 || visitsData.length > 0) {
+        initializeVisitGrid();
+    }
+
+    // Update generate visits button state when arms change
+    updateGenerateVisitsButtonState();
 }
 
 //#endregion
@@ -1102,7 +1128,7 @@ myVisitModal.addEventListener('show.bs.modal', function (event) {
 
     $.each(armsData, function (index, item) {
         let armD = {
-            id: index + 1,
+            id: item.armID,  // Use actual armID instead of index + 1
             name: item.name,
         }
         armsCombo.push(armD);

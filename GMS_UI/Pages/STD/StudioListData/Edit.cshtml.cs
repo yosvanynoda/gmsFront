@@ -85,7 +85,7 @@ namespace GMS_UI.Pages.STD.StudioListData
             }
         }
 
-        public async Task<JsonResult> OnPostUpdateStudy(STDCreateStudioViewModel studioData)
+        public async Task<JsonResult> OnPostUpdateStudy([FromBody] STDCreateStudioViewModel studioData)
         {
             try
             {

@@ -487,13 +487,35 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Dose</label>
-                                <input type="text" class="form-control" id="medicationDose" placeholder="e.g., 500mg" />
+                                <input type="text" class="form-control" id="medicationDose" placeholder="e.g., 500" />
                             </div>
                             <div class="col-md-3">
+                                <label class="form-label">Drug Unit</label>
+                                <select class="form-select" id="drugUnit">
+                                    <option value="">Select Unit</option>
+                                    @foreach (var item in Model.DrugUnitList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Frequency</label>
+                                <select class="form-select" id="drugFrequency">
+                                    <option value="">Select Frequency</option>
+                                    @foreach (var item in Model.DrugFrequencyList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
                                 <label class="form-label">Start Date</label>
                                 <input type="date" class="form-control" id="medicationStartDate" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="form-label">End Date</label>
                                 <input type="date" class="form-control" id="medicationEndDate" />
                             </div>

@@ -8,6 +8,8 @@
 
         public int ArmID { get; set; } = 0;
 
+        public string ArmName { get; set; } = string.Empty;
+
         public string Name { get; set; } = string.Empty;
 
         public int DayOffset { get; set; } = 0;

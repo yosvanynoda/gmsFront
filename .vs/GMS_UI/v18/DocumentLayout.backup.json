@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 299,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 30,
           "Children": [
             {
               "$type": "Document",
@@ -85,19 +85,6 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-01-02T16:29:22.959Z",
               "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GMS.BL",
-              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
-              "RelativeDocumentMoniker": "GMS.BL\\GMS.BL.csproj",
-              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
-              "RelativeToolTip": "GMS.BL\\GMS.BL.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-01T21:05:54.737Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -212,32 +199,16 @@
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
-              "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
-              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
-              "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEQBAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T02:04:24Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
-              "RelativeDocumentMoniker": "GMS_UI\\appsettings.json",
-              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
-              "RelativeToolTip": "GMS_UI\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-05T23:02:37.169Z",
+              "DocumentIndex": 0,
+              "Title": "GMS.BL.csproj",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
+              "RelativeDocumentMoniker": "GMS.BL\\GMS.BL.csproj",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
+              "RelativeToolTip": "GMS.BL\\GMS.BL.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-01T21:05:54.737Z",
               "EditorCaption": ""
             },
             {
@@ -287,6 +258,34 @@
               "ViewState": "AgIAAGEAAAAAAAAAAAAjwG4AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-01-05T22:44:26.708Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
+              "RelativeDocumentMoniker": "GMS_UI\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
+              "RelativeToolTip": "GMS_UI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-05T23:02:37.169Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEQBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-07T02:04:24Z"
             },
             {
               "$type": "Document",

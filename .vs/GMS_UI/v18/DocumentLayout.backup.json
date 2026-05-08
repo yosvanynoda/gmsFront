@@ -3,48 +3,52 @@
   "WorkspaceRootPath": "D:\\source\\repos\\GMS\\GMS_UI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}|GMS.BL\\GMS.BL.csproj|d:\\source\\repos\\gms\\gms_ui\\gms.bl\\gms.bl.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E7FA40A5-5D32-43DF-B3BC-38E8B06E8B14}|GMS.BL\\GMS.BL.csproj|solutionrelative:gms.bl\\gms.bl.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiocreate.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\vlt\\volunteer\\volunteeredit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\vlt\\volunteer\\volunteeredit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\cmn\\referencedata\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\sub\\subject\\visitplan.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studiolistdata.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\js\\std\\studiolistdata\\studioedit.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\pages\\std\\studiolistdata\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|d:\\source\\repos\\gms\\gms_ui\\gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{420D5227-2D7D-4957-A17E-518B87D976CE}|GMS_UI\\GMS_UI.csproj|solutionrelative:gms_ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,11 +58,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 299,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 11,
               "Title": "site.css",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\css\\site.css",
@@ -71,16 +75,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 10,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
               "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
               "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
               "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Create.cshtml",
-              "ViewState": "AgIAAEMCAAAAAAAAAAAqwHgDAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHEBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-01-02T16:29:22.959Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GMS.BL",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
+              "RelativeDocumentMoniker": "GMS.BL\\GMS.BL.csproj",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS.BL\\GMS.BL.csproj",
+              "RelativeToolTip": "GMS.BL\\GMS.BL.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-01T21:05:54.737Z",
               "EditorCaption": ""
             },
             {
@@ -201,33 +217,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
-              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABNAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-16T16:26:31.716Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
               "RelativeDocumentMoniker": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
               "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
               "RelativeToolTip": "GMS_UI\\Pages\\STD\\StudioListData\\Edit.cshtml",
-              "ViewState": "AgIAAD4BAAAAAAAAAADgv0QBAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEQBAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T02:04:24Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-07T02:04:24Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\appsettings.json",
               "RelativeDocumentMoniker": "GMS_UI\\appsettings.json",
@@ -235,11 +237,12 @@
               "RelativeToolTip": "GMS_UI\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-05T23:02:37.169Z"
+              "WhenOpened": "2026-01-05T23:02:37.169Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "studioEdit.js",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
               "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioEdit.js",
@@ -251,7 +254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "studioListData.js",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
               "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioListData.js",
@@ -263,19 +266,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 5,
               "Title": "visitPlan.js",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
               "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
               "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
               "RelativeToolTip": "GMS_UI\\wwwroot\\js\\sub\\subject\\visitPlan.js",
-              "ViewState": "AgIAAGgBAAAAAAAAAIA2wHgBAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAGkBAAAAAAAAAAAWwHgBAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-01-05T22:44:35.51Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "volunteerEdit.js",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
               "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\vlt\\volunteer\\volunteerEdit.js",
@@ -287,7 +290,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 2,
+              "Title": "studioCreate.js",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-02T20:16:54.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "GMS_UI\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-16T16:26:31.716Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
               "RelativeDocumentMoniker": "GMS_UI\\Pages\\CMN\\ReferenceData\\Index.cshtml",
@@ -296,19 +324,6 @@
               "ViewState": "AgIAACcKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-01-05T22:41:32.425Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "studioCreate.js",
-              "DocumentMoniker": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
-              "RelativeDocumentMoniker": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
-              "ToolTip": "D:\\source\\repos\\GMS\\GMS_UI\\GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
-              "RelativeToolTip": "GMS_UI\\wwwroot\\js\\std\\studioListData\\studioCreate.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-01-02T20:16:54.658Z",
-              "EditorCaption": ""
             }
           ]
         },

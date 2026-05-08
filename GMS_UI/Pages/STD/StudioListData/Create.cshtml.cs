@@ -37,11 +37,10 @@ namespace GMS_UI.Pages.STD.StudioListData
             return Page();
         }
 
-        public async Task<JsonResult> OnPostSaveStudy(STDCreateStudioViewModel studioData)
+        public async Task<JsonResult> OnPostSaveStudy([FromBody] STDCreateStudioViewModel studioData)
         {
             try
             {
-
                 studioData.CompanyId = 1; // Assuming CompanyId is always 1
                 studioData.Username = 1; // Assuming a default user name for the system
                 studioData.SiteId = 1; // Assuming a default site Id for the system

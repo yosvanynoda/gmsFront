@@ -157,7 +157,8 @@ function convertDateToISO(dateStr) {
 
 // Helper function to format date for DateOnly backend type (always returns YYYY-MM-DD or default)
 function formatDateForBackend(dateStr) {
-    if (!dateStr || dateStr === '0001-01-01') return '0001-01-01';
+    // Return null for empty dates instead of '0001-01-01'
+    if (!dateStr || dateStr === '0001-01-01' || dateStr === 'null') return null;
 
     // If already in YYYY-MM-DD format (from date input)
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
@@ -173,8 +174,8 @@ function formatDateForBackend(dateStr) {
         return `${year}-${month}-${day}`;
     }
 
-    // Default fallback
-    return '0001-01-01';
+    // Default fallback - return null for invalid dates
+    return null;
 }
 
 function changeStep(direction) {
@@ -804,6 +805,8 @@ function submitForm() {
                 MedicationId: medication.id,
                 DrogName: medication.name,
                 DrogDose: medication.dose || '',
+                DrogUnit: medication.drugUnit || 0,
+                DrogFrequency: medication.drugFrequency || 0,
                 StartDate: formatDateForBackend(medication.startDate),
                 EndDate: formatDateForBackend(medication.endDate),
                 CompanyId: 1,
@@ -1216,17 +1219,41 @@ function setupMedicationsGrid() {
             { field: "id", hide: true },
             { field: "name", headerName: "Medication", flex: 2 },
             { field: "dose", headerName: "Dose", flex: 1 },
+            { field: "drugUnitName", headerName: "Unit", flex: 1 },
+            { field: "drugFrequencyName", headerName: "Frequency", flex: 1.5 },
             {
                 field: "startDate",
                 headerName: "Start Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => {
+                    if (!params.value) return '';
+                    // Check for various empty date formats
+                    const dateStr = params.value.toString();
+                    if (dateStr.includes('0001-01-01') || dateStr.includes('0001/01/01')) return '';
+
+                    const date = new Date(params.value);
+                    // Check if year is 1 (0001-01-01)
+                    if (date.getFullYear() === 1) return '';
+
+                    return date.toLocaleDateString();
+                }
             },
             {
                 field: "endDate",
                 headerName: "End Date",
                 flex: 1,
-                valueFormatter: params => params.value ? new Date(params.value).toLocaleDateString() : ''
+                valueFormatter: params => {
+                    if (!params.value) return '';
+                    // Check for various empty date formats
+                    const dateStr = params.value.toString();
+                    if (dateStr.includes('0001-01-01') || dateStr.includes('0001/01/01')) return '';
+
+                    const date = new Date(params.value);
+                    // Check if year is 1 (0001-01-01)
+                    if (date.getFullYear() === 1) return '';
+
+                    return date.toLocaleDateString();
+                }
             },
             {
                 headerName: "Actions",
@@ -1252,6 +1279,8 @@ function setupMedicationsGrid() {
 function saveMedication() {
     const medicationId = $('#medicationSelect').val();
     const dose = $('#medicationDose').val();
+    const drugUnit = $('#drugUnit').val();
+    const drugFrequency = $('#drugFrequency').val();
     const startDate = $('#medicationStartDate').val();
     const endDate = $('#medicationEndDate').val();
 
@@ -1263,12 +1292,19 @@ function saveMedication() {
     $('#validateMedication').text('');
 
     const medicationName = $('#medicationSelect option:selected').text();
+    const drugUnitName = $('#drugUnit option:selected').text();
+    const drugFrequencyName = $('#drugFrequency option:selected').text();
+
     const medicationItem = {
         id: parseInt(medicationId),
         name: medicationName,
         dose: dose || '',
-        startDate: startDate || '0001-01-01',
-        endDate: endDate || '0001-01-01',
+        drugUnit: drugUnit ? parseInt(drugUnit) : 0,
+        drugUnitName: drugUnit ? drugUnitName : '',
+        drugFrequency: drugFrequency ? parseInt(drugFrequency) : 0,
+        drugFrequencyName: drugFrequency ? drugFrequencyName : '',
+        startDate: startDate || null,
+        endDate: endDate || null,
         active: true,
         recordId: 0
     };
@@ -1286,6 +1322,8 @@ function saveMedication() {
     // Reset form
     $('#medicationSelect').val('');
     $('#medicationDose').val('');
+    $('#drugUnit').val('');
+    $('#drugFrequency').val('');
     $('#medicationStartDate').val('');
     $('#medicationEndDate').val('');
 }

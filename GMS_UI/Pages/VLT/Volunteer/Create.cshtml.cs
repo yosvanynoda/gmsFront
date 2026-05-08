@@ -4,6 +4,7 @@ using GMS.Objects.General;
 using GMS.Objects.STD;
 using GMS.Objects.VLT;
 using GMS_UI.Helper;
+using GMS_UI.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,6 +31,8 @@ namespace GMS_UI.Pages.VLT.Volunteer
         public List<SelectListItem> VaccineList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> SurgicalList { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> VLTStatusList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> DrugUnitList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> DrugFrequencyList { get; set; } = new List<SelectListItem>();
 
         public async Task OnGetAsync()
         {
@@ -125,6 +128,30 @@ namespace GMS_UI.Pages.VLT.Volunteer
             {
                 var vltStatusData = JsonConvert.DeserializeObject<List<DropListBaseResponse>>(vltStatusResponse.Data.ToString());
                 VLTStatusList = vltStatusData?.Select(v => new SelectListItem { Value = v.Id.ToString(), Text = v.Name }).ToList() ?? new List<SelectListItem>();
+            }
+
+            // Load Drug Unit List from Enum
+            foreach (var item in Enum.GetValues(typeof(DrugUnitEnum)))
+            {
+                var value = (int)item;
+                var text = Enum.GetName(typeof(DrugUnitEnum), value) ?? "";
+                DrugUnitList.Add(new SelectListItem
+                {
+                    Value = value.ToString(),
+                    Text = text
+                });
+            }
+
+            // Load Drug Frequency List from Enum
+            foreach (var item in Enum.GetValues(typeof(DrugFrequencyEnum)))
+            {
+                var value = (int)item;
+                var text = Enum.GetName(typeof(DrugFrequencyEnum), value) ?? "";
+                DrugFrequencyList.Add(new SelectListItem
+                {
+                    Value = value.ToString(),
+                    Text = text
+                });
             }
         }
 
